@@ -1,0 +1,47 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class OrderItemSeeder extends Seeder
+{
+	/**
+	 * Run the database seeds.
+	 */
+	public function run(): void
+	{
+		DB::table('order_items')->insert([
+			// Order 1 - customer01
+			[
+				'order_id' => 1,
+				'product_id' => 1, // iPhone 16 Pro Max
+				'quantity' => 1,
+				'price' => 34990000,
+			],
+			// Order 2 - customer02
+			[
+				'order_id' => 2,
+				'product_id' => 3, // Dell XPS 15
+				'quantity' => 1,
+				'price' => 45990000,
+			],
+			// Order 3 - customer01
+			[
+				'order_id' => 3,
+				'product_id' => 4, // Sony WH-1000XM5
+				'quantity' => 2,
+				'price' => 8990000,
+			],
+			// Order 4 - customer02
+			[
+				'order_id' => 4,
+				'product_id' => 2, // Samsung Galaxy S24 Ultra
+				'quantity' => 1,
+				'price' => 29990000,
+			],
+		]);
+	}
+}
