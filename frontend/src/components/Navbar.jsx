@@ -101,13 +101,13 @@ export default function Navbar() {
 
               <div className="collapse navbar-collapse" id="navbarCollapse">
                 <div className="navbar-nav ms-auto py-0">
-                  <a href="index.html" className="nav-item nav-link">
+                  <a href="/" className="nav-item nav-link">
                     Home
                   </a>
-                  <a href="shop.html" className="nav-item nav-link">
+                  <a href="/shop" className="nav-item nav-link">
                     Shop
                   </a>
-                  <a href="single.html" className="nav-item nav-link">
+                  <a href="/product" className="nav-item nav-link">
                     Single Page
                   </a>
 
@@ -119,13 +119,13 @@ export default function Navbar() {
                       <a href="bestseller.html" className="dropdown-item">
                         Bestseller
                       </a>
-                      <a href="cart.html" className="dropdown-item">
+                      <a href="/cart" className="dropdown-item">
                         Cart Page
                       </a>
-                      <a href="cheackout.html" className="dropdown-item">
+                      <a href="/checkout" className="dropdown-item">
                         Cheackout
                       </a>
-                      <a href="404.html" className="dropdown-item">
+                      <a href="*" className="dropdown-item">
                         404 Page
                       </a>
                     </div>
