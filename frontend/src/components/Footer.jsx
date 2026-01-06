@@ -5,7 +5,10 @@ export default function Footer() {
   return (
     <>
       {/* Footer Start */}
-      <div className="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+      <div
+        className="container-fluid footer py-5 wow fadeIn"
+        data-wow-delay="0.2s"
+      >
         <div className="container py-5">
           <div
             className="row g-4 rounded mb-5"
@@ -77,10 +80,14 @@ export default function Footer() {
               <div className="footer-item d-flex flex-column">
                 <div className="footer-item">
                   <h4 className="text-primary mb-4">Newsletter</h4>
-                  <p className="text-white mb-3">
-                    Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum
-                    dolor sit amet, consectetur adipiscing elit consectetur adipiscing elit.
+
+                  {/* ✅ Template gốc: không có text-white */}
+                  <p className="mb-3">
+                    Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem
+                    ipsum dolor sit amet, consectetur adipiscing elit consectetur
+                    adipiscing elit.
                   </p>
+
                   <div className="position-relative mx-auto rounded-pill">
                     <input
                       className="form-control rounded-pill w-100 py-3 ps-4 pe-5"
@@ -101,25 +108,25 @@ export default function Footer() {
             <div className="col-md-6 col-lg-6 col-xl-3">
               <div className="footer-item d-flex flex-column">
                 <h4 className="text-primary mb-4">Customer Service</h4>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Contact Us
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Returns
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Order History
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Site Map
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Testimonials
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> My Account
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Unsubscribe Notification
                 </a>
               </div>
@@ -128,25 +135,25 @@ export default function Footer() {
             <div className="col-md-6 col-lg-6 col-xl-3">
               <div className="footer-item d-flex flex-column">
                 <h4 className="text-primary mb-4">Information</h4>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> About Us
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Delivery infomation
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Privacy Policy
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Terms &amp; Conditions
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Warranty
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> FAQ
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Seller Login
                 </a>
               </div>
@@ -155,25 +162,25 @@ export default function Footer() {
             <div className="col-md-6 col-lg-6 col-xl-3">
               <div className="footer-item d-flex flex-column">
                 <h4 className="text-primary mb-4">Extras</h4>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Brands
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Gift Vouchers
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Affiliates
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Wishlist
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Order History
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Track Your Order
                 </a>
-                <a href="#" className="">
+                <a href="#">
                   <i className="fas fa-angle-right me-2"></i> Track Your Order
                 </a>
               </div>

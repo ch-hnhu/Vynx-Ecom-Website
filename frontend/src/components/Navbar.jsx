@@ -1,12 +1,33 @@
 // File: src/components/Navbar.jsx
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Navbar() {
+  useEffect(() => {
+    const navBar = document.querySelector(".nav-bar");
+    if (!navBar) return;
+
+    const onScroll = () => {
+      if (window.scrollY > 45) {
+        navBar.classList.add("fixed-top", "bg-white", "shadow-sm");
+      } else {
+        navBar.classList.remove("fixed-top", "bg-white", "shadow-sm");
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       {/* Navbar & Hero Start */}
       <div className="container-fluid nav-bar p-0">
-        <div className="row gx-0 bg-primary px-5 align-items-center">
+        <div className="container-fluid nav-bar p-0 bg-primary">
+      {/* wrapper de canh va padding */}
+      <div className="px-5">
+        <div className="row gx-0 align-items-center">
           {/* Left: All Categories (desktop) */}
           <div className="col-lg-3 d-none d-lg-block">
             <nav className="navbar navbar-light position-relative" style={{ width: 250 }}>
@@ -166,6 +187,8 @@ export default function Navbar() {
             </nav>
           </div>
         </div>
+      </div>
+    </div>
       </div>
       {/* Navbar & Hero End */}
     </>
