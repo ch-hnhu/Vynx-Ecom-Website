@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router-dom";
-import AdminLayout from "./layouts/AdminLayout";
+import MainLayout from "./layouts/MainLayout";
 import DashboardPage from "./pages/DashboardPage";
 
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<AdminLayout />}>
-        <Route index element={<DashboardPage />} />
-      </Route>
-    </Routes>
-  );
+	return (
+		<Routes>
+			<Route path='/' element={<MainLayout />}>
+				<Route index element={<DashboardPage />} />
+			</Route>
+		</Routes>
+	);
 }
