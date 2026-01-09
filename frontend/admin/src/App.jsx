@@ -1,18 +1,13 @@
-import { useState } from 'react'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
+import DashboardPage from "./pages/DashboardPage";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="App">
-      <h1>Vynx Admin Dashboard</h1>
-      <p>Welcome to the admin panel</p>
-      <button onClick={() => setCount((count) => count + 1)}>
-        count is {count}
-      </button>
-    </div>
-  )
+export default function App() {
+	return (
+		<Routes>
+			<Route path='/' element={<MainLayout />}>
+				<Route index element={<DashboardPage />} />
+			</Route>
+		</Routes>
+	);
 }
-
-export default App
