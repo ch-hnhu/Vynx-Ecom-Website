@@ -20,64 +20,74 @@ export default function AdminSidebar() {
             role="navigation"
             aria-label="Main navigation"
             data-accordion="false"
-            id="navigation"
-          >
+            id="navigation">
             <li className="nav-item menu-open">
               <a href="#" className="nav-link active">
                 <i className="nav-icon bi bi-speedometer" />
                 <p>
                   Dashboard
-                  <i className="nav-arrow bi bi-chevron-right" />
                 </p>
               </a>
-              <ul className="nav nav-treeview">
-                <li className="nav-item">
-                  <a href="#" className="nav-link active">
-                    <i className="nav-icon bi bi-circle" />
-                    <p>Dashboard v1</p>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="#" className="nav-link">
-                    <i className="nav-icon bi bi-circle" />
-                    <p>Dashboard v2</p>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="#" className="nav-link">
-                    <i className="nav-icon bi bi-circle" />
-                    <p>Dashboard v3</p>
-                  </a>
-                </li>
-              </ul>
             </li>
 
             <li className="nav-item">
               <a href="#" className="nav-link">
-                <i className="nav-icon bi bi-palette" />
-                <p>Theme Generate</p>
-              </a>
-            </li>
-
-            {/* ... các menu khác bạn copy tiếp tương tự ... */}
-
-            <li className="nav-header">LABELS</li>
-            <li className="nav-item">
-              <a href="#" className="nav-link">
-                <i className="nav-icon bi bi-circle text-danger" />
-                <p className="text">Important</p>
+                <i className="nav-icon bi bi-box-seam" />
+                <p>Products</p>
               </a>
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link">
-                <i className="nav-icon bi bi-circle text-warning" />
-                <p>Warning</p>
+                <i className="nav-icon bi bi-receipt" />
+                <p>Orders</p>
               </a>
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link">
-                <i className="nav-icon bi bi-circle text-info" />
-                <p>Informational</p>
+                <i className="nav-icon bi bi-people" />
+                <p>Users</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                <i className="nav-icon bi bi-grid" />
+                <p>Categories</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                <i className="nav-icon bi bi-tags" />
+                <p>Brands</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                <i className="nav-icon bi bi-sliders" />
+                <p>Attributes</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                <i className="nav-icon bi bi-chat-left-text" />
+                <p>Reviews</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                <i className="nav-icon bi bi-ticket-perforated" />
+                <p>Coupons</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                <i className="nav-icon bi bi-gear" />
+                <p>Settings</p>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link text-danger">
+                <i className="nav-icon bi bi-box-arrow-right text-danger" />
+                <p>Logout</p>
               </a>
             </li>
           </ul>

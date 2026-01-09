@@ -1,44 +1,42 @@
-import { useEffect } from 'react';
+// File: src/layouts/AdminLayout.jsx
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import AdminHeader from "../components/AdminHeader";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminFooter from "../components/AdminFooter";
-import { Outlet } from "react-router-dom";
-export default function AdminLayout({ children }) {
+
+export default function AdminLayout() {
   useEffect(() => {
-    // Nếu bạn dùng AdminLTE JS + OverlayScrollbars qua CDN trong index.html,
-    // thì chỗ này chỉ cần init giống template.
-
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-
+    const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
     const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
     const isMobile = window.innerWidth <= 992;
 
-    if (
-      sidebarWrapper &&
-      window.OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined &&
-      !isMobile
-    ) {
-      window.OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+    // Tránh init nhiều lần khi hot reload
+    if (sidebarWrapper?.dataset?.osInit === "1") return;
+
+    const OverlayScrollbars = window.OverlayScrollbarsGlobal?.OverlayScrollbars;
+
+    if (sidebarWrapper && OverlayScrollbars && !isMobile) {
+      OverlayScrollbars(sidebarWrapper, {
         scrollbars: {
-          theme: Default.scrollbarTheme,
-          autoHide: Default.scrollbarAutoHide,
-          clickScroll: Default.scrollbarClickScroll,
+          theme: "os-theme-light",
+          autoHide: "leave",
+          clickScroll: true,
         },
       });
+
+      sidebarWrapper.dataset.osInit = "1";
     }
   }, []);
 
   return (
-     <div className="app-wrapper">
+    <div className="app-wrapper">
       <AdminHeader />
       <AdminSidebar />
 
+      {/* AdminLTE: app-main */}
       <main className="app-main">
+        {/* Nơi render các page con */}
         <Outlet />
       </main>
 
