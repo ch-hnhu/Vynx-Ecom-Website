@@ -4,7 +4,7 @@ export default function AdminSidebar() {
       <div className="sidebar-brand">
         <a href="#" className="brand-link">
           <img
-            src="/pubic/assets/img/AdminLTELogo.png"
+            src="/assets/img/AdminLTELogo.png"
             alt="AdminLTE Logo"
             className="brand-image opacity-75 shadow"
           />
