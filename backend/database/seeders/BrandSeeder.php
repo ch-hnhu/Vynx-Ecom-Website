@@ -15,16 +15,16 @@ class BrandSeeder extends Seeder
     {
         DB::table('brands')->insert([
             [
-                'name' => 'Apple',
-                'logo_url' => 'https://example.com/logos/apple.png',
-                'description' => 'Thương hiệu công nghệ hàng đầu thế giới, chuyên về điện thoại, máy tính và thiết bị điện tử',
+                'name' => 'Corsair',
+                'logo_url' => 'https://example.com/logos/corsair.png',
+                'description' => 'Thương hiệu nổi tiếng về linh kiện máy tính và thiết bị chơi game hiệu suất cao',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Samsung',
-                'logo_url' => 'https://example.com/logos/samsung.png',
-                'description' => 'Tập đoàn điện tử đa quốc gia của Hàn Quốc, sản xuất điện thoại thông minh và thiết bị gia dụng',
+                'name' => 'Acer',
+                'logo_url' => 'https://example.com/logos/acer.png',
+                'description' => 'Tập đoàn công nghệ Đài Loan chuyên sản xuất máy tính và thiết bị điện tử tiêu dùng',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -42,6 +42,13 @@ class BrandSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'MSI',
+                'logo_url' => 'https://example.com/logos/msi.png',
+                'description' => 'Công ty hàng đầu về sản xuất laptop gaming và linh kiện máy tính hiệu suất cao',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
     }
 }

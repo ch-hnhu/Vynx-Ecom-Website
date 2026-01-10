@@ -15,25 +15,25 @@ class SlideshowSeeder extends Seeder
     {
         DB::table('slideshows')->insert([
             [
-                'title' => 'Ra mắt iPhone 16 Pro Max',
-                'image_url' => 'https://example.com/slides/iphone16-banner.jpg',
-                'link_url' => '/products/iphone-16-pro-max',
+                'title' => 'Khuyến mãi Tết Nguyên Đán 2026',
+                'image_url' => 'https://example.com/slides/newyear-banner.jpg',
+                'link_url' => '/promotions/newyear2026',
                 'position' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'Samsung Galaxy S24 Ultra - Siêu phẩm 2026',
-                'image_url' => 'https://example.com/slides/samsung-s24-banner.jpg',
-                'link_url' => '/products/samsung-galaxy-s24-ultra',
+                'title' => 'MSI Gaming GF63 Thin - Laptop Gaming Sinh Viên',
+                'image_url' => 'https://example.com/slides/msi-gf63-banner.jpg',
+                'link_url' => '/products/msi-gaming-gf63-thin',
                 'position' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'Laptop Dell XPS - Giảm giá đến 30%',
+                'title' => 'Laptop Dell XPS 15 - Cao cấp cho dân sáng tạo',
                 'image_url' => 'https://example.com/slides/dell-xps-sale.jpg',
-                'link_url' => '/promotions/laptop-sale',
+                'link_url' => '/products/dell-xps-15',
                 'position' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
