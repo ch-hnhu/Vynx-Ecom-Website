@@ -58,6 +58,7 @@ export default function ProductPage() {
 	const columns = [
 		{ field: "id", headerName: "ID", width: 90 },
 		{ field: "name", headerName: "Tên sản phẩm", width: 300 },
+		{ field: "slug", headerName: "Slug", width: 300 },
 		{
 			field: "price",
 			headerName: "Giá",
