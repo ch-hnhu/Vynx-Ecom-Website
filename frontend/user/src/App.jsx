@@ -9,6 +9,9 @@ import Checkout from "./pages/Checkout.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import Contact from "./pages/Contact.jsx";
+import About from "./pages/About.jsx";
 import { HelmetProvider } from "react-helmet-async";
 
 export default function App() {
@@ -25,6 +28,9 @@ export default function App() {
 					<Route path='cart' element={<Cart />} />
 					<Route path='support' element={<Support />} />
 					<Route path='checkout' element={<Checkout />} />
+					<Route path='privacy-policy' element={<PrivacyPolicy />} />
+					<Route path='contact' element={<Contact />} />
+					<Route path='about' element={<About />} />
 
 					<Route path='*' element={<NotFound />} />
 				</Route>

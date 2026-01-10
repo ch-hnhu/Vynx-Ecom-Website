@@ -96,7 +96,7 @@ export default function Footer() {
 						<div className='col-md-6 col-lg-6 col-xl-3'>
 							<div className='footer-item d-flex flex-column'>
 								<h4 className='text-primary mb-4'>Customer Service</h4>
-								<a href='#'>
+								<a href='/contact'>
 									<i className='fas fa-angle-right me-2'></i> Contact Us
 								</a>
 								<a href='#'>
@@ -124,13 +124,13 @@ export default function Footer() {
 						<div className='col-md-6 col-lg-6 col-xl-3'>
 							<div className='footer-item d-flex flex-column'>
 								<h4 className='text-primary mb-4'>Information</h4>
-								<a href='#'>
+								<a href='/about'>
 									<i className='fas fa-angle-right me-2'></i> About Us
 								</a>
 								<a href='#'>
 									<i className='fas fa-angle-right me-2'></i> Delivery infomation
 								</a>
-								<a href='#'>
+								<a href='/privacy-policy'>
 									<i className='fas fa-angle-right me-2'></i> Privacy Policy
 								</a>
 								<a href='#'>
