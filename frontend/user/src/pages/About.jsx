@@ -26,49 +26,54 @@ export default function About() {
 
 			<div className='container-fluid py-5'>
 				<div className='container py-5'>
-					<div className='row g-4 align-items-center mb-4'>
+					<div className='row g-4 align-items-center mb-5'>
 						<div className='col-lg-6'>
-							<div className='bg-light rounded p-4 p-lg-5'>
-								<h2 className='mb-3'>Sứ mệnh của Electro</h2>
+							<div className='bg-light rounded p-4 p-lg-5 h-100'>
+								<p className='text-uppercase text-primary mb-2'>Electro</p>
+								<h2 className='mb-3'>Cửa hàng công nghệ cho người dùng thực tế</h2>
 								<p className='mb-4'>
-									Chúng tôi mang đến trải nghiệm mua sắm công nghệ đáng tin cậy,
-									giá hợp lý và dịch vụ hậu mãi rõ ràng. Electro tập trung vào
-									những sản phẩm chính hãng, nguồn gốc minh bạch và giao hàng
-									nhanh chóng.
+									Chúng tôi xây dựng Electro với mục tiêu đơn giản: giúp bạn
+									mua đúng sản phẩm, đúng nhu cầu, đúng ngân sách. Mọi quy trình
+									đều minh bạch, từ tư vấn đến hậu mãi.
 								</p>
 								<div className='d-flex flex-wrap gap-3'>
 									<div className='bg-white border rounded px-3 py-2'>
-										<strong>10K+</strong> Khách hàng hài lòng
+										<strong>10K+</strong> khách hàng hài lòng
 									</div>
 									<div className='bg-white border rounded px-3 py-2'>
-										<strong>48h</strong> Giao hàng nội thành
+										<strong>48h</strong> giao hàng nội thành
 									</div>
 									<div className='bg-white border rounded px-3 py-2'>
-										<strong>100%</strong> Hàng chính hãng
+										<strong>100%</strong> hàng chính hãng
 									</div>
 								</div>
 							</div>
 						</div>
 						<div className='col-lg-6'>
-							<div className='bg-white rounded p-4 border h-100'>
+							<div className='bg-white rounded p-4 p-lg-5 border h-100'>
 								<h5 className='mb-3'>Cam kết dịch vụ</h5>
-								<ul className='mb-0'>
+								<ul className='mb-4'>
 									<li>Tư vấn đúng nhu cầu, không chèo kéo.</li>
-									<li>Chính sách đổi trả minh bạch và dễ hiểu.</li>
-									<li>Bảo hành nhanh, hỗ trợ kỹ thuật tận tâm.</li>
-									<li>Giá cả cạnh tranh cùng ưu đãi rõ ràng.</li>
+									<li>Đổi trả minh bạch, bảo hành rõ ràng.</li>
+									<li>Hỗ trợ kỹ thuật nhanh và có trách nhiệm.</li>
+									<li>Giá cả cạnh tranh, ưu đãi rõ ràng.</li>
 								</ul>
+								<div className='d-flex flex-wrap gap-2'>
+									<span className='badge bg-secondary'>Tư vấn 1:1</span>
+									<span className='badge bg-secondary'>Bảo hành tận nơi</span>
+									<span className='badge bg-secondary'>Kiểm tra miễn phí</span>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<div className='row g-4 mb-4'>
+					<div className='row g-4 mb-5'>
 						<div className='col-lg-4'>
 							<div className='bg-light rounded p-4 h-100'>
 								<h5 className='mb-3'>Tầm nhìn</h5>
 								<p className='mb-0'>
-									Trở thành điểm đến hàng đầu cho khách hàng yêu công nghệ tại
-									Việt Nam với trải nghiệm mua sắm hiện đại.
+									Trở thành điểm đến công nghệ đáng tin cậy với trải nghiệm mua
+									sắm hiện đại, thân thiện và nhất quán.
 								</p>
 							</div>
 						</div>
@@ -76,8 +81,8 @@ export default function About() {
 							<div className='bg-light rounded p-4 h-100'>
 								<h5 className='mb-3'>Giá trị cốt lõi</h5>
 								<p className='mb-0'>
-									Chính trực, minh bạch và lấy khách hàng làm trung tâm trong
-									mọi quyết định.
+									Chính trực, minh bạch và lấy khách hàng làm trung tâm trong mọi
+									quyết định.
 								</p>
 							</div>
 						</div>
@@ -85,9 +90,54 @@ export default function About() {
 							<div className='bg-light rounded p-4 h-100'>
 								<h5 className='mb-3'>Đội ngũ</h5>
 								<p className='mb-0'>
-									Đội ngũ tư vấn am hiểu sản phẩm và hỗ trợ kỹ thuật luôn sẵn
-									sàng đồng hành.
+									Đội ngũ tư vấn am hiểu sản phẩm, kỹ thuật phản hồi nhanh và luôn
+									đồng hành sau bán.
 								</p>
+							</div>
+						</div>
+					</div>
+
+					<div className='row g-4 mb-5'>
+						<div className='col-lg-7'>
+							<div className='bg-white rounded p-4 p-lg-5 border h-100'>
+								<h5 className='mb-3'>Hành trình phát triển</h5>
+								<div className='row g-3'>
+									<div className='col-md-6'>
+										<div className='bg-light rounded p-3 h-100'>
+											<p className='text-primary mb-1'>2022</p>
+											<p className='mb-0'>Ra mắt cửa hàng đầu tiên tại TP.HCM.</p>
+										</div>
+									</div>
+									<div className='col-md-6'>
+										<div className='bg-light rounded p-3 h-100'>
+											<p className='text-primary mb-1'>2023</p>
+											<p className='mb-0'>Mở rộng danh mục laptop và gaming gear.</p>
+										</div>
+									</div>
+									<div className='col-md-6'>
+										<div className='bg-light rounded p-3 h-100'>
+											<p className='text-primary mb-1'>2024</p>
+											<p className='mb-0'>Triển khai giao hàng nhanh trong 48h.</p>
+										</div>
+									</div>
+									<div className='col-md-6'>
+										<div className='bg-light rounded p-3 h-100'>
+											<p className='text-primary mb-1'>2025</p>
+											<p className='mb-0'>Hệ thống chăm sóc khách hàng 1:1.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className='col-lg-5'>
+							<div className='bg-light rounded p-4 p-lg-5 h-100'>
+								<h5 className='mb-3'>Vì sao chọn Electro</h5>
+								<ul className='mb-0'>
+									<li>Kiểm tra sản phẩm trước khi giao.</li>
+									<li>Hỗ trợ cài đặt và tối ưu theo nhu cầu.</li>
+									<li>Chính sách đổi trả trong 7 ngày.</li>
+									<li>Ưu đãi định kỳ cho khách hàng thân thiết.</li>
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -95,20 +145,19 @@ export default function About() {
 					<div className='row g-4'>
 						<div className='col-lg-6'>
 							<div className='bg-white rounded p-4 border h-100'>
-								<h5 className='mb-3'>Hành trình phát triển</h5>
+								<h5 className='mb-3'>Liên hệ hợp tác</h5>
 								<p className='mb-0'>
-									Từ một cửa hàng nhỏ, Electro mở rộng thành hệ thống phân phối
-									đa dạng sản phẩm: laptop, thiết bị âm thanh, gaming gear và
-									phụ kiện chính hãng.
+									Nếu bạn là nhà phân phối, đại lý hoặc đối tác thương hiệu,
+									hãy liên hệ để cùng phát triển bền vững.
 								</p>
 							</div>
 						</div>
 						<div className='col-lg-6'>
 							<div className='bg-white rounded p-4 border h-100'>
-								<h5 className='mb-3'>Liên hệ hợp tác</h5>
+								<h5 className='mb-3'>Kết nối với chúng tôi</h5>
 								<p className='mb-0'>
-									Nếu bạn là nhà phân phối, đại lý hoặc đối tác thương hiệu, hãy
-									liên hệ để cùng phát triển bền vững.
+									Theo dõi Electro để cập nhật sản phẩm mới, ưu đãi và các mẹo
+									sử dụng công nghệ hiệu quả.
 								</p>
 							</div>
 						</div>
