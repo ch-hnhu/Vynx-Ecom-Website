@@ -15,7 +15,7 @@ export default function Footer() {
 									<i className='fas fa-map-marker-alt fa-2x text-primary'></i>
 								</div>
 								<div>
-									<h4 className='text-white'>Address</h4>
+									<h4 className='text-white'>Địa chỉ</h4>
 									<p className='mb-2'>123 Street New York.USA</p>
 								</div>
 							</div>
@@ -29,7 +29,7 @@ export default function Footer() {
 									<i className='fas fa-envelope fa-2x text-primary'></i>
 								</div>
 								<div>
-									<h4 className='text-white'>Mail Us</h4>
+									<h4 className='text-white'>Email</h4>
 									<p className='mb-2'>info@example.com</p>
 								</div>
 							</div>
@@ -43,7 +43,7 @@ export default function Footer() {
 									<i className='fa fa-phone-alt fa-2x text-primary'></i>
 								</div>
 								<div>
-									<h4 className='text-white'>Telephone</h4>
+									<h4 className='text-white'>Điện thoại</h4>
 									<p className='mb-2'>(+012) 3456 7890</p>
 								</div>
 							</div>
@@ -68,25 +68,24 @@ export default function Footer() {
 						<div className='col-md-6 col-lg-6 col-xl-3'>
 							<div className='footer-item d-flex flex-column'>
 								<div className='footer-item'>
-									<h4 className='text-primary mb-4'>Newsletter</h4>
+									<h4 className='text-primary mb-4'>Bản tin</h4>
 
 									{/* ✅ Template gốc: không có text-white */}
 									<p className='mb-3'>
-										Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem
-										ipsum dolor sit amet, consectetur adipiscing elit
-										consectetur adipiscing elit.
+										Đăng ký để nhận tin mới nhất về sản phẩm, ưu đãi và các chương
+										trình đặc biệt từ Electro.
 									</p>
 
 									<div className='position-relative mx-auto rounded-pill'>
 										<input
 											className='form-control rounded-pill w-100 py-3 ps-4 pe-5'
 											type='text'
-											placeholder='Enter your email'
+											placeholder='Nhập email của bạn'
 										/>
 										<button
 											type='button'
 											className='btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2'>
-											SignUp
+											Đăng ký
 										</button>
 									</div>
 								</div>
@@ -95,83 +94,83 @@ export default function Footer() {
 
 						<div className='col-md-6 col-lg-6 col-xl-3'>
 							<div className='footer-item d-flex flex-column'>
-								<h4 className='text-primary mb-4'>Customer Service</h4>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Contact Us
+								<h4 className='text-primary mb-4'>Chăm sóc khách hàng</h4>
+								<a href='/contact'>
+									<i className='fas fa-angle-right me-2'></i> Liên hệ
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Returns
+									<i className='fas fa-angle-right me-2'></i> Đổi trả
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Order History
+									<i className='fas fa-angle-right me-2'></i> Lịch sử đơn hàng
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Site Map
+									<i className='fas fa-angle-right me-2'></i> Sơ đồ website
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Testimonials
+									<i className='fas fa-angle-right me-2'></i> Đánh giá
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> My Account
+									<i className='fas fa-angle-right me-2'></i> Tài khoản của tôi
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Unsubscribe
-									Notification
-								</a>
-							</div>
-						</div>
-
-						<div className='col-md-6 col-lg-6 col-xl-3'>
-							<div className='footer-item d-flex flex-column'>
-								<h4 className='text-primary mb-4'>Information</h4>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> About Us
-								</a>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Delivery infomation
-								</a>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Privacy Policy
-								</a>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Terms &amp;
-									Conditions
-								</a>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Warranty
-								</a>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> FAQ
-								</a>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Seller Login
+									<i className='fas fa-angle-right me-2'></i> Hủy nhận thông báo
 								</a>
 							</div>
 						</div>
 
 						<div className='col-md-6 col-lg-6 col-xl-3'>
 							<div className='footer-item d-flex flex-column'>
-								<h4 className='text-primary mb-4'>Extras</h4>
-								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Brands
+								<h4 className='text-primary mb-4'>Thông tin</h4>
+								<a href='/about'>
+									<i className='fas fa-angle-right me-2'></i> Về chúng tôi
+								</a>
+								<a href='/shipping-policy'>
+									<i className='fas fa-angle-right me-2'></i> Chính sách giao hàng
+								</a>
+								<a href='/privacy-policy'>
+									<i className='fas fa-angle-right me-2'></i> Chính sách bảo mật
+								</a>
+								<a href='/terms'>
+									<i className='fas fa-angle-right me-2'></i> Điều khoản &amp; điều
+									kiện
+								</a>
+								<a href='/warranty'>
+									<i className='fas fa-angle-right me-2'></i> Bảo hành
+								</a>
+								<a href='/faq'>
+									<i className='fas fa-angle-right me-2'></i> Câu hỏi thường gặp
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Gift Vouchers
+									<i className='fas fa-angle-right me-2'></i> Đăng nhập nhà bán
+									hàng
+								</a>
+							</div>
+						</div>
+
+						<div className='col-md-6 col-lg-6 col-xl-3'>
+							<div className='footer-item d-flex flex-column'>
+								<h4 className='text-primary mb-4'>Tiện ích</h4>
+								<a href='#'>
+									<i className='fas fa-angle-right me-2'></i> Thương hiệu
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Affiliates
+									<i className='fas fa-angle-right me-2'></i> Phiếu quà tặng
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Wishlist
+									<i className='fas fa-angle-right me-2'></i> Đối tác liên kết
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Order History
+									<i className='fas fa-angle-right me-2'></i> Yêu thích
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Track Your Order
+									<i className='fas fa-angle-right me-2'></i> Lịch sử đơn hàng
 								</a>
 								<a href='#'>
-									<i className='fas fa-angle-right me-2'></i> Track Your Order
+									<i className='fas fa-angle-right me-2'></i> Theo dõi đơn hàng
+								</a>
+								<a href='#'>
+									<i className='fas fa-angle-right me-2'></i> Tra cứu bảo hành
 								</a>
 							</div>
 						</div>
@@ -187,19 +186,18 @@ export default function Footer() {
 						<div className='col-md-6 text-center text-md-start mb-md-0'>
 							<span className='text-white'>
 								<a href='#' className='border-bottom text-white'>
-									<i className='fas fa-copyright text-light me-2'></i>Your Site
-									Name
+									<i className='fas fa-copyright text-light me-2'></i>Tên website
 								</a>
-								, All right reserved.
+								, Đã đăng ký bản quyền.
 							</span>
 						</div>
 
 						<div className='col-md-6 text-center text-md-end text-white'>
-							Designed By{" "}
+							Thiết kế bởi{" "}
 							<a className='border-bottom text-white' href='https://htmlcodex.com'>
 								HTML Codex
 							</a>
-							. Distributed By{" "}
+							. Phân phối bởi{" "}
 							<a className='border-bottom text-white' href='https://themewagon.com'>
 								ThemeWagon
 							</a>
