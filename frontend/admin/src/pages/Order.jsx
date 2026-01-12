@@ -4,12 +4,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import DataTable from "../components/Partial/DataTable";
 import api from "../services/api";
 import { formatPrice, formatDate } from "@shared/utils/formatHelper.jsx";
-import { renderStatusChip } from "@shared/utils/renderHelper.jsx";
+import { renderChip } from "@shared/utils/renderHelper.jsx";
+import { useToast } from "@shared/hooks/useToast";
 
 export default function OrderPage() {
 	const [orders, setOrders] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [toast, setToast] = useState({ open: false, message: "", severity: "success" });
+	const { toast, showSuccess, showError, showInfo, closeToast } = useToast();
 
 	useEffect(() => {
 		setLoading(true);
@@ -27,12 +28,7 @@ export default function OrderPage() {
 
 	const handleCreate = () => {
 		console.log("Create order");
-		setToast({ open: true, message: "Tạo đơn hàng mới", severity: "info" });
-	};
-
-	const handleCloseToast = (event, reason) => {
-		if (reason === "clickaway") return;
-		setToast({ ...toast, open: false });
+		showInfo("Tạo đơn hàng mới");
 	};
 
 	const processRowUpdate = async (newRow, oldRow) => {
@@ -52,28 +48,15 @@ export default function OrderPage() {
 			if (response.data.success) {
 				// Cập nhật state local
 				setOrders((prev) => prev.map((order) => (order.id === newRow.id ? newRow : order)));
-
-				setToast({
-					open: true,
-					message: response.data.message || "Cập nhật thành công!",
-					severity: "success",
-				});
+				showSuccess(response.data.message || "Cập nhật thành công!");
 				return newRow;
 			} else {
-				setToast({
-					open: true,
-					message: response.data.message || "Cập nhật thất bại",
-					severity: "error",
-				});
+				showError(response.data.message || "Cập nhật thất bại");
 				return oldRow;
 			}
 		} catch (error) {
 			console.error("Error updating order:", error);
-			setToast({
-				open: true,
-				message: error.response?.data?.message || error.message || "Cập nhật thất bại",
-				severity: "error",
-			});
+			showError(error.response?.data?.message || error.message || "Cập nhật thất bại");
 			return oldRow; // Rollback về giá trị cũ
 		}
 	};
@@ -131,7 +114,7 @@ export default function OrderPage() {
 			editable: true,
 			type: "singleSelect",
 			valueOptions: ["paid", "pending", "failed", "refunded", "cancelled"],
-			renderCell: (params) => renderStatusChip(params.value, paymentStatusColors),
+			renderCell: (params) => renderChip(params.value, paymentStatusColors),
 		},
 		{
 			field: "delivery_status",
@@ -148,7 +131,7 @@ export default function OrderPage() {
 				"returned",
 				"cancelled",
 			],
-			renderCell: (params) => renderStatusChip(params.value, deliveryStatusColors),
+			renderCell: (params) => renderChip(params.value, deliveryStatusColors),
 		},
 		{
 			field: "created_at",
@@ -202,9 +185,9 @@ export default function OrderPage() {
 			<Snackbar
 				open={toast.open}
 				autoHideDuration={3000}
-				onClose={handleCloseToast}
+				onClose={closeToast}
 				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={handleCloseToast} severity={toast.severity} variant='filled'>
+				<Alert onClose={closeToast} severity={toast.severity} variant='filled'>
 					{toast.message}
 				</Alert>
 			</Snackbar>
