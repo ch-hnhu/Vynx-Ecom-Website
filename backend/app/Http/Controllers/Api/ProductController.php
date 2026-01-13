@@ -63,8 +63,11 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:products,name',
+            'slug' => 'required|string|max:255|unique:products,slug',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
+            'hero_image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
             'category_id' => 'required|integer|exists:categories,id',
             'brand_id' => 'required|integer|exists:brands,id',
             'promotion_id' => 'nullable|integer|exists:promotions,id',
@@ -73,24 +76,26 @@ class ProductController extends Controller
             'gallery_images.*' => 'nullable|image|max:5120',
         ]);
 
+        // Handle image uploads
         $imageUrls = [];
 
+        // Upload hero image first
         if ($request->hasFile('hero_image')) {
-            $path = $request->file('hero_image')->store('products/imgs', 'public');
-            $imageUrls[] = Storage::url($path);
+            $heroImage = $request->file('hero_image');
+            $heroPath = $heroImage->store('products/images', 'public');
+            $imageUrls[] = '/storage/' . $heroPath;
         }
 
+        // Upload gallery images
         if ($request->hasFile('gallery_images')) {
-            foreach ($request->file('gallery_images') as $file) {
-                if (!$file) {
-                    continue;
-                }
-                $path = $file->store('products/imgs', 'public');
-                $imageUrls[] = Storage::url($path);
+            foreach ($request->file('gallery_images') as $galleryImage) {
+                $galleryPath = $galleryImage->store('products/images', 'public');
+                $imageUrls[] = '/storage/' . $galleryPath;
             }
         }
 
-        $validated['image_url'] = $imageUrls ? $imageUrls : null;
+        // Add image URLs to validated data
+        $validated['image_url'] = json_encode($imageUrls);
 
         $product = Product::create($validated);
 
