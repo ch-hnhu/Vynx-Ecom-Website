@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -159,31 +158,11 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
-
-        $imageUrls = $product->image_url;
-        $paths = [];
-
-        if (is_array($imageUrls)) {
-            $paths = $imageUrls;
-        } elseif (is_string($imageUrls)) {
-            $paths = [$imageUrls];
-        }
-
-        foreach ($paths as $url) {
-            if (!is_string($url)) {
-                continue;
-            }
-            if (str_starts_with($url, '/storage/')) {
-                $storagePath = str_replace('/storage/', '', $url);
-                Storage::disk('public')->delete($storagePath);
-            }
-        }
-
         $product->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Xóa sản phẩm thành công',
+            'message' => 'Xoa san pham thanh cong (soft delete)',
             'data' => null,
             'error' => null,
             'timestamp' => now(),
