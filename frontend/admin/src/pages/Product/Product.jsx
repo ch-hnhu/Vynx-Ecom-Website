@@ -79,8 +79,7 @@ export default function ProductPage() {
 			width: 150,
 			renderCell: (params) => {
 				const imageUrl = getProductImage(params.value);
-
-				return imageUrl && imageUrl !== "/img/product-default.png" ? (
+				return (
 					<img
 						src={imageUrl}
 						alt={params.row.name}
@@ -94,8 +93,6 @@ export default function ProductPage() {
 							e.target.src = "https://placehold.co/600x400";
 						}}
 					/>
-				) : (
-					<span>Không có ảnh</span>
 				);
 			},
 		},
