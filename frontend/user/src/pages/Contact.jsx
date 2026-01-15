@@ -1,47 +1,82 @@
 import { Helmet } from "react-helmet-async";
-import { useState } from "react"; 
+import { useState} from "react"; 
+import api from "../services/api";
+import { useToast } from "@shared/hooks/useToast";
+
 export default function Contact() {
-	const [form, setForm] = useState({
-        full_name: "",
-        email: "",
-        phone: "",
-        content: "",
-    });
-	const handleSubmit = async (e) => {
-  e.preventDefault();
+	const [formData, setFormData] = useState({
+		full_name: "",
+		email: "",
+		phone: "",
+		content: "",
+	});
 
-  try {
-    const res = await fetch("http://127.0.0.1:8000/api/support-requests", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+	const [errors, setErrors] = useState({});
+	const [submitting, setSubmitting] = useState(false);
+	const { showSuccess, showError } = useToast();
+	
+	// Handle input change
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("Server error:", text);
-      alert("Gửi liên hệ thất bại");
-      return;
-    }
+		if (errors[name]) {
+			setErrors((prev) => ({ ...prev, [name]: "" }));
+		}
+	};
 
-    const data = await res.json();
-    alert(data.message);
+	// Validate form
+	const validate = () => {
+		const newErrors = {};
 
-    // reset form
-    setForm({
-      full_name: "",
-      email: "",
-      phone: "",
-      content: "",
-    });
-  } catch (error) {
-    console.error(error);
-    alert("Không kết nối được server");
-  }
-};
+		if (!formData.full_name.trim()) {
+			newErrors.full_name = "Vui lòng nhập họ và tên";
+		}
+
+		if (!formData.phone.trim()) {
+			newErrors.phone = "Vui lòng nhập số điện thoại";
+		}
+
+		if (!formData.content.trim()) {
+			newErrors.content = "Vui lòng nhập nội dung liên hệ";
+		}
+
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
+
+	// Submit form
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		if (!validate()) return;
+
+		setSubmitting(true);
+
+		api.post("/support-requests", formData)
+			.then(() => {
+				showSuccess("Gửi liên hệ thành công!");
+				
+				setFormData({
+					full_name: "",
+					email: "",
+					phone: "",
+					content: "",
+				});
+				
+			})
+			.catch(() => {
+				showError("Gửi liên hệ thất bại!");
+				
+			})
+			.finally(() => {
+				setSubmitting(false);
+			});
+		
+	};
 
 
 	return (
@@ -82,40 +117,51 @@ export default function Contact() {
 										<div className='col-md-6'>
 											<input
 												type='text'
+												name="full_name"
 												className='form-control'
 												placeholder='Họ và tên'
-												onChange={(e)=>setForm({...form, full_name:e.target.value})}
+												value={formData.full_name}
+												onChange={handleChange}
 											/>
+											{errors.full_name && <p className="text-danger">{errors.full_name}</p>}
 										</div>
 										<div className='col-md-6'>
 											<input
 												type='email'
+												name="email"
 												className='form-control'
-												placeholder='Email'
-												onChange={(e)=>setForm({...form, email:e.target.value})}
+												placeholder='Email (Nếu có)'
+												value={formData.email}
+												onChange={handleChange}
 											/>
 										</div>
-										<div className='col-12'>
+										<div className='col-md-12'>
 											<input
 												type='text'
+												name="phone"
 												className='form-control'
 												placeholder='Số điện thoại'
-												onChange={(e)=>setForm({...form, phone:e.target.value})}
-											/>
+												value={formData.phone}
+												onChange={handleChange}
+											/>											
 										</div>
+										{errors.phone && <p className="text-danger">{errors.phone}</p>}
 										<div className='col-12'>
 											<textarea
 												className='form-control'
+												name="content"
 												rows='6'
 												placeholder='Nội dung liên hệ'
-												onChange={(e)=>setForm({...form, content:e.target.value})}
-											></textarea>
+												value={formData.content}
+												onChange={handleChange}
+											/>
+											{errors.content && <p className="text-danger">{errors.content}</p>}
 										</div>
 										<div className='col-12'>
 											<button
-												type='submit'
+												type='submit' disabled={submitting}	
 												className='btn btn-primary rounded-pill px-5 py-2'>
-												Gửi liên hệ
+												{submitting?"Đang gửi...":"Gửi liên hệ"}
 											</button>
 										</div>
 									</div>
@@ -126,8 +172,8 @@ export default function Contact() {
 						<div className='col-lg-5'>
 							<div className='bg-white rounded p-4 border mb-4'>
 								<h5 className='mb-3'>Thông tin liên hệ</h5>
-								<p className='mb-2'>Email: support@electro.com</p>
-								<p className='mb-2'>Hotline: (+012) 3456 7890</p>
+								<p className='mb-2'>Email: </p>
+								<p className='mb-2'>Hotline: </p>
 								<p className='mb-0'>Thời gian: 9:00 - 18:00 (T2 - T7)</p>
 							</div>
 
@@ -144,7 +190,12 @@ export default function Contact() {
 									className='rounded'
 									style={{ height: 220, background: "rgba(0, 0, 0, 0.05)" }}>
 									<div className='h-100 d-flex align-items-center justify-content-center text-muted'>
-										Khu vực hiển thị bản đồ
+										<iframe
+									className='rounded w-100'
+									style={{ height: "100%" }}
+									src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5138654110992!2d106.69867477506085!3d10.771899359277182!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f40a3b49e59%3A0xa1bd14e483a602db!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEvhu7kgdGh14bqtdCBDYW8gVGjhuq9uZw!5e0!3m2!1svi!2s!4v1767708564153!5m2!1svi!2s'
+									loading='lazy'
+									referrerPolicy='no-referrer-when-downgrade'></iframe>
 									</div>
 								</div>
 							</div>
