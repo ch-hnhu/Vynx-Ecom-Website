@@ -13,25 +13,35 @@ import Configuration from "./pages/Configuration";
 import Review from "./pages/Review";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import AuthRedirect from "./pages/AuthRedirect";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
-	return (
-		<Routes>
-			<Route path='login' element={<Login />} />
-			<Route path='signup' element={<Signup />} />
-			<Route path='/' element={<MainLayout />}>
-				<Route index element={<DashboardPage />} />
-				<Route path='table' element={<Table />} />
-				<Route path='products' element={<Product />} />
-				<Route path='orders' element={<Order />} />
-				<Route path='users' element={<User />} />
-				<Route path='brands' element={<Brand />} />
-				<Route path='categories' element={<Category />} />
-				<Route path='attributes' element={<Attribute />} />
-				<Route path='promotions' element={<Promotion />} />
-				<Route path='configurations' element={<Configuration />} />
-				<Route path='reviews' element={<Review />} />
-			</Route>
-		</Routes>
-	);
+  return (
+    <Routes>
+      <Route path="login" element={<Login />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="auth-redirect" element={<AuthRedirect />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DashboardPage />} />
+        <Route path="table" element={<Table />} />
+        <Route path="products" element={<Product />} />
+        <Route path="orders" element={<Order />} />
+        <Route path="users" element={<User />} />
+        <Route path="brands" element={<Brand />} />
+        <Route path="categories" element={<Category />} />
+        <Route path="attributes" element={<Attribute />} />
+        <Route path="promotions" element={<Promotion />} />
+        <Route path="configurations" element={<Configuration />} />
+        <Route path="reviews" element={<Review />} />
+      </Route>
+    </Routes>
+  );
 }
