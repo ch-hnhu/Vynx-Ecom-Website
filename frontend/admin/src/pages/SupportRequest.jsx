@@ -36,7 +36,7 @@ export default function SupportRequestPage() {
 		processing: "info",
 		resolved: "success",
 	};
-
+	//Refresh data
 	const fetchSupportRequests = () => {
 		setLoading(true);
 		api.get("/support-requests")
@@ -89,12 +89,12 @@ export default function SupportRequestPage() {
 		if (window.confirm("Ban co chac chan muon xoa yeu cau ho tro nay?")) {
 			api.delete(`/support-requests/${id}`)
 				.then(() => {
-					alert("Xoa thanh cong!");
+					showSuccess("Xoa yeu cau ho tro thanh cong!");
 					fetchSupportRequests();
 				})
 				.catch((error) => {
 					console.error("Error deleting support request:", error);
-					alert("Xoa that bai!");
+					showError("Xoa that bai!");
 				});
 		}
 	};
