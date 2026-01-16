@@ -20,6 +20,7 @@ export default function Contact() {
 	//Thông tin liên hệ 
 	const [companyProfile, setCompanyProfile] = useState(null);
 	const [isLoadingCompany, setIsLoadingCompany] = useState(true);
+	const PHONE_REGEX = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
 
 	useEffect(() => {
 		let isMounted = true;
@@ -62,8 +63,12 @@ export default function Contact() {
 			newErrors.full_name = "Vui lòng nhập họ và tên";
 		}
 
-		if (!formData.phone.trim()) {
-			newErrors.phone = "Vui lòng nhập số điện thoại";
+		if (!formData.email.trim()) {
+			newErrors.email = "Vui lòng nhập email";
+		}
+
+		if (formData.phone.trim() && !PHONE_REGEX.test(formData.phone.trim())) {
+			newErrors.phone = "Số điện thoại không hợp lệ";
 		}
 
 		if (!formData.content.trim()) {
@@ -79,7 +84,7 @@ export default function Contact() {
 		e.preventDefault();
 
 		if (!validate()) return;
-
+		
 		setSubmitting(true);
 
 		api.post("/support-requests", formData)
@@ -92,7 +97,7 @@ export default function Contact() {
 					phone: "",
 					content: "",
 				});
-				
+				setSubmitting(false);
 			})
 			.catch(() => {
 				showError("Gửi liên hệ thất bại!", 1500);
@@ -149,19 +154,13 @@ export default function Contact() {
 												value={formData.full_name}
 												onChange={handleChange}
 											/>
-											{errors.full_name && <p className="text-danger">{errors.full_name}</p>}
+											<div className="invalid-feedback d-block ps-2">
+											{errors.full_name }
+											</div>
+
 										</div>
+										
 										<div className='col-md-6'>
-											<input
-												type='email'
-												name="email"
-												className='form-control'
-												placeholder='Email (Nếu có)'
-												value={formData.email}
-												onChange={handleChange}
-											/>
-										</div>
-										<div className='col-md-12'>
 											<input
 												type='text'
 												name="phone"
@@ -169,9 +168,24 @@ export default function Contact() {
 												placeholder='Số điện thoại'
 												value={formData.phone}
 												onChange={handleChange}
-											/>											
+											/>	
+											<div className="invalid-feedback d-block ps-2">
+											{errors.phone }
+											</div>										
 										</div>
-										{errors.phone && <p className="text-danger">{errors.phone}</p>}
+										<div className='col-md-12'>
+											<input
+												type='email'
+												name="email"
+												className='form-control'
+												placeholder='Email '
+												value={formData.email}
+												onChange={handleChange}
+											/>
+											<div className="invalid-feedback d-block ps-2">
+												{errors.email }
+											</div>
+										</div>
 										<div className='col-12'>
 											<textarea
 												className='form-control'
@@ -181,7 +195,9 @@ export default function Contact() {
 												value={formData.content}
 												onChange={handleChange}
 											/>
-											{errors.content && <p className="text-danger">{errors.content}</p>}
+											<div className="invalid-feedback d-block ps-2">
+											{errors.content }
+											</div>
 										</div>
 										<div className='col-12'>
 											<button
@@ -272,7 +288,7 @@ export default function Contact() {
 				autoHideDuration={toast.duration || 3000}
 				onClose={closeToast}
 				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={closeToast} severity={toast.severity} variant='filled'>
+				<Alert onClose={closeToast} severity={toast.severity} variant='oulined'>
 					{toast.message}
 				</Alert>
 			</Snackbar>
