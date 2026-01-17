@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+
 import api from "../services/api";
 
 export default function ShippingPolicy() {
@@ -31,28 +32,20 @@ export default function ShippingPolicy() {
 	const supportHotline = companyProfile?.phone || "Đang cập nhật";
 	const supportEmail = companyProfile?.email || "Đang cập nhật";
 
+
+	const title = "CHÍNH SÁCH VẬN CHUYỂN";
+	const breadcrumbs = [
+		{ label: "Trang chủ", href: "/" },
+		{ label: "Chính sách vận chuyển", active: true },
+	];
+
 	return (
 		<>
 			<Helmet>
-				<title>Chính sách giao hàng - Electro</title>
+				<title>VYNX | {title}</title>
 			</Helmet>
 
-			<div className='container-fluid page-header py-5'>
-				<h1 className='text-center text-white display-6 wow fadeInUp' data-wow-delay='0.1s'>
-					Chính sách giao hàng
-				</h1>
-				<ol
-					className='breadcrumb justify-content-center mb-0 wow fadeInUp'
-					data-wow-delay='0.3s'>
-					<li className='breadcrumb-item'>
-						<a href='/'>Trang chủ</a>
-					</li>
-					<li className='breadcrumb-item'>
-						<a href='/'>Trang</a>
-					</li>
-					<li className='breadcrumb-item active text-white'>Giao hàng</li>
-				</ol>
-			</div>
+			<PageHeader title={title} breadcrumbs={breadcrumbs} />
 
 			<div className='container-fluid py-5'>
 				<div className='container py-5'>
@@ -91,8 +84,8 @@ export default function ShippingPolicy() {
 								<h4 className='mb-3'>Trường hợp giao hàng thất bại</h4>
 								<p className='mb-0'>
 									Nếu không liên hệ được hoặc khách hàng hẹn lại, đơn vị vận
-									chuyển sẽ giao lại tối đa 2 lần. Sau đó đơn sẽ được hoàn về
-									kho và xử lý theo quy định.
+									chuyển sẽ giao lại tối đa 2 lần. Sau đó đơn sẽ được hoàn về kho
+									và xử lý theo quy định.
 								</p>
 							</div>
 						</div>
