@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
+import { API_BASE_URL } from "../../config/api";
 export default function Footer() {
 	const [companyProfile, setCompanyProfile] = useState(null);
 
 	useEffect(() => {
 		let isMounted = true;
 
-		api.get("/configurations")
+		api.get("/configuration")
 			.then((response) => {
 				const configurations = response?.data?.data ?? [];
 				const activeConfig = configurations.find((item) => item.is_active);
@@ -29,6 +30,15 @@ export default function Footer() {
 	const companyAddress = companyProfile?.address || "Đang cập nhật";
 	const companyEmail = companyProfile?.email || "Đang cập nhật";
 	const companyPhone = companyProfile?.phone || "Đang cập nhật";
+	// Xử lý logo 
+	const footerLogoUrl = (() => {
+		const logo = companyProfile?.logo;
+		if (!logo) return "/img/vynx-logo.png";
+		if (/^https?:\/\//i.test(logo) || logo.startsWith("data:")) return logo;
+		const base = API_BASE_URL.replace(/\/api\/?$/, "");
+		if (logo.startsWith("/")) return `${base}${logo}`;
+		return `${base}/${logo}`;
+	})();
 
 	return (
 		<>
@@ -100,7 +110,7 @@ export default function Footer() {
 							<div className='footer-item d-flex flex-column'>
 								<div className='footer-item'>
 									<img
-										src={companyProfile?.logo || "/img/vynx-logo.png"}
+										src={footerLogoUrl}
 										alt='Vynx Logo'
 										className='footer-logo mb-3'
 									/>
