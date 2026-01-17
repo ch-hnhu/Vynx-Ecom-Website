@@ -29,6 +29,7 @@ export default function ConfigurationPage() {
 	const [loading, setLoading] = useState(true);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
 	const [selectedConfig, setSelectedConfig] = useState(null);
+	const [isCreateMode, setIsCreateMode] = useState(false);
 	const [formData, setFormData] = useState({
 		logo: "",
 		name: "",
@@ -65,12 +66,23 @@ export default function ConfigurationPage() {
 	}, []);
 
 	const handleCreate = () => {
-		console.log("Create configuration");
-		alert("Tạo cấu hình mới");
+		setSelectedConfig(null);
+		setIsCreateMode(true);
+		setFormData({
+			logo: "",
+			name: "",
+			email: "",
+			phone: "",
+			address: "",
+			is_active: false,
+		});
+		setErrors({});
+		setOpenEditDialog(true);
 	};
 
 	const handleEdit = (row) => {
 		setSelectedConfig(row);
+		setIsCreateMode(false);
 		setFormData({
 			logo: row.logo || "",
 			name: row.name || "",
@@ -133,7 +145,7 @@ export default function ConfigurationPage() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (!validate() || !selectedConfig) return;
+		if (!validate()) return;
 
 		setSubmitting(true);
 		const payload = {
@@ -145,22 +157,31 @@ export default function ConfigurationPage() {
 			is_active: !!formData.is_active,
 		};
 
-		api.put(`/configuration/${selectedConfig.id}`, payload)
+		const request = isCreateMode
+			? api.post("/configuration", payload)
+			: api.put(`/configuration/${selectedConfig?.id}`, payload);
+
+		request
 			.then((response) => {
 				const updated = response?.data?.data ?? payload;
-				showSuccess("Cập nhật cấu hình thành công!");
-				setConfigurations((prev) =>
-					prev.map((item) =>
-						item.id === selectedConfig.id ? { ...item, ...updated } : item
-					)
-				);
+				if (isCreateMode) {
+					showSuccess("Tạo cấu hình thành công!");
+					setConfigurations((prev) => [updated, ...prev]);
+				} else {
+					showSuccess("Cập nhật cấu hình thành công!");
+					setConfigurations((prev) =>
+						prev.map((item) =>
+							item.id === selectedConfig.id ? { ...item, ...updated } : item
+						)
+					);
+				}
 				setTimeout(() => {
 					handleCloseEdit();
 				}, 1000);
 			})
 			.catch((error) => {
-				console.error("Error updating configuration:", error);
-				showError("Cập nhật cấu hình thất bại!");
+				console.error("Error saving configuration:", error);
+				showError(isCreateMode ? "Tạo cấu hình thất bại!" : "Cập nhật cấu hình thất bại!");
 				setSubmitting(false);
 			});
 	};
@@ -168,6 +189,7 @@ export default function ConfigurationPage() {
 	const handleCloseEdit = () => {
 		setOpenEditDialog(false);
 		setSelectedConfig(null);
+		setIsCreateMode(false);
 		setFormData({
 			logo: "",
 			name: "",
@@ -269,7 +291,7 @@ export default function ConfigurationPage() {
 				<DialogTitle>
 					<Box display='flex' alignItems='center' justifyContent='space-between'>
 						<Typography variant='h6' component='div'>
-							CẬP NHẬT CẤU HÌNH
+							{isCreateMode ? "THÊM CẤU HÌNH" : "CẬP NHẬT CẤU HÌNH"}
 						</Typography>
 						<IconButton edge='end' color='inherit' onClick={handleCloseEdit}>
 							<CloseIcon />
@@ -355,7 +377,7 @@ export default function ConfigurationPage() {
 							backgroundColor: "#234C6A",
 							"&:hover": { backgroundColor: "#1B3C53" },
 						}}>
-						{submitting ? "Đang lưu..." : "Cập nhật"}
+						{submitting ? "Đang lưu..." : isCreateMode ? "Tạo mới" : "Cập nhật"}
 					</Button>
 				</DialogActions>
 			</Dialog>
