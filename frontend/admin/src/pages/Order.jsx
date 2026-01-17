@@ -7,6 +7,10 @@ import { formatCurrency, formatDate } from "@shared/utils/formatHelper.jsx";
 import { renderChip } from "@shared/utils/renderHelper.jsx";
 import { useToast } from "@shared/hooks/useToast";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditOrder from "./EditOrder.jsx";
+import OrderDetails from "./OrderDetails.jsx";
 
 export default function OrderPage() {
 	const [orders, setOrders] = useState([]);
@@ -30,6 +34,47 @@ export default function OrderPage() {
 	const handleCreate = () => {
 		console.log("Create order");
 		showInfo("Tạo đơn hàng mới");
+	};
+
+	const handleEdit = (order) => {
+		setSelectedOrder(order);
+		setOpenEditDialog(true);
+	};
+
+	const handleCloseEdit = () => {
+		setOpenEditDialog(false);
+		setSelectedOrder(null);
+	};
+
+	const handleView = (order) => {
+		setSelectedOrder(order);
+		setOpenViewDialog(true);
+	};
+
+	const handleCloseView = () => {
+		setOpenViewDialog(false);
+		setSelectedOrder(null);
+	};
+
+	const handleDelete = (order) => {
+		if (!order) {
+			return;
+		}
+		if (window.confirm(`Bạn có chắc chắn muốn xoá đơn hàng: "${order.id}"?`)) {
+			api.delete(`/orders/${order.id}`)
+				.then((res) => {
+					if (res.data.success) {
+						showSuccess("Xoá đơn hàng thành công!");
+						fetchOrders();
+					} else {
+						showError("Xoá đơn hàng thất bại!");
+					}
+				})
+				.catch((error) => {
+					console.error("Error deleting order: ", error);
+					showError("Xoá đơn hàng thất bại!");
+				});
+		}
 	};
 
 	const processRowUpdate = async (newRow, oldRow) => {
@@ -144,19 +189,37 @@ export default function OrderPage() {
 		},
 		{
 			field: "actions",
-			headerName: "Hành động",
-			width: 120,
+			headerName: "Thao tác",
+			width: 300,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => (
-				<Button
-					variant='outlined'
-					color='primary'
-					size='small'
-					startIcon={<VisibilityIcon />}
-					href={`/orders/${params.row.id}`}>
-					Xem
-				</Button>
+				<Box sx={{ display: "flex", gap: 1, alignItems: "center", height: "100%" }}>
+					<Button
+						variant='outlined'
+						color='primary'
+						size='small'
+						startIcon={<EditIcon />}
+						onClick={() => handleEdit(params.row)}>
+						Cập nhật
+					</Button>
+					<Button
+						variant='outlined'
+						color='info'
+						size='small'
+						startIcon={<VisibilityIcon />}
+						onClick={() => handleView(params.row)}>
+						Xem
+					</Button>
+					<Button
+						variant='outlined'
+						color='error'
+						size='small'
+						startIcon={<DeleteIcon />}
+						onClick={() => handleDelete(params.row)}>
+						Xóa
+					</Button>
+				</Box>
 			),
 		},
 	];

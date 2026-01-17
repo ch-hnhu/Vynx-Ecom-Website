@@ -4,7 +4,7 @@ import { Snackbar, Alert } from "@mui/material";
 import api from "../services/api";
 import { buildGoogleMapEmbedUrl } from "@shared/utils/mapHelper";
 import { useToast } from "@shared/hooks/useToast";
-
+import PageHeader from "../components/Partial/PageHeader";
 export default function Contact() {
 	const [formData, setFormData] = useState({
 		full_name: "",
@@ -24,7 +24,7 @@ export default function Contact() {
 
 	useEffect(() => {
 		let isMounted = true;
-		api.get("/configurations")
+		api.get("/configuration")
 			.then((response) => {
 				const configurations = response?.data?.data ?? [];
 				const activeConfig = configurations.find((item) => item.is_active);
@@ -109,29 +109,19 @@ export default function Contact() {
 		
 	};
 
+	const title = "LIÊN HỆ";
+	const breadcrumbs = [
+		{ label: "Trang chủ", href: "/" },
+		{ label: "Liên hệ", active: true },
+	];
 
 	return (
 		<>
 			<Helmet>
-				<title>Liên hệ chúng tôi - Electro</title>
+				<title>VYNX | {title}</title>
 			</Helmet>
 
-			<div className='container-fluid page-header py-5'>
-				<h1 className='text-center text-white display-6 wow fadeInUp' data-wow-delay='0.1s'>
-					Liên hệ chúng tôi
-				</h1>
-				<ol
-					className='breadcrumb justify-content-center mb-0 wow fadeInUp'
-					data-wow-delay='0.3s'>
-					<li className='breadcrumb-item'>
-						<a href='/Home'>Trang chủ</a>
-					</li>
-					<li className='breadcrumb-item'>
-						<a href='/'>Trang</a>
-					</li>
-					<li className='breadcrumb-item active text-white'>Liên hệ</li>
-				</ol>
-			</div>
+			<PageHeader title={title} breadcrumbs={breadcrumbs} />
 
 			<div className='container-fluid py-5'>
 				<div className='container py-5'>
@@ -140,8 +130,8 @@ export default function Contact() {
 							<div className='bg-light rounded p-4 p-lg-5'>
 								<h2 className='mb-3'>Gửi liên hệ</h2>
 								<p className='text-muted mb-4'>
-									Chúng tôi phản hồi trong giờ làm việc. Vui lòng mô tả rõ vấn
-									đề để được hỗ trợ nhanh nhất.
+									Chúng tôi phản hồi trong giờ làm việc. Vui lòng mô tả rõ vấn đề
+									để được hỗ trợ nhanh nhất.
 								</p>
 								<form onSubmit={handleSubmit}>
 									<div className='row g-3'>
@@ -275,8 +265,8 @@ export default function Contact() {
 							<div className='bg-light rounded p-4 h-100'>
 								<h5 className='mb-3'>Hợp tác &amp; báo giá</h5>
 								<p className='mb-0'>
-									Gửi thông tin doanh nghiệp để nhận chính sách giá và ưu đãi
-									hợp tác.
+									Gửi thông tin doanh nghiệp để nhận chính sách giá và ưu đãi hợp
+									tác.
 								</p>
 							</div>
 						</div>
@@ -288,7 +278,7 @@ export default function Contact() {
 				autoHideDuration={toast.duration || 3000}
 				onClose={closeToast}
 				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={closeToast} severity={toast.severity} variant='oulined'>
+				<Alert onClose={closeToast} severity={toast.severity} variant='outlined'>
 					{toast.message}
 				</Alert>
 			</Snackbar>

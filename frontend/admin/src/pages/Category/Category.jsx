@@ -46,12 +46,12 @@ export default function CategoryPage() {
 		if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này?")) {
 			api.delete(`/categories/${id}`)
 				.then(() => {
-					alert("Xóa thành công!");
-					setCategories(categories.filter((category) => category.id !== id));
+					showSuccess("Xóa danh mục thành công!");
+					fetchCategories();
 				})
 				.catch((error) => {
-					console.error("Error deleting category:", error);
-					alert("Xóa thất bại!");
+					console.error("Error deleting category: ", error);
+					showError("Xóa danh mục thất bại. Vui lòng thử lại.");
 				});
 		}
 	};

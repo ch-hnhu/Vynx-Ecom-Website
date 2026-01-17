@@ -26,7 +26,7 @@ import api from "../../services/api";
 import { useToast } from "@shared/hooks/useToast";
 import { formatSlug } from "../../../../shared/utils/formatHelper";
 
-export default function AddProduct({ open, onClose, categories, brands, promotions }) {
+export default function AddProduct({ open, onClose, onSuccess, categories, brands, promotions }) {
 	const [formData, setFormData] = useState({
 		name: "",
 		price: "",
@@ -173,13 +173,15 @@ export default function AddProduct({ open, onClose, categories, brands, promotio
 				formDataToSend.append("gallery_images[]", image);
 			});
 
-			api.post("/products/store", formDataToSend, {
+			api.post("/products", formDataToSend, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
 			})
 				.then(() => {
 					showSuccess("Thêm sản phẩm thành công!");
+					// Gọi callback để refetch data
+					onSuccess?.();
 					// Delay close để toast kịp hiển thị
 					setTimeout(() => {
 						handleClose();
@@ -218,6 +220,7 @@ export default function AddProduct({ open, onClose, categories, brands, promotio
 		setGalleryPreviews([]);
 		setErrors({});
 		setSubmitting(false);
+		closeToast(); // Reset toast state
 		onClose();
 	};
 
@@ -274,7 +277,7 @@ export default function AddProduct({ open, onClose, categories, brands, promotio
 						</Box>
 
 						<Grid container spacing={2}>
-							<Grid size={6}>
+							<Grid size={5}>
 								{/* Hero Image */}
 								<Typography variant='body2' color='text.secondary' gutterBottom>
 									Hình ảnh chính (Hero Image) *
@@ -282,7 +285,7 @@ export default function AddProduct({ open, onClose, categories, brands, promotio
 								<Box
 									sx={{
 										width: "100%",
-										paddingTop: "75%", // 4:3 aspect ratio
+										paddingTop: "100%", // 1:1 aspect ratio
 										position: "relative",
 										border: "3px dashed",
 										borderColor: "divider",
@@ -350,14 +353,14 @@ export default function AddProduct({ open, onClose, categories, brands, promotio
 												color='text.secondary'
 												mt={1}
 												display='block'>
-												JPG, PNG, WEBP (4:3 recommended)
+												JPG, PNG, WEBP (1:1 recommended)
 											</Typography>
 										</Box>
 									)}
 								</Box>
 							</Grid>
 
-							<Grid size={6}>
+							<Grid size={7}>
 								{/* Gallery Images */}
 								<Typography variant='body2' color='text.secondary' gutterBottom>
 									Hình ảnh phụ (Gallery Images)
