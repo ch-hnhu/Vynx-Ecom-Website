@@ -1,6 +1,36 @@
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import api from "../services/api";
 
 export default function ShippingPolicy() {
+	const [companyProfile, setCompanyProfile] = useState(null);
+
+	useEffect(() => {
+		let isMounted = true;
+
+		api.get("/configurations")
+			.then((response) => {
+				const configurations = response?.data?.data ?? [];
+				const activeConfig = configurations.find((item) => item.is_active);
+
+				if (isMounted) {
+					setCompanyProfile(activeConfig || null);
+				}
+			})
+			.catch(() => {
+				if (isMounted) {
+					setCompanyProfile(null);
+				}
+			});
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
+
+	const supportHotline = companyProfile?.phone || "Đang cập nhật";
+	const supportEmail = companyProfile?.email || "Đang cập nhật";
+
 	return (
 		<>
 			<Helmet>
@@ -70,8 +100,8 @@ export default function ShippingPolicy() {
 						<div className='col-lg-4'>
 							<div className='bg-white rounded p-4 border mb-4'>
 								<h5 className='mb-3'>Hỗ trợ giao hàng</h5>
-								<p className='mb-2'>Hotline: (+012) 3456 7890</p>
-								<p className='mb-0'>Email: shipping@electro.com</p>
+								<p className='mb-2'>Hotline: {supportHotline}</p>
+								<p className='mb-0'>Email: {supportEmail}</p>
 							</div>
 
 							<div className='bg-white rounded p-4 border mb-4'>
