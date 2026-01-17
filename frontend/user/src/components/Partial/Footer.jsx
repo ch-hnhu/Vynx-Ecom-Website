@@ -99,6 +99,11 @@ export default function Footer() {
 						<div className='col-md-6 col-lg-6 col-xl-3'>
 							<div className='footer-item d-flex flex-column'>
 								<div className='footer-item'>
+									<img
+										src={companyProfile?.logo || "/img/vynx-logo.png"}
+										alt='Vynx Logo'
+										className='footer-logo mb-3'
+									/>
 									<h4 className='text-primary mb-4'>Bảng tin</h4>
 
 									<p className='mb-3'>

@@ -134,6 +134,15 @@ a.text-primary:focus {
 	color: #e3e3e3 !important;
 }
 
+.footer-logo {
+	max-width: 180px;
+	height: auto;
+	display: block;
+	background-color: #ffffff;
+	padding: 8px 12px;
+	border-radius: 6px;
+}
+
 /* Copyright section */
 .copyright {
 	background-color: #234c6a !important;
