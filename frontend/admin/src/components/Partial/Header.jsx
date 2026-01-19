@@ -244,8 +244,8 @@ export default function Header() {
 									/>
 									<span className='d-none d-md-inline'>{user.full_name}</span>
 								</a>
-								<ul className='dropdown-menu dropdown-menu-lg dropdown-menu-end'>
-									<li className='user-header text-bg-primary'>
+								<ul className='dropdown-menu dropdown-menu-lg dropdown-menu-end admin-user-menu'>
+									<li className='user-header admin-user-header'>
 										<img
 											src={getAvatarSrc()}
 											className='rounded-circle shadow'
