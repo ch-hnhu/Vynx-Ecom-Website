@@ -59,7 +59,7 @@ const theme = createTheme({
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -69,14 +69,14 @@ export default function Login() {
     setError(null);
     setLoading(true);
 
-    if (!email || !password) {
-      setError("Vui lòng điền đầy đủ email và mật khẩu.");
+    if (!username || !password) {
+      setError("Vui lòng điền đầy đủ tên đăng nhập và mật khẩu.");
       setLoading(false);
       return;
     }
 
     try {
-      const { user, token } = await login(email, password);
+      const { user, token } = await login(username, password);
 
       // Trigger storage event để cập nhật Header
       window.dispatchEvent(new Event("storage"));
@@ -94,8 +94,8 @@ export default function Login() {
       }
     } catch (err) {
       console.error("Login error:", err);
-      if (err.response?.data?.errors?.email) {
-        setError(err.response.data.errors.email[0]);
+      if (err.response?.data?.errors?.username) {
+        setError(err.response.data.errors.username[0]);
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
@@ -154,10 +154,10 @@ export default function Login() {
             {error && <Alert severity="error">{error}</Alert>}
 
             <TextField
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Tên đăng nhập"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               fullWidth
             />

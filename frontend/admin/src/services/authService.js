@@ -12,7 +12,7 @@ export const register = async (
   password,
   password_confirmation,
   full_name,
-  phone = null
+  phone = null,
 ) => {
   try {
     const response = await api.post("/register", {
@@ -42,10 +42,10 @@ export const register = async (
 /**
  * Đăng nhập người dùng
  */
-export const login = async (email, password) => {
+export const login = async (username, password) => {
   try {
     const response = await api.post("/login", {
-      email,
+      username,
       password,
     });
 
@@ -137,4 +137,3 @@ export const getCurrentUser = async () => {
 
 // Khởi tạo auth khi import module
 initAuth();
-

@@ -8,8 +8,10 @@ import {
   Alert,
   ThemeProvider,
   createTheme,
+  Snackbar,
 } from "@mui/material";
 import { register } from "../services/authService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 const theme = createTheme({
   palette: {
@@ -67,6 +69,7 @@ export default function Signup() {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { toast, showSuccess, closeToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,23 +102,26 @@ export default function Signup() {
         password,
         confirmPassword,
         fullName,
-        phone
+        phone,
       );
 
       // Trigger storage event để cập nhật Header
       window.dispatchEvent(new Event("storage"));
 
-      // Kiểm tra role và chuyển hướng
-      if (user.role === "admin" || user.role === "employee") {
-        // Chuyển đến trang admin (port 5174) với token
-        const userData = encodeURIComponent(JSON.stringify(user));
-        alert("Đăng ký thành công!");
-        window.location.href = `http://localhost:5174/auth-redirect?token=${token}&user=${userData}`;
-      } else {
-        // Customer -> chuyển về trang chủ
-        alert("Đăng ký thành công!");
-        navigate("/");
-      }
+      // Hiển thị thông báo thành công
+      showSuccess("Đăng ký thành công!");
+
+      // Kiểm tra role và chuyển hướng sau 1.5 giây
+      setTimeout(() => {
+        if (user.role === "admin" || user.role === "employee") {
+          // Chuyển đến trang admin (port 5174) với token
+          const userData = encodeURIComponent(JSON.stringify(user));
+          window.location.href = `http://localhost:5174/auth-redirect?token=${token}&user=${userData}`;
+        } else {
+          // Customer -> chuyển về trang chủ
+          navigate("/");
+        }
+      }, 1500);
     } catch (err) {
       console.error("Register error:", err);
 
@@ -269,6 +275,22 @@ export default function Signup() {
             </Box>
           </Box>
         </Box>
+
+        {/* Toast Notification */}
+        <Snackbar
+          open={toast.open}
+          autoHideDuration={3000}
+          onClose={closeToast}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            onClose={closeToast}
+            severity={toast.severity}
+            sx={{ width: "100%" }}
+          >
+            {toast.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </ThemeProvider>
   );

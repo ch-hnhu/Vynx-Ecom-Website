@@ -43,7 +43,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Đăng ký thành công',
+            'message' => 'Dang ky thanh cong',
             'user' => [
                 'id' => $user->id,
                 'username' => $user->username,
@@ -64,22 +64,22 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('username', $request->username)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Email hoặc mật khẩu không chính xác.'],
+                'username' => ['Tên đăng nhập hoặc mật khẩu không chính xác.'],
             ]);
         }
 
         // Kiểm tra tài khoản có active không
         if (!$user->is_active) {
             return response()->json([
-                'message' => 'Tài khoản của bạn đã bị vô hiệu hóa.',
+                'message' => 'Tai khoan cua ban da bi vo hieu hoa.',
             ], 403);
         }
 
@@ -87,7 +87,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Đăng nhập thành công',
+            'message' => 'Dang nhap thanh cong',
             'user' => [
                 'id' => $user->id,
                 'username' => $user->username,
