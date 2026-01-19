@@ -14,11 +14,52 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'message' => 'Goi den api category thanh cong',
-            'data' => Category::with('category')->get(),
-        ]);
+        try {
+            $categories = Category::whereNull('parent_id')
+                ->with('categories')
+                ->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Lay danh sach danh muc thanh cong',
+                'data' => $categories,
+                'error' => null,
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lay danh sach danh muc that bai',
+                'data' => null,
+                'error' => $ex->getMessage(),
+                'timestamp' => now(),
+            ], 500);
+        }
     }
+
+    /**
+     * Build nested tree from flat category array
+     *
+     * @param array $items
+     * @param int|null $parentId
+     * @return array
+     */
+    // private function buildTree(array $items, $parentId = null)
+    // {
+    //     $branch = [];
+
+    //     foreach ($items as $item) {
+    //         $pid = isset($item['parent_id']) ? $item['parent_id'] : null;
+    //         if ($pid == $parentId) {
+    //             $children = $this->buildTree($items, $item['id']);
+    //             if ($children) {
+    //                 $item['children'] = $children;
+    //             }
+    //             $branch[] = $item;
+    //         }
+    //     }
+
+    //     return $branch;
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -33,7 +74,7 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::create($validated);
-        $category->load('category');
+        $category->load('categories');
 
         return response()->json([
             'message' => 'Tao danh muc thanh cong',
