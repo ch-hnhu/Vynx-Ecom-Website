@@ -141,7 +141,20 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         try {
-            $product = Product::with(['category', 'brand', 'promotion'])->where('slug', $slug)->firstOrFail();
+            $product = Product::with(['category', 'brand', 'promotion', 'specifications'])
+                ->where('slug', $slug)
+                ->firstOrFail();
+
+            $specifications = $product->specifications->map(function ($attribute) {
+                return [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                    'value' => $attribute->pivot->value,
+                    'unit' => $attribute->unit,
+                ];
+            });
+            $product->setAttribute('specifications', $specifications);
+            $product->unsetRelation('specifications');
 
             return response()->json([
                 'success' => true,

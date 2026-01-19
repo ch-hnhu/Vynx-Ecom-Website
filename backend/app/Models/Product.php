@@ -96,6 +96,15 @@ class Product extends Model
             ->withTimestamps();
     }
 
+    public function specifications()
+    {
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values')
+            ->where('attributes.attribute_type', 'specification')
+            ->whereNull('product_attribute_values.deleted_at')
+            ->withPivot('value')
+            ->withTimestamps();
+    }
+
     public function product_reviews()
     {
         return $this->hasMany(ProductReview::class);
