@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,20 +12,34 @@ export default function CategoryPage() {
 	const [categories, setCategories] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [openDialog, setOpenDialog] = useState(false);
+	const [rowCount, setRowCount] = useState(0);
+	const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
+
+	const fetchCategories = async (model = paginationModel) => {
+		setLoading(true);
+		try {
+			const res = await api.get("/categories", {
+				params: {
+					flat: 1,
+					paginate: 1,
+					page: model.page + 1, // Laravel paginate là 1-based
+					per_page: model.pageSize,
+				},
+			});
+
+			setCategories(res.data.data || []);
+			setRowCount(res.data.meta?.total ?? 0);
+		} catch (error) {
+			console.error("Error fetching categories: ", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useEffect(() => {
-		setLoading(true);
-		api.get("/categories")
-			.then((response) => {
-				setCategories(response.data.data || []);
-			})
-			.catch((error) => {
-				console.error("Error fetching categories: ", error);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, []);
+		fetchCategories(paginationModel);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [paginationModel.page, paginationModel.pageSize]);
 
 	const handleOpenDialog = () => {
 		setOpenDialog(true);
@@ -46,17 +60,16 @@ export default function CategoryPage() {
 		if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này?")) {
 			api.delete(`/categories/${id}`)
 				.then(() => {
-					showSuccess("Xóa danh mục thành công!");
 					fetchCategories();
 				})
 				.catch((error) => {
 					console.error("Error deleting category: ", error);
-					showError("Xóa danh mục thất bại. Vui lòng thử lại.");
 				});
 		}
 	};
 
-	const columns = [
+	const columns = useMemo(
+		() => [
 		{ field: "id", headerName: "ID", width: 90 },
 		{ field: "name", headerName: "Tên danh mục", width: 200 },
 		{ field: "slug", headerName: "Slug", width: 180 },
@@ -103,7 +116,9 @@ export default function CategoryPage() {
 				);
 			},
 		},
-	];
+	],
+		[]
+	);
 
 	const breadcrumbs = [
 		{ label: "Trang chủ", href: "/" },
@@ -119,6 +134,10 @@ export default function CategoryPage() {
 			title='Quản lý danh mục'
 			breadcrumbs={breadcrumbs}
 			pageSize={25}
+			paginationMode='server'
+			rowCount={rowCount}
+			paginationModel={paginationModel}
+			onPaginationModelChange={setPaginationModel}
 			checkboxSelection={true}
 			actions={
 				<Button

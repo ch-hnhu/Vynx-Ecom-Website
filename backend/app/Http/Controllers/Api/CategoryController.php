@@ -4,22 +4,58 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $categories = Category::whereNull('parent_id')
-                ->with('categories')
-                ->get();
+            $flat = filter_var($request->query('flat', false), FILTER_VALIDATE_BOOLEAN);
+            $paginate = filter_var($request->query('paginate', false), FILTER_VALIDATE_BOOLEAN);
+            $perPage = (int) $request->query('per_page', 10);
+            $perPage = max(1, min($perPage, 200));
+
+            if ($flat) {
+                $query = Category::query()
+                    ->with(['category:id,name,slug'])
+                    ->orderByRaw('COALESCE(parent_id, 0) ASC')
+                    ->orderBy('name');
+
+                if ($paginate) {
+                    $paginator = $query->paginate($perPage);
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Lay danh sach danh muc thanh cong',
+                        'data' => $paginator->items(),
+                        'meta' => [
+                            'current_page' => $paginator->currentPage(),
+                            'per_page' => $paginator->perPage(),
+                            'last_page' => $paginator->lastPage(),
+                            'total' => $paginator->total(),
+                        ],
+                        'error' => null,
+                        'timestamp' => now(),
+                    ]);
+                }
+
+                $categories = $query->get();
+            } else {
+                $categories = Category::whereNull('parent_id')
+                    ->with('childrenRecursive')
+                    ->get();
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Lay danh sach danh muc thanh cong',
                 'data' => $categories,
+                'meta' => null,
                 'error' => null,
                 'timestamp' => now(),
             ]);
@@ -33,31 +69,6 @@ class CategoryController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Build nested tree from flat category array
-     *
-     * @param array $items
-     * @param int|null $parentId
-     * @return array
-     */
-    // private function buildTree(array $items, $parentId = null)
-    // {
-    //     $branch = [];
-
-    //     foreach ($items as $item) {
-    //         $pid = isset($item['parent_id']) ? $item['parent_id'] : null;
-    //         if ($pid == $parentId) {
-    //             $children = $this->buildTree($items, $item['id']);
-    //             if ($children) {
-    //                 $item['children'] = $children;
-    //             }
-    //             $branch[] = $item;
-    //         }
-    //     }
-
-    //     return $branch;
-    // }
 
     /**
      * Store a newly created resource in storage.
