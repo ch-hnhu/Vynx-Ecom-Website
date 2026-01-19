@@ -39,14 +39,6 @@ body {
 	will-change: left;
 }
 
-/* MUI Snackbar: tránh bị header fixed che (toast ở top) */
-.MuiSnackbar-anchorOriginTopLeft,
-.MuiSnackbar-anchorOriginTopCenter,
-.MuiSnackbar-anchorOriginTopRight {
-	top: calc(var(--admin-header-height) + 12px) !important;
-	z-index: 2000;
-}
-
 /* Sidebar fixed + animate */
 .app-sidebar {
 	position: fixed;
@@ -188,6 +180,16 @@ body.sidebar-collapse .app-sidebar {
 .app-header .admin-user-menu .user-body a:hover {
 	background: rgba(69, 104, 130, 0.10);
 	color: rgba(0, 0, 0, 0.82);
+}
+
+.app-header .admin-user-menu .user-footer {
+	background: var(--admin-surface);
+	padding: 0.75rem 0.75rem 0.85rem;
+	border-top: 1px solid var(--admin-border);
+}
+
+.app-header .admin-user-menu .user-footer .btn {
+	border-radius: 10px;
 }
 
 .app-header .admin-user-menu .user-footer {
