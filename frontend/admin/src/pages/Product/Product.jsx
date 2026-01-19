@@ -7,8 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { formatDate, formatCurrency } from "@shared/utils/formatHelper.jsx";
 import AddProduct from "./AddProduct";
-import { getProductImage } from "../../../../shared/utils/productHelpers";
-import { API_BASE_URL } from "../../config/api";
+import { getProductImage } from "../../../../shared/utils/productHelper";
 
 export default function ProductPage() {
 	const [products, setProducts] = useState([]);

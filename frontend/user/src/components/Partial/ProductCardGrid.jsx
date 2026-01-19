@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { getProductImage, getFinalPrice, hasDiscount } from "@shared/utils/productHelper.jsx";
 import { formatCurrency } from "@shared/utils/formatHelper.jsx";
 import { renderRating } from "@shared/utils/renderHelper.jsx";
 
-export default function ProductCardLarge({ product, onAddToCart, onViewDetails }) {
+export default function ProductCardGrid({ product, onAddToCart, onViewDetails }) {
 	const handleAddToCart = (e) => {
 		e.preventDefault();
 		if (onAddToCart) {
@@ -18,7 +19,7 @@ export default function ProductCardLarge({ product, onAddToCart, onViewDetails }
 	};
 
 	return (
-		<div className='col-lg-4'>
+		<div className='col-md-6 col-lg-4 col-xl-3'>
 			<div className='product-item rounded wow fadeInUp' data-wow-delay='0.1s'>
 				<div className='product-item-inner border rounded'>
 					<div className='product-item-inner-item'>
@@ -32,9 +33,9 @@ export default function ProductCardLarge({ product, onAddToCart, onViewDetails }
 						/>
 						{product.is_new && <div className='product-new'>New</div>}
 						<div className='product-details'>
-							<a href='#' onClick={handleViewDetails}>
+							<Link to={`/${product.slug}`} onClick={handleViewDetails}>
 								<i className='fa fa-eye fa-1x'></i>
-							</a>
+							</Link>
 						</div>
 					</div>
 					<div className='text-center rounded-bottom p-4'>
@@ -65,7 +66,6 @@ export default function ProductCardLarge({ product, onAddToCart, onViewDetails }
 						className='btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4'>
 						<i className='fas fa-shopping-cart me-2'></i> Add To Cart
 					</a>
-
 					<div className='d-flex justify-content-between align-items-center'>
 						<div className='d-flex'>{renderRating(product.rating_average || 0)}</div>
 						<div className='d-flex'>
