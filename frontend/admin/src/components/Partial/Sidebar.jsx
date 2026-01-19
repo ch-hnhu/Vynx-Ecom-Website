@@ -51,15 +51,6 @@ export default function Sidebar() {
 			data-bs-theme='dark'
 			style={{
 				background: "linear-gradient(180deg, #1B3C53 0%, #234C6A 100%)",
-				// position: "fixed",
-				// top: 0,
-				// left: 0,
-				// height: "100vh",
-				// overflowY: "auto",
-				// zIndex: 900,
-				// width: "250px",
-				// transition: "transform 0.3s ease",
-				// willChange: "transform",
 			}}>
 			<div
 				className='sidebar-brand'
