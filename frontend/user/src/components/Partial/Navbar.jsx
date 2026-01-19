@@ -4,11 +4,98 @@ import api from "../../services/api";
 export default function Navbar() {
 	const [configuration, setConfiguration] = useState({});
 	const [categories, setCategories] = useState([]);
+	const [phuKienCategories, setPhuKienCategories] = useState([]);
+	const [linhKienCategories, setLinhKienCategories] = useState([]);
+
+	useEffect(() => {
+		api.get("/categories", {
+			params: {
+				parent_slug: "phu-kien",
+			},
+		}).then((res) => {
+			if (res.data.success) {
+				setPhuKienCategories(res.data.data);
+			} else {
+				console.error("Error fetching phu kien categories:", res.data.error);
+			}
+		}).catch((err) => {
+			console.error("Error fetching phu kien categories:", err);
+		});
+	}, []);
+
+	useEffect(() => {
+		api.get("/categories", {
+			params: {
+				parent_slug: "linh-kien-may-tinh",
+			},
+		}).then((res) => {
+			if (res.data.success) {
+				setLinhKienCategories(res.data.data);
+			} else {
+				console.error("Error fetching linh kien categories:", res.data.error);
+			}
+		}).catch((err) => {
+			console.error("Error fetching linh kien categories:", err);
+		});
+	}, []);
+
+	const getChildren = (cat) => {
+		return cat?.children_recursive || [];
+	};
+
+	const renderCategoryTree = (nodes, level = 0) => {
+		if (!nodes || nodes.length === 0) return null;
+
+		return (
+			<ul
+				className={[
+					"vynx-catmenu",
+					`level-${level}`,
+					level === 0 ? "vynx-catmenu-root" : "",
+				]
+					.filter(Boolean)
+					.join(" ")}>
+				{nodes.map((cat) => {
+					const children = getChildren(cat);
+					// Tu cap 2 tro di (level >= 1): an va chi hien khi hover (desktop)
+					const hasChildren = children.length > 0;
+					return (
+						<li
+							key={cat.id}
+							className={[
+								"vynx-catmenu-item",
+								`level-${level}`,
+								hasChildren ? "has-children" : "",
+							]
+								.filter(Boolean)
+								.join(" ")}>
+							<a className='vynx-catmenu-link' href={`/danh-muc/${cat.slug}`}>
+								<span className='vynx-catmenu-text'>{cat.name}</span>
+								{hasChildren ? (
+									<i
+										className='fa fa-angle-right vynx-catmenu-caret'
+										aria-hidden='true'
+									/>
+								) : null}
+							</a>
+
+							{hasChildren ? (
+								<div className='vynx-catmenu-submenu'>
+									{renderCategoryTree(children, level + 1)}
+								</div>
+							) : null}
+						</li>
+					);
+				})}
+			</ul>
+		);
+	};
 
 	useEffect(() => {
 		api.get("/categories")
 			.then((res) => {
 				if (res.data && res.data.data) {
+					console.log(res.data.data);
 					setCategories(res.data.data);
 				}
 			})
@@ -68,40 +155,13 @@ export default function Navbar() {
 										className='collapse navbar-collapse rounded-bottom'
 										id='allCat'>
 										<div className='navbar-nav ms-auto py-0'>
-											<ul className='list-unstyled categories-bars'>
-												{categories && categories.length > 0 ? (
-													categories.map((cat) => (
-														<li key={cat.id}>
-															<div className='categories-bars-item'>
-																<a href={`/danh-muc/${cat.slug}`}>
-																	{cat.name}
-																</a>
-															</div>
-															{cat.categories &&
-																cat.categories.length > 0 && (
-																	<ul className='list-unstyled ms-3'>
-																		{cat.categories.map(
-																			(sub) => (
-																				<li key={sub.id}>
-																					<div className='categories-bars-item'>
-																						<a
-																							href={`/danh-muc/${sub.slug}`}>
-																							{
-																								sub.name
-																							}
-																						</a>
-																					</div>
-																				</li>
-																			)
-																		)}
-																	</ul>
-																)}
-														</li>
-													))
-												) : (
+											{categories && categories.length > 0 ? (
+												renderCategoryTree(categories)
+											) : (
+												<ul className='list-unstyled categories-bars'>
 													<li>Không có danh mục</li>
-												)}
-											</ul>
+												</ul>
+											)}
 										</div>
 									</div>
 								</nav>
@@ -147,11 +207,32 @@ export default function Navbar() {
 													</span>
 												</a>
 												<div className='dropdown-menu m-0'>
-													<a
-														href='bestseller.html'
-														className='dropdown-item'>
-														Tai nghe
-													</a>
+													{phuKienCategories && phuKienCategories.length > 0 ? (
+														renderCategoryTree(phuKienCategories)
+													) : (
+														<ul className='list-unstyled categories-bars'>
+															<li>Không có danh mục</li>
+														</ul>
+													)}
+												</div>
+											</div>
+											<div className='nav-item dropdown'>
+												<a
+													href='/linh-kien-may-tinh'
+													className='nav-link'
+													data-bs-toggle='dropdown'>
+													<span className='dropdown-toggle'>
+														Linh kiện máy tính
+													</span>
+												</a>
+												<div className='dropdown-menu m-0'>
+													{linhKienCategories && linhKienCategories.length > 0 ? (
+														renderCategoryTree(linhKienCategories)
+													) : (
+														<ul className='list-unstyled categories-bars'>
+															<li>Không có danh mục</li>
+														</ul>
+													)}
 												</div>
 											</div>
 
@@ -166,45 +247,13 @@ export default function Navbar() {
 													</span>
 												</a>
 												<div className='dropdown-menu m-0'>
-													<ul className='list-unstyled categories-bars'>
-														{categories && categories.length > 0 ? (
-															categories.map((cat) => (
-																<li key={cat.id}>
-																	<div className='categories-bars-item'>
-																		<a
-																			href={`/danh-muc/${cat.slug}`}>
-																			{cat.name}
-																		</a>
-																	</div>
-																	{cat.categories &&
-																		cat.categories.length >
-																			0 && (
-																			<ul className='list-unstyled ms-3'>
-																				{cat.categories.map(
-																					(sub) => (
-																						<li
-																							key={
-																								sub.id
-																							}>
-																							<div className='categories-bars-item'>
-																								<a
-																									href={`/danh-muc/${sub.slug}`}>
-																									{
-																										sub.name
-																									}
-																								</a>
-																							</div>
-																						</li>
-																					)
-																				)}
-																			</ul>
-																		)}
-																</li>
-															))
-														) : (
+													{categories && categories.length > 0 ? (
+														renderCategoryTree(categories)
+													) : (
+														<ul className='list-unstyled categories-bars'>
 															<li>Không có danh mục</li>
-														)}
-													</ul>
+														</ul>
+													)}
 												</div>
 											</div>
 										</div>
