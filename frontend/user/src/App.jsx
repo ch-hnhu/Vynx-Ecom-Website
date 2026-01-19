@@ -16,7 +16,8 @@ import Faq from "./pages/Faq.jsx";
 import Warranty from "./pages/Warranty.jsx";
 import Terms from "./pages/Terms.jsx";
 import { CartProvider } from "./components/Cart/CartContext.jsx";
-import { HelmetProvider} from "react-helmet-async";
+import { HelmetProvider } from "react-helmet-async";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
 	return (
@@ -29,8 +30,25 @@ export default function App() {
 						<Route index element={<Home />} />
 
 						<Route path='san-pham' element={<Shop />} />
-						<Route path='gio-hang' element={<Cart />} />
-						<Route path='thanh-toan' element={<Checkout />} />
+
+						{/* Protected routes - Cần đăng nhập */}
+						<Route
+							path='gio-hang'
+							element={
+								<ProtectedRoute>
+									<Cart />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='thanh-toan'
+							element={
+								<ProtectedRoute>
+									<Checkout />
+								</ProtectedRoute>
+							}
+						/>
+
 						<Route path='chinh-sach-bao-mat' element={<PrivacyPolicy />} />
 						<Route path='lien-he' element={<Contact />} />
 						<Route path='ve-chung-toi' element={<About />} />
