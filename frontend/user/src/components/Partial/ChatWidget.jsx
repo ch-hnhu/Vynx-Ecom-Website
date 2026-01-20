@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-import api from "../../services/api";
+import { useState } from "react";
 
 export default function ChatWidget() {
 	const [isOpen, setIsOpen] = useState(false);
-	const [configuration, setConfiguration] = useState(null);
 	const [messages, setMessages] = useState([
 		{
 			from: "support",
@@ -12,34 +10,9 @@ export default function ChatWidget() {
 	]);
 	const [draft, setDraft] = useState("");
 
-	useEffect(() => {
-		let isMounted = true;
-
-		api.get("/configuration")
-			.then((response) => {
-				const configurations = response?.data?.data ?? [];
-				const activeConfig =
-					configurations.find((item) => item.is_active) || configurations[0];
-
-				if (isMounted) {
-					setConfiguration(activeConfig || null);
-				}
-			})
-			.catch(() => {
-				if (isMounted) {
-					setConfiguration(null);
-				}
-			});
-
-		return () => {
-			isMounted = false;
-		};
-	}, []);
-
-	const zaloPhone = configuration?.zalo || configuration?.phone || "";
-	const zaloId = String(zaloPhone).replace(/[^\d]/g, "");
-	const zaloLink = zaloId ? `https://zalo.me/${zaloId}` : "https://zalo.me";
-	const zaloLabel = zaloId ? `Zalo ${configuration?.phone || ""}` : "Zalo support";
+	const zaloPhone = "0777365083";
+	const zaloLink = `https://zalo.me/${zaloPhone}`;
+	const zaloLabel = `Zalo ${zaloPhone}`;
 
 	const handleSend = (event) => {
 		event.preventDefault();
@@ -53,14 +26,6 @@ export default function ChatWidget() {
 	return (
 		<div className={`chat-widget ${isOpen ? "is-open" : ""}`}>
 			<div className='chat-actions'>
-				<a
-					className='zalo-toggle'
-					href={zaloLink}
-					target='_blank'
-					rel='noreferrer'
-					aria-label={zaloLabel}>
-					<span className='zalo-icon'>Zalo</span>
-				</a>
 				<button
 					type='button'
 					className='chat-toggle'
@@ -69,6 +34,14 @@ export default function ChatWidget() {
 					<span className='chat-toggle-label'>Chat</span>
 					<i className='fas fa-comments'></i>
 				</button>
+				<a
+					className='zalo-toggle'
+					href={zaloLink}
+					target='_blank'
+					rel='noreferrer'
+					aria-label={zaloLabel}>
+					<span className='zalo-icon'>Zalo</span>
+				</a>
 			</div>
 
 			<div className='chat-panel' role='dialog' aria-label='Live chat'>

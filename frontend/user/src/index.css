@@ -387,6 +387,8 @@ a.text-primary:focus {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	min-width: 120px;
+	height: 44px;
 	padding: 10px 14px;
 	border-radius: 999px;
 	background: #0068ff;
@@ -410,6 +412,9 @@ a.text-primary:focus {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
+	justify-content: center;
+	min-width: 120px;
+	height: 44px;
 	padding: 10px 14px;
 	border: 0;
 	border-radius: 999px;
