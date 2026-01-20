@@ -15,7 +15,7 @@ export const register = async (
   phone = null,
 ) => {
   try {
-    const response = await api.post("/register", {
+    const response = await api.post("/dang-ky", {
       username,
       email,
       password,

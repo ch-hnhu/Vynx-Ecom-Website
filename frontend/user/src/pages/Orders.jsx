@@ -65,7 +65,11 @@ export default function Orders() {
 
     try {
       setLoading(true);
-      await api.post(`/orders/${orderId}/cancel`);
+      // Sử dụng API update (PUT) để cập nhật trạng thái đơn hàng thành 'cancelled'
+      // Endpoint: /api/orders/{id}
+      await api.put(`/orders/${orderId}`, {
+        delivery_status: "cancelled",
+      });
 
       // Hiển thị thông báo thành công
       showSuccess("Hủy đơn hàng thành công!");
@@ -170,9 +174,8 @@ export default function Orders() {
               {ORDER_STATUSES.map((status) => (
                 <li className="nav-item" key={status.key}>
                   <button
-                    className={`nav-link ${
-                      activeStatus === status.key ? "active" : ""
-                    }`}
+                    className={`nav-link ${activeStatus === status.key ? "active" : ""
+                      }`}
                     onClick={() => handleStatusChange(status.key)}
                     style={{
                       border: "none",
