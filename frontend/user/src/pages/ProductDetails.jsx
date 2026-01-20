@@ -15,6 +15,11 @@ export default function ProductDetails() {
 	const [notFound, setNotFound] = useState(false);
 	const [loading, setLoading] = useState(true);
 
+	// Scroll to top when component mounts or slug changes
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}, [slug]);
+
 	useEffect(() => {
 		let isActive = true;
 		setLoading(true);
@@ -33,7 +38,7 @@ export default function ProductDetails() {
 								? item.category_id === currentProduct.category_id
 								: true
 						)
-						.slice(0, 8);
+						.slice(0, 5);
 
 					setProduct(currentProduct);
 					setRelatedProducts(filteredRelated);
