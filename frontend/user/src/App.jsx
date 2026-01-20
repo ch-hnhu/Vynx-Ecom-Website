@@ -66,7 +66,7 @@ export default function App() {
             <Route path="chinh-sach-bao-hanh" element={<Warranty />} />
             <Route path="dieu-khoan" element={<Terms />} />
             <Route path="404" element={<NotFound />} />
-
+            
             <Route path=":slug" element={<ProductDetails />} />
             <Route path="*" element={<NotFound />} />
           </Route>

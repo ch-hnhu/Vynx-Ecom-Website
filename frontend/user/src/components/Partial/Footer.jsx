@@ -213,7 +213,7 @@ export default function Footer() {
 								<a href='/cau-hoi-thuong-gap'>
 									<i className='fas fa-angle-right me-2'></i> Câu hỏi thường gặp
 								</a>
-								<a href='http://localhost:5174/dang-nhap'>
+								<a href='/dang-nhap'>
 									<i className='fas fa-angle-right me-2'></i> Đăng nhập quản trị
 								</a>
 							</div>
