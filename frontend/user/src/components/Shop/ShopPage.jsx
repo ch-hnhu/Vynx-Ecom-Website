@@ -19,7 +19,7 @@ export default function ShopPage() {
 	const [pagination, setPagination] = useState({
 		currentPage: 1,
 		lastPage: 1,
-		perPage: 6,
+		perPage: 2,
 		total: 0,
 	});
 	const [searchTerm, setSearchTerm] = useState("");
