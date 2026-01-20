@@ -15,11 +15,14 @@ import { isAuthenticated } from "../../services/authService";
 import api from "../../services/api";
 import Pagination from "../Partial/Pagination.jsx";
 
+import { useWishlist } from "../Wishlist/WishlistContext.jsx";
+
 export default function SingleProduct({ product }) {
 	const [reviews, setReviews] = useState([]);
 	const [isInWishlist, setIsInWishlist] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { addToCart } = useCart();
+	const { updateWishlistCount } = useWishlist();
 	const { toast, showSuccess, showError, closeToast } = useToast();
 	const [quantity, setQuantity] = useState(1);
 	const images = useMemo(() => getAllProductImages(product?.image_url), [product?.image_url]);
@@ -91,6 +94,7 @@ export default function SingleProduct({ product }) {
 				.then((response) => {
 					setIsInWishlist(false);
 					showSuccess("Đã xóa khỏi danh sách yêu thích");
+					updateWishlistCount();
 				})
 				.catch((error) => {
 					console.error("Error removing from wishlist:", error);
@@ -102,6 +106,7 @@ export default function SingleProduct({ product }) {
 				.then((response) => {
 					setIsInWishlist(true);
 					showSuccess("Đã thêm vào danh sách yêu thích");
+					updateWishlistCount();
 				})
 				.catch((error) => {
 					console.error("Error adding to wishlist:", error);
