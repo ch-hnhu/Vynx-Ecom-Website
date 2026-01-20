@@ -34,7 +34,7 @@ export default function Orders() {
     try {
       setLoading(true);
       const response = await api.get(`/orders?status=${status}`);
-      setOrders(response.data.orders || []);
+      setOrders(response.data.data || []);
     } catch (err) {
       console.error("Error fetching orders:", err);
       showError("Không thể tải danh sách đơn hàng");
