@@ -244,4 +244,96 @@ class ProductController extends Controller
             ]);
         }
     }
+
+    /**
+     * Display a listing of trashed products.
+     */
+    public function trashed(Request $request)
+    {
+        try {
+            $perPage = $request->input('per_page', 25);
+
+            $products = Product::onlyTrashed()
+                ->with(['category', 'brand', 'promotion'])
+                ->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lay danh sach san pham da xoa thanh cong',
+                'data' => $products->items(),
+                'error' => null,
+                'pagination' => [
+                    'total' => $products->total(),
+                    'per_page' => $products->perPage(),
+                    'current_page' => $products->currentPage(),
+                    'last_page' => $products->lastPage(),
+                    'from' => $products->firstItem(),
+                    'to' => $products->lastItem(),
+                ],
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loi khi lay danh sach san pham da xoa',
+                'data' => null,
+                'error' => $e->getMessage(),
+                'timestamp' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * Restore a trashed product.
+     */
+    public function restore(string $id)
+    {
+        try {
+            $product = Product::onlyTrashed()->findOrFail($id);
+            $product->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Khoi phuc san pham thanh cong',
+                'data' => $product,
+                'error' => null,
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loi khi khoi phuc san pham',
+                'data' => null,
+                'error' => $e->getMessage(),
+                'timestamp' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * Permanently delete a trashed product.
+     */
+    public function forceDelete(string $id)
+    {
+        try {
+            $product = Product::onlyTrashed()->findOrFail($id);
+            $product->forceDelete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xoa vinh vien san pham thanh cong',
+                'data' => null,
+                'error' => null,
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loi khi xoa vinh vien san pham',
+                'data' => null,
+                'error' => $e->getMessage(),
+                'timestamp' => now(),
+            ]);
+        }
+    }
 }

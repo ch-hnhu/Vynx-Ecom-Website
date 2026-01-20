@@ -5,6 +5,7 @@ import { Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { formatDate, formatCurrency } from "@shared/utils/formatHelper.jsx";
 import AddProduct from "./AddProduct";
 import { getProductImage } from "../../../../shared/utils/productHelper";
@@ -12,10 +13,13 @@ import EditProduct from "./EditProduct";
 import { useToast } from "@shared/hooks/useToast";
 import { Snackbar, Alert } from "@mui/material";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
+import { useNavigate } from "react-router-dom";
+import PageTransition from "../../components/PageTransition";
 
 export default function ProductPage() {
 	const title = "VYNX ADMIN | QUẢN LÝ SẢN PHẨM";
 	useDocumentTitle(title);
+	const navigate = useNavigate();
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -90,6 +94,10 @@ export default function ProductPage() {
 					showError("Xoá sản phẩm thất bại!");
 				});
 		}
+	};
+
+	const handleGoToTrash = () => {
+		navigate("/products/trash");
 	};
 
 	const columns = [
@@ -184,7 +192,7 @@ export default function ProductPage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={products}
@@ -198,16 +206,32 @@ export default function ProductPage() {
 				onPaginationModelChange={setPaginationModel}
 				checkboxSelection={true}
 				actions={
-					<Button
-						variant='contained'
-						startIcon={<AddIcon />}
-						onClick={handleCreate}
-						sx={{
-							backgroundColor: "#234C6A",
-							"&:hover": { backgroundColor: "#1B3C53" },
-						}}>
-						Thêm sản phẩm
-					</Button>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<Button
+							variant='contained'
+							startIcon={<AddIcon />}
+							onClick={handleCreate}
+							sx={{
+								backgroundColor: "#234C6A",
+								"&:hover": { backgroundColor: "#1B3C53" },
+							}}>
+							Thêm sản phẩm
+						</Button>
+						<Button
+							variant='outlined'
+							startIcon={<DeleteSweepIcon />}
+							onClick={handleGoToTrash}
+							sx={{
+								color: "#234C6A",
+								borderColor: "#234C6A",
+								"&:hover": {
+									backgroundColor: "#1B3C53",
+									color: "#ffffff",
+								},
+							}}>
+							Thùng rác
+						</Button>
+					</Box>
 				}
 			/>
 			<AddProduct
@@ -235,6 +259,6 @@ export default function ProductPage() {
 					{toast.message}
 				</Alert>
 			</Snackbar>
-		</>
+		</PageTransition>
 	);
 }
