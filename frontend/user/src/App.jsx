@@ -20,11 +20,13 @@ import Account from "./pages/Account.jsx";
 import { CartProvider } from "./components/Cart/CartContext.jsx";
 import { HelmetProvider } from "react-helmet-async";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 export default function App() {
 	return (
 		<HelmetProvider>
 			<CartProvider>
+				<ScrollToTop />
 				<Routes>
 					<Route path='dang-nhap' element={<Login />} />
 					<Route path='dang-ky' element={<Signup />} />
