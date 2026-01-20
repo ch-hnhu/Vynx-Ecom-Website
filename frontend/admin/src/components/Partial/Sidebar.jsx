@@ -10,8 +10,8 @@ export default function Sidebar() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
-		api.get("/configuration").then((res) => {
-			setConfiguration(res.data.data[0]);
+		api.get("/configuration/active").then((res) => {
+			setConfiguration(res.data.data || {});
 		});
 	}, []);
 
