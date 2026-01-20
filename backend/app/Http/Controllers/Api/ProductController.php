@@ -222,6 +222,8 @@ class ProductController extends Controller
     {
         try {
             $product = Product::with(['category', 'brand', 'promotion', 'specifications'])
+                ->withAvg('product_reviews as rating_average', 'rating')
+                ->withCount('product_reviews as rating_count')
                 ->where('slug', $slug)
                 ->firstOrFail();
 
