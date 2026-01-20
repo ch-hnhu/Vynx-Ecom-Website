@@ -62,7 +62,7 @@ export default function SingleProduct({ product }) {
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText(window.location.href);
-			showSuccess("Đã sao chép đường link sản phẩm");
+			showSuccess("\u0110\u00e3 sao ch\u00e9p \u0111\u01b0\u1eddng link s\u1ea3n ph\u1ea9m");
 		} catch {
 			const tempInput = document.createElement("input");
 			tempInput.value = window.location.href;
@@ -70,7 +70,7 @@ export default function SingleProduct({ product }) {
 			tempInput.select();
 			document.execCommand("copy");
 			document.body.removeChild(tempInput);
-			showSuccess("Đã sao chép đường link sản phẩm");
+			showSuccess("\u0110\u00e3 sao ch\u00e9p \u0111\u01b0\u1eddng link s\u1ea3n ph\u1ea9m");
 		}
 	};
 
