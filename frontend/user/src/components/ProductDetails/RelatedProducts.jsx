@@ -49,7 +49,7 @@ export default function RelatedProducts({ products = [] }) {
 							Sản phẩm liên quan
 						</h4>
 						<p className='wow fadeInUp' data-wow-delay='0.2s'>
-							Khám phá thêm sản phẩm cùng danh mục.
+							Khám phá thêm các sản phẩm cùng danh mục.
 						</p>
 					</div>
 					<div className='related-carousel owl-carousel pt-4'>
@@ -145,7 +145,7 @@ export default function RelatedProducts({ products = [] }) {
 				open={toast.open}
 				autoHideDuration={2500}
 				onClose={closeToast}
-				anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
 				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 					{toast.message}
 				</Alert>
@@ -153,3 +153,4 @@ export default function RelatedProducts({ products = [] }) {
 		</>
 	);
 }
+

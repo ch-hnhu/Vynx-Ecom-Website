@@ -24,7 +24,7 @@ export default function ShopPage() {
 
 	useEffect(() => {
 		setLoading(true);
-		api.get(`/products/paginated?page=${pagination.currentPage}&per_page=${pagination.perPage}`)
+		api.get(`/products?page=${pagination.currentPage}&per_page=${pagination.perPage}`)
 			.then((res) => {
 				setProducts(res.data.data || []);
 				setPagination((prev) => ({
@@ -541,7 +541,7 @@ export default function ShopPage() {
 				open={toast.open}
 				autoHideDuration={2500}
 				onClose={closeToast}
-				anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
 				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 					{toast.message}
 				</Alert>
@@ -549,3 +549,4 @@ export default function ShopPage() {
 		</div>
 	);
 }
+

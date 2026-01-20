@@ -228,6 +228,7 @@ export default function PersonalInfo() {
         autoHideDuration={toast.duration}
         onClose={closeToast}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={closeToast}

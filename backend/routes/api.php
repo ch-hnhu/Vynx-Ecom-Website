@@ -31,12 +31,15 @@ Route::post('/support-requests', [SupportRequestController::class, 'store']);
 Route::apiResource('support-requests', SupportRequestController::class)->only(['index', 'update', 'destroy']);
 
 // Authentication routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/dang-ky', [AuthController::class, 'register']);
+Route::post('/dang-nhap', [AuthController::class, 'login']);
+
 // Product routes
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
-    Route::get('/paginated', [ProductController::class, 'paginated']);
+    Route::get('/trashed', [ProductController::class, 'trashed']);
+    Route::post('/{id}/restore', [ProductController::class, 'restore']);
+    Route::delete('/{id}/force', [ProductController::class, 'forceDelete']);
     Route::get('/{slug}', [ProductController::class, 'show']);
     Route::post('/', [ProductController::class, 'store']);
     Route::put('/{id}', [ProductController::class, 'update']);

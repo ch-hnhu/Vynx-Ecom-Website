@@ -9,45 +9,107 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource with filtering & sorting.
+     * 
+     * Query Parameters:
+     * - category_id: Filter by category ID
+     * - brand_id: Filter by brand ID
+     * - sort: newest|bestseller|price_asc|price_desc|rating
+     * - featured: 1 (products with promotions)
+     * - min_price: Minimum price
+     * - max_price: Maximum price
+     * - search: Search by name
+     * - per_page: Items per page (default: 9)
      */
-    public function index()
-    {
-        try {
-            $products = Product::with(['category', 'brand', 'promotion'])
-                ->withAvg('product_reviews as rating_average', 'rating')
-                ->withCount('product_reviews as rating_count')
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Lay danh sach san pham thanh cong',
-                'data' => $products,
-                'error' => null,
-                'timestamp' => now(),
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Loi khi lay danh sach san pham',
-                'data' => null,
-                'error' => $th->getMessage(),
-                'timestamp' => now(),
-            ]);
-        }
-    }
-
-    /**
-     * Display a paginated listing of the resource.
-     */
-    public function paginated(Request $request)
+    public function index(Request $request)
     {
         try {
             $perPage = $request->input('per_page', 9);
-            $products = Product::with(['category', 'brand', 'promotion'])
+
+            // query gốc lấy tất cả sản phẩm
+            $query = Product::with(['category', 'brand', 'promotion'])
                 ->withAvg('product_reviews as rating_average', 'rating')
-                ->withCount('product_reviews as rating_count')
-                ->paginate($perPage);
+                ->withCount('product_reviews as rating_count');
+
+            // bắt đầu lọc danh sách sản phẩm đã lấy
+
+            // lọc theo danh mục
+            if ($request->has('category_id')) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            // lọc theo thương hiệu
+            if ($request->has('brand_id')) {
+                $query->where('brand_id', $request->brand_id);
+            }
+
+            // lọc theo khoảng giá
+            if ($request->has('min_price')) {
+                $query->where('price', '>=', $request->min_price);
+            }
+            if ($request->has('max_price')) {
+                $query->where('price', '<=', $request->max_price);
+            }
+
+            // lọc theo sản phẩm có khuyến mãi
+            if ($request->input('featured') == 1) {
+                $query->whereNotNull('promotion_id');
+            }
+
+            // tìm kiếm theo tên
+            if ($request->has('search')) {
+                $query->where('name', 'like', '%' . $request->search . '%');
+            }
+
+            // bắt đầu sắp xếp danh sách sản phẩm
+            $sort = $request->input('sort', 'newest');
+            switch ($sort) {
+                case 'newest':
+                    // sắp xếp theo ngày tạo mới nhất
+                    $query->orderBy('created_at', 'desc');
+                    break;
+
+                case 'oldest':
+                    // sắp xếp theo ngày tạo cũ nhất
+                    $query->orderBy('created_at', 'asc');
+                    break;
+
+                case 'bestseller':
+                    // sắp xếp theo số lượng review nhiều nhất
+                    $query->orderBy('rating_count', 'desc');
+                    break;
+
+                case 'price_asc':
+                    // sắp xếp theo giá tăng dần
+                    $query->orderBy('price', 'asc');
+                    break;
+
+                case 'price_desc':
+                    // sắp xếp theo giá giảm dần
+                    $query->orderBy('price', 'desc');
+                    break;
+
+                case 'rating':
+                    // sắp xếp theo đánh giá cao nhất
+                    $query->orderBy('rating_average', 'desc');
+                    break;
+
+                case 'name_asc':
+                    // sắp xếp theo tên tăng dần
+                    $query->orderBy('name', 'asc');
+                    break;
+
+                case 'name_desc':
+                    // sắp xếp theo tên giảm dần
+                    $query->orderBy('name', 'desc');
+                    break;
+
+                default:
+                    // mặc định sắp xếp theo ngày tạo mới nhất
+                    $query->orderBy('created_at', 'desc');
+            }
+
+            $products = $query->paginate($perPage);
 
             return response()->json([
                 'success' => true,
@@ -62,14 +124,23 @@ class ProductController extends Controller
                     'from' => $products->firstItem(),
                     'to' => $products->lastItem(),
                 ],
+                'filters' => [
+                    'category_id' => $request->input('category_id'),
+                    'brand_id' => $request->input('brand_id'),
+                    'sort' => $sort,
+                    'featured' => $request->input('featured'),
+                    'min_price' => $request->input('min_price'),
+                    'max_price' => $request->input('max_price'),
+                    'search' => $request->input('search'),
+                ],
                 'timestamp' => now(),
             ]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Loi khi lay danh sach san pham',
                 'data' => null,
-                'error' => $th->getMessage(),
+                'error' => $e->getMessage(),
                 'timestamp' => now(),
             ]);
         }
@@ -141,7 +212,20 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         try {
-            $product = Product::with(['category', 'brand', 'promotion'])->where('slug', $slug)->firstOrFail();
+            $product = Product::with(['category', 'brand', 'promotion', 'specifications'])
+                ->where('slug', $slug)
+                ->firstOrFail();
+
+            $specifications = $product->specifications->map(function ($attribute) {
+                return [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                    'value' => $attribute->pivot->value,
+                    'unit' => $attribute->unit,
+                ];
+            });
+            $product->setAttribute('specifications', $specifications);
+            $product->unsetRelation('specifications');
 
             return response()->json([
                 'success' => true,
@@ -264,13 +348,104 @@ class ProductController extends Controller
                 'error' => null,
                 'timestamp' => now(),
             ]);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'Loi khi xoa san pham',
                 'data' => null,
                 'error' => $th->getMessage(),
+                'timestamp' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * Display a listing of trashed products.
+     */
+    public function trashed(Request $request)
+    {
+        try {
+            $perPage = $request->input('per_page', 25);
+
+            $products = Product::onlyTrashed()
+                ->with(['category', 'brand', 'promotion'])
+                ->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lay danh sach san pham da xoa thanh cong',
+                'data' => $products->items(),
+                'error' => null,
+                'pagination' => [
+                    'total' => $products->total(),
+                    'per_page' => $products->perPage(),
+                    'current_page' => $products->currentPage(),
+                    'last_page' => $products->lastPage(),
+                    'from' => $products->firstItem(),
+                    'to' => $products->lastItem(),
+                ],
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loi khi lay danh sach san pham da xoa',
+                'data' => null,
+                'error' => $e->getMessage(),
+                'timestamp' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * Restore a trashed product.
+     */
+    public function restore(string $id)
+    {
+        try {
+            $product = Product::onlyTrashed()->findOrFail($id);
+            $product->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Khoi phuc san pham thanh cong',
+                'data' => $product,
+                'error' => null,
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loi khi khoi phuc san pham',
+                'data' => null,
+                'error' => $e->getMessage(),
+                'timestamp' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * Permanently delete a trashed product.
+     */
+    public function forceDelete(string $id)
+    {
+        try {
+            $product = Product::onlyTrashed()->findOrFail($id);
+            $product->forceDelete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xoa vinh vien san pham thanh cong',
+                'data' => null,
+                'error' => null,
+                'timestamp' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Loi khi xoa vinh vien san pham',
+                'data' => null,
+                'error' => $e->getMessage(),
                 'timestamp' => now(),
             ]);
         }

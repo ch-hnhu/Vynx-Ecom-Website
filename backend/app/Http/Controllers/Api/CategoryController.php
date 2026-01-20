@@ -4,25 +4,86 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $categories = Category::whereNull('parent_id')
-                ->with('categories')
-                ->get();
-            return response()->json([
-                'success' => true,
-                'message' => 'Lay danh sach danh muc thanh cong',
-                'data' => $categories,
-                'error' => null,
-                'timestamp' => now(),
-            ]);
+            $flat = $request->input('flat', false);
+            $perPage = $request->input('per_page', 10);
+            $parent_id = $request->input('parent_id', 0);
+            $parent_slug = $request->input('parent_slug', null);
+
+            if ($parent_slug) {
+                // Danh mục con của danh mục cha theo slug
+                $parent_id = Category::where('slug', $parent_slug)->value('id');
+                if (!$parent_id) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Danh muc cha khong ton tai',
+                        'data' => null,
+                        'error' => null,
+                        'timestamp' => now(),
+                    ], 404);
+                }
+                $categories = Category::where('parent_id', $parent_id)->orderBy('name')->paginate($perPage);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lay danh sach danh muc thanh cong',
+                    'data' => $categories->items(),
+                    'error' => null,
+                    'timestamp' => now(),
+                ]);
+            }
+
+            if ($parent_id) {
+                // Danh mục con của danh mục cha
+                $categories = Category::where('parent_id', $parent_id)->orderBy('name')->paginate($perPage);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lay danh sach danh muc thanh cong',
+                    'data' => $categories->items(),
+                    'error' => null,
+                    'timestamp' => now(),
+                ]);
+            }
+
+            if ($flat) {
+                // Danh mục phẳng kèm phân trang
+                $categories = Category::with('category')->orderBy('name')->paginate($perPage);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lay danh sach danh muc thanh cong',
+                    'data' => $categories->items(),
+                    'error' => null,
+                    'pagination' => [
+                        'total' => $categories->total(),
+                        'per_page' => $categories->perPage(),
+                        'current_page' => $categories->currentPage(),
+                        'last_page' => $categories->lastPage(),
+                        'from' => $categories->firstItem(),
+                        'to' => $categories->lastItem(),
+                    ],
+                    'timestamp' => now(),
+                ]);
+            } else {
+                // Danh mục phân cấp
+                $categories = Category::whereNull('parent_id')->with('childrenRecursive')->get();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lay danh sach danh muc thanh cong',
+                    'data' => $categories,
+                    'error' => null,
+                    'timestamp' => now(),
+                ]);
+            }
         } catch (\Exception $ex) {
             return response()->json([
                 'success' => false,
@@ -33,31 +94,6 @@ class CategoryController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Build nested tree from flat category array
-     *
-     * @param array $items
-     * @param int|null $parentId
-     * @return array
-     */
-    // private function buildTree(array $items, $parentId = null)
-    // {
-    //     $branch = [];
-
-    //     foreach ($items as $item) {
-    //         $pid = isset($item['parent_id']) ? $item['parent_id'] : null;
-    //         if ($pid == $parentId) {
-    //             $children = $this->buildTree($items, $item['id']);
-    //             if ($children) {
-    //                 $item['children'] = $children;
-    //             }
-    //             $branch[] = $item;
-    //         }
-    //     }
-
-    //     return $branch;
-    // }
 
     /**
      * Store a newly created resource in storage.
@@ -72,7 +108,7 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::create($validated);
-        $category->load('categories');
+        $category->load('category');
 
         return response()->json([
             'message' => 'Tao danh muc thanh cong',

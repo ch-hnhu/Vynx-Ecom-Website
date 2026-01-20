@@ -79,7 +79,7 @@ export default function Contact() {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	// Submit form
+	// Gui form
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -278,7 +278,7 @@ export default function Contact() {
 				autoHideDuration={toast.duration || 3000}
 				onClose={closeToast}
 				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={closeToast} severity={toast.severity} variant='outlined'>
+				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 					{toast.message}
 				</Alert>
 			</Snackbar>
