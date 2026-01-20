@@ -56,9 +56,13 @@ class ProductController extends Controller
                 $query->whereNotNull('promotion_id');
             }
 
-            // tìm kiếm theo tên
-            if ($request->has('search')) {
-                $query->where('name', 'like', '%' . $request->search . '%');
+            // tìm kiếm theo tên + mô tả
+            $searchTerm = $request->input('search');
+            if (!empty($searchTerm)) {
+                $query->where(function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                });
             }
 
             // bắt đầu sắp xếp danh sách sản phẩm
