@@ -222,6 +222,8 @@ class ProductController extends Controller
     {
         try {
             $product = Product::with(['category', 'brand', 'promotion', 'specifications'])
+                ->withAvg('product_reviews as rating_average', 'rating')
+                ->withCount('product_reviews as rating_count')
                 ->where('slug', $slug)
                 ->firstOrFail();
 
@@ -235,6 +237,15 @@ class ProductController extends Controller
             });
             $product->setAttribute('specifications', $specifications);
             $product->unsetRelation('specifications');
+
+            // Calculate rating distribution
+            $ratingDistribution = [];
+            for ($i = 5; $i >= 1; $i--) {
+                $ratingDistribution[$i] = $product->product_reviews()
+                    ->where('rating', $i)
+                    ->count();
+            }
+            $product->setAttribute('rating_distribution', $ratingDistribution);
 
             return response()->json([
                 'success' => true,
