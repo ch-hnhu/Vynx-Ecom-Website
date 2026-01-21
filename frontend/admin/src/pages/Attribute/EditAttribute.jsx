@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
 	Dialog,
 	DialogTitle,
@@ -16,14 +16,17 @@ import {
 	Typography,
 	FormControlLabel,
 	Checkbox,
+	Snackbar,
+	Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
 import api from "../../services/api";
+import { useToast } from "@shared/hooks/useToast";
 
 const ATTRIBUTE_TYPES = [
 	{ value: "specification", label: "Thông số" },
-	{ value: "variant", label: "Biến thể" },
+	{ value: "variant", label: "Biển thể" },
 	{ value: "both", label: "Cả hai" },
 ];
 
@@ -43,6 +46,7 @@ export default function EditAttribute({
 	showSuccess,
 	showError,
 }) {
+	const { toast, showSuccess: showLocalSuccess, showError: showLocalError, closeToast } = useToast();
 	const [formData, setFormData] = useState({
 		name: "",
 		attribute_type: "specification",
@@ -122,7 +126,7 @@ export default function EditAttribute({
 		api.put(`/attributes/${attribute.id}`, payload)
 			.then((response) => {
 				const updated = response?.data?.data ?? response?.data;
-				showSuccess?.("Cập nhật thuộc tính thành công!");
+				showLocalSuccess("Cập nhật thuộc tính thành công!");
 				onUpdated?.(updated);
 				setTimeout(() => {
 					handleClose();
@@ -141,11 +145,11 @@ export default function EditAttribute({
 					setErrors((prev) => ({ ...prev, ...nextErrors }));
 					const firstError = Object.values(nextErrors)[0];
 					if (firstError) {
-						showError?.(firstError);
+						showLocalError(firstError);
 					}
 				} else {
 					console.error("Error updating attribute:", error);
-					showError?.("Cập nhật thuộc tính thất bại!");
+					showLocalError("Cập nhật thuộc tính thất bại!");
 				}
 			})
 			.finally(() => {
@@ -163,6 +167,7 @@ export default function EditAttribute({
 		});
 		setErrors({});
 		setSubmitting(false);
+		closeToast();
 		onClose();
 	};
 
@@ -315,6 +320,17 @@ export default function EditAttribute({
 					{submitting ? "Đang lưu..." : "Lưu thay đổi"}
 				</Button>
 			</DialogActions>
+			<Snackbar
+				open={toast.open}
+				autoHideDuration={3000}
+				onClose={closeToast}
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+					{toast.message}
+				</Alert>
+			</Snackbar>
 		</Dialog>
 	);
 }
+
+

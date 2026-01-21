@@ -6,7 +6,8 @@ import Product from "./pages/Product/Product";
 import ProductTrash from "./pages/Product/ProductTrash";
 import AddProduct from "./pages/Product/AddProduct";
 import Order from "./pages/Order/Order";
-import User from "./pages/User";
+import User from "./pages/User/User";
+import UserTrash from "./pages/User/UserTrash";
 import Brand from "./pages/Brand/Brand";
 import BrandTrash from "./pages/Brand/BrandTrash";
 import Category from "./pages/Category/Category";
@@ -15,8 +16,10 @@ import Attribute from "./pages/Attribute/Attribute";
 import AttributeTrash from "./pages/Attribute/AttributeTrash";
 import Promotion from "./pages/Promotion";
 import Configuration from "./pages/Configuration";
-import Review from "./pages/Review";
-import SupportRequest from "./pages/SupportRequest";
+import Review from "./pages/Review/Review";
+import ReviewTrash from "./pages/Review/ReviewTrash";
+import SupportRequest from "./pages/SupportRequest/SupportRequest";
+import SupportRequestTrash from "./pages/SupportRequest/SupportRequestTrash";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AuthRedirect from "./pages/AuthRedirect";
@@ -45,6 +48,7 @@ export default function App() {
         <Route path="san-pham/them" element={<AddProduct />} />
         <Route path="don-hang" element={<Order />} />
         <Route path="nguoi-dung" element={<User />} />
+        <Route path="nguoi-dung/thung-rac" element={<UserTrash />} />
         <Route path="thuong-hieu" element={<Brand />} />
         <Route path="thuong-hieu/thung-rac" element={<BrandTrash />} />
         <Route path="danh-muc" element={<Category />} />
@@ -54,7 +58,9 @@ export default function App() {
         <Route path="khuyen-mai" element={<Promotion />} />
         <Route path="cau-hinh" element={<Configuration />} />
         <Route path="danh-gia" element={<Review />} />
+        <Route path="danh-gia/thung-rac" element={<ReviewTrash />} />
         <Route path="lien-he" element={<SupportRequest />} />
+        <Route path="lien-he/thung-rac" element={<SupportRequestTrash />} />
       </Route>
     </Routes>
   );

@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import PageTransition from "../../components/PageTransition";
 
 export default function ProductTrashPage() {
-	useDocumentTitle("VYNX ADMIN | THUNG RAC SAN PHAM");
+	useDocumentTitle("VYNX ADMIN | THÙNG RÁC SẢN PHẨM");
 	const navigate = useNavigate();
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -35,12 +35,12 @@ export default function ProductTrashPage() {
 					setProducts(res.data.data || []);
 					setRowCount(res.data.pagination?.total ?? 0);
 				} else {
-					showError("Khong the tai danh sach san pham da xoa");
+					showError("Không thể tải danh sách sản phẩm đã xóa");
 				}
 			})
 			.catch((error) => {
-				console.error("Error fetching trashed san-pham: ", error);
-				showError("Loi khi tai danh sach san pham da xoa");
+				console.error("Error fetching trashed products: ", error);
+				showError("Lỗi khi tải danh sách sản phẩm đã xóa");
 			})
 			.finally(() => {
 				setLoading(false);
@@ -54,19 +54,19 @@ export default function ProductTrashPage() {
 	const handleRestore = (product) => {
 		if (!product) return;
 
-		if (window.confirm(`Ban co chac chan muon khoi phuc san pham: "${product.name}"?`)) {
+		if (window.confirm(`Bạn có chắc chắn muốn khôi phục sản phẩm: "${product.name}"?`)) {
 			api.post(`/products/${product.id}/restore`)
 				.then((res) => {
 					if (res.data.success) {
-						showSuccess("Khoi phuc san pham thanh cong!");
+						showSuccess("Khôi phục sản phẩm thành công!");
 						fetchTrashedProducts(paginationModel);
 					} else {
-						showError("Khoi phuc san pham that bai!");
+						showError("Khôi phục sản phẩm thất bại!");
 					}
 				})
 				.catch((error) => {
 					console.error("Error restoring product:", error);
-					showError("Khoi phuc san pham that bai!");
+					showError("Khôi phục sản phẩm thất bại!");
 				});
 		}
 	};
@@ -76,21 +76,21 @@ export default function ProductTrashPage() {
 
 		if (
 			window.confirm(
-				`Ban co chac chan muon xoa vinh vien san pham: "${product.name}"?\n\nHanh dong nay KHONG THE HOAN TAC!`,
+				`Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm: "${product.name}"?\n\nành động này KHÔNG THỂ HOÀN TÁC!`,
 			)
 		) {
 			api.delete(`/products/${product.id}/force`)
 				.then((res) => {
 					if (res.data.success) {
-						showSuccess("Xoa vinh vien san pham thanh cong!");
+						showSuccess("Xóa vĩnh viễn sản phẩm thành công!");
 						fetchTrashedProducts(paginationModel);
 					} else {
-						showError("Xoa vinh vien san pham that bai!");
+						showError("Xóa vĩnh viễn sản phẩm thất bại!");
 					}
 				})
 				.catch((error) => {
 					console.error("Error force deleting product:", error);
-					showError("Xoa vinh vien san pham that bai!");
+					showError("Xóa vĩnh viễn sản phẩm thất bại!");
 				});
 		}
 	};
@@ -101,10 +101,10 @@ export default function ProductTrashPage() {
 
 	const columns = [
 		{ field: "id", headerName: "ID", width: 90 },
-		{ field: "name", headerName: "Ten san pham", width: 300 },
+		{ field: "name", headerName: "Tên sản phẩm", width: 300 },
 		{
 			field: "image_url",
-			headerName: "Hinh anh",
+			headerName: "Hình ảnh",
 			width: 150,
 			renderCell: (params) => {
 				const imageUrl = getProductImage(params.value);
@@ -127,27 +127,27 @@ export default function ProductTrashPage() {
 		},
 		{
 			field: "price",
-			headerName: "Gia",
+			headerName: "Giá",
 			width: 150,
 			type: "number",
 			valueFormatter: (params) => formatCurrency(params),
 		},
-		{ field: "stock_quantity", headerName: "Ton kho", width: 120, type: "number" },
+		{ field: "stock_quantity", headerName: "Tồn kho", width: 120, type: "number" },
 		{
 			field: "category",
-			headerName: "Danh muc",
+			headerName: "Danh mục",
 			width: 180,
 			valueGetter: (params, row) => row.category?.name || "N/A",
 		},
 		{
 			field: "brand",
-			headerName: "Thuong hieu",
+			headerName: "Thương hiệu",
 			width: 180,
 			valueGetter: (params, row) => row.brand?.name || "N/A",
 		},
 		{
 			field: "deleted_at",
-			headerName: "Ngay xoa",
+			headerName: "Ngày xóa",
 			width: 180,
 			valueFormatter: (params) => {
 				return params ? formatDate(params) : "";
@@ -155,7 +155,7 @@ export default function ProductTrashPage() {
 		},
 		{
 			field: "actions",
-			headerName: "Thao tac",
+			headerName: "Thao tác",
 			width: 300,
 			sortable: false,
 			filterable: false,
@@ -168,7 +168,7 @@ export default function ProductTrashPage() {
 							size='small'
 							startIcon={<RestoreIcon />}
 							onClick={() => handleRestore(params.row)}>
-							Khoi phuc
+							Khôi phục
 						</Button>
 						<Button
 							variant='contained'
@@ -176,7 +176,7 @@ export default function ProductTrashPage() {
 							size='small'
 							startIcon={<DeleteForeverIcon />}
 							onClick={() => handleForceDelete(params.row)}>
-							Xoa vinh vien
+							Xóa vĩnh viễn
 						</Button>
 					</Box>
 				);
@@ -213,7 +213,7 @@ export default function ProductTrashPage() {
 							backgroundColor: "#234C6A",
 							"&:hover": { backgroundColor: "#1B3C53" },
 						}}>
-						Quay lai danh sach
+						Quay lại danh sách
 					</Button>
 				}
 			/>

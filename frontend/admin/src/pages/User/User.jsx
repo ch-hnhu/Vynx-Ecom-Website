@@ -1,41 +1,44 @@
 import { useEffect, useState } from "react";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Snackbar, Alert } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import AddIcon from "@mui/icons-material/Add";
 import DataTable from "../../components/Partial/DataTable";
 import api from "../../services/api";
 import { formatDate } from "@shared/utils/formatHelper.jsx";
-import AddIcon from "@mui/icons-material/Add";
-import AddBrand from "./AddBrand.jsx";
-import EditBrand from "./EditBrand.jsx";
-import { useToast } from "@shared/hooks/useToast";
-import { getProductImage } from "@shared/utils/productHelper.jsx";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import { renderChip } from "@shared/utils/renderHelper.jsx";
+import { userStatusColors, getUserStatusName } from "@shared/utils/userHelper.jsx";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@shared/hooks/useToast";
+import AddUser from "./AddUser.jsx";
+import EditUser from "./EditUser.jsx";
+import UserDetails from "./UserDetails.jsx";
 import PageTransition from "../../components/PageTransition";
 
-export default function BrandPage() {
-	useDocumentTitle("VYNX ADMIN | QUẢN LÝ THƯƠNG HIỆU");
+export default function UserPage() {
+	useDocumentTitle("VYNX ADMIN | QUẢN LÝ NGƯỜI DÙNG");
 	const navigate = useNavigate();
+	const { toast, showSuccess, showError, closeToast } = useToast();
 
-	const [brands, setBrands] = useState([]);
+	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [openAddDialog, setOpenAddDialog] = useState(false);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
-	const [selectedBrand, setSelectedBrand] = useState(null);
-	const { toast, showSuccess, showError, closeToast } = useToast();
+	const [openViewDialog, setOpenViewDialog] = useState(false);
+	const [selectedUser, setSelectedUser] = useState(null);
 
-	const fetchBrands = () => {
+	const fetchUsers = () => {
 		setLoading(true);
-		api.get("/brands")
+		api.get("/users")
 			.then((response) => {
-				setBrands(response.data.data || []);
+				setUsers(response.data.data || []);
 			})
 			.catch((error) => {
-				console.error("Error fetching thuong-hieu: ", error);
+				console.error("Error fetching users: ", error);
+				showError("Tải danh sách người dùng thất bại!");
 			})
 			.finally(() => {
 				setLoading(false);
@@ -43,69 +46,55 @@ export default function BrandPage() {
 	};
 
 	useEffect(() => {
-		fetchBrands();
+		fetchUsers();
 	}, []);
 
 	const handleCreate = () => {
 		setOpenAddDialog(true);
 	};
 
-	const handleCreated = () => {
-		fetchBrands();
-	};
-
 	const handleEdit = (row) => {
-		setSelectedBrand(row);
+		setSelectedUser(row);
 		setOpenEditDialog(true);
 	};
 
+	const handleView = (row) => {
+		setSelectedUser(row);
+		setOpenViewDialog(true);
+	};
+
 	const handleDelete = (id) => {
-		console.log("Delete brand:", id);
-		if (window.confirm("Bạn có chắc chắn muốn xóa thương hiệu này?")) {
-			api.delete(`/brands/${id}`)
+		if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
+			api.delete(`/users/${id}`)
 				.then(() => {
-					showSuccess("Xóa thành công!");
-					fetchBrands();
+					showSuccess("Xóa người dùng thành công!");
+					fetchUsers();
 				})
 				.catch((error) => {
-					console.error("Error deleting brand:", error);
-					showError("Xóa thất bại!");
+					console.error("Error deleting user:", error);
+					showError("Xóa người dùng thất bại!");
 				});
 		}
 	};
 
 	const handleGoToTrash = () => {
-		navigate("/thuong-hieu/thung-rac");
+		navigate("/nguoi-dung/thung-rac");
 	};
 
 	const columns = [
 		{ field: "id", headerName: "ID", width: 90 },
+		{ field: "username", headerName: "Username", width: 160 },
+		{ field: "full_name", headerName: "Họ tên", width: 220 },
+		{ field: "email", headerName: "Email", width: 220 },
+		{ field: "phone", headerName: "Số điện thoại", width: 150 },
+		{ field: "role", headerName: "Vai trò", width: 120 },
 		{
-			field: "logo_url",
-			headerName: "Logo",
-			width: 110,
-			sortable: false,
-			renderCell: (params) => {
-				const src = getProductImage(params.row.logo_url);
-				return (
-					<img
-						src={src}
-						alt={params.row.name || "brand-logo"}
-						style={{
-							width: 48,
-							height: 48,
-							objectFit: "contain",
-							borderRadius: 6,
-						}}
-						onError={(e) => {
-							e.target.src = "https://placehold.co/600x400";
-						}}
-					/>
-				);
-			},
+			field: "is_active",
+			headerName: "Trạng thái",
+			width: 130,
+			valueGetter: (value, row) => getUserStatusName(row.is_active),
+			renderCell: (params) => renderChip(params.value, userStatusColors),
 		},
-		{ field: "name", headerName: "Tên thương hiệu", width: 240 },
-		{ field: "description", headerName: "Mô tả", width: 400 },
 		{
 			field: "created_at",
 			headerName: "Ngày tạo",
@@ -117,7 +106,7 @@ export default function BrandPage() {
 		{
 			field: "actions",
 			headerName: "Thao tác",
-			width: 200,
+			width: 240,
 			sortable: false,
 			renderCell: (params) => {
 				return (
@@ -125,6 +114,14 @@ export default function BrandPage() {
 						<Button
 							variant='outlined'
 							color='primary'
+							size='small'
+							startIcon={<VisibilityIcon />}
+							onClick={() => handleView(params.row)}>
+							Xem
+						</Button>
+						<Button
+							variant='outlined'
+							color='info'
 							size='small'
 							startIcon={<EditIcon />}
 							onClick={() => handleEdit(params.row)}>
@@ -146,16 +143,16 @@ export default function BrandPage() {
 
 	const breadcrumbs = [
 		{ label: "Trang chủ", href: "/" },
-		{ label: "Thương hiệu", active: true },
+		{ label: "Người dùng", active: true },
 	];
 
 	return (
 		<PageTransition>
 			<DataTable
 				columns={columns}
-				rows={brands}
+				rows={users}
 				loading={loading}
-				title='Quản lý thương hiệu'
+				title='Quản lý người dùng'
 				breadcrumbs={breadcrumbs}
 				pageSize={25}
 				checkboxSelection={true}
@@ -169,7 +166,7 @@ export default function BrandPage() {
 								backgroundColor: "#234C6A",
 								"&:hover": { backgroundColor: "#1B3C53" },
 							}}>
-							Thêm thương hiệu
+							Thêm người dùng
 						</Button>
 						<Button
 							variant='outlined'
@@ -188,30 +185,39 @@ export default function BrandPage() {
 					</Box>
 				}
 			/>
-			<AddBrand
+
+			<AddUser
 				open={openAddDialog}
 				onClose={() => setOpenAddDialog(false)}
-				onCreated={handleCreated}
+				onCreated={fetchUsers}
 				showSuccess={showSuccess}
 				showError={showError}
 			/>
-			<EditBrand
+			<EditUser
 				open={openEditDialog}
 				onClose={() => {
 					setOpenEditDialog(false);
-					setSelectedBrand(null);
+					setSelectedUser(null);
 				}}
-				brand={selectedBrand}
-				onUpdated={handleCreated}
+				user={selectedUser}
+				onUpdated={fetchUsers}
 				showSuccess={showSuccess}
 				showError={showError}
 			/>
+			<UserDetails
+				open={openViewDialog}
+				onClose={() => {
+					setOpenViewDialog(false);
+					setSelectedUser(null);
+				}}
+				user={selectedUser}
+			/>
+
 			<Snackbar
 				open={toast.open}
 				autoHideDuration={3000}
 				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}
-			>
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
 				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 					{toast.message}
 				</Alert>

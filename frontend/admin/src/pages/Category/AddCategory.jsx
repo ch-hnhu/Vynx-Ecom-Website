@@ -46,13 +46,13 @@ export default function AddCategory({
         if(res.data.success) {
             setCategories(res.data.data || []);
         } else {
-            console.log("Error fetching danh-muc: ", res.data.error);
+            console.log("Error fetching categories: ", res.data.error);
         }
     };
 
     useEffect(() => {
         fetchCategories();
-        console.log("danh-muc: ", categories);
+        console.log("categories: ", categories);
     }, []);
 
 	const handleChange = (e) => {
@@ -70,13 +70,13 @@ export default function AddCategory({
 		const nextErrors = {};
 
 		if (!formData.name.trim()) {
-			nextErrors.name = "Please enter a category name.";
+			nextErrors.name = "Vui lòng nhập tên danh mục.";
 		} else if (formData.name.length > 255) {
-			nextErrors.name = "Name must be 255 characters or less.";
+			nextErrors.name = "Tên danh mục không vượt quá 255 ký tự.";
 		}
 
 		if (formData.description.length > 1000) {
-			nextErrors.description = "Description must be 1000 characters or less.";
+			nextErrors.description = "Mô tả không vượt quá 1000 ký tự.";
 		}
 
 		setErrors(nextErrors);

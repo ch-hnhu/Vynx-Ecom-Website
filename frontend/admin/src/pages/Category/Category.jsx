@@ -14,9 +14,10 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
+import PageTransition from "../../components/PageTransition";
 
 export default function CategoryPage() {
-	useDocumentTitle("VYNX ADMIN | QUAN LY DANH MUC");
+	useDocumentTitle("VYNX ADMIN | QUẢN LÝ DANH MỤC");
 
 	const navigate = useNavigate();
 	const [categories, setCategories] = useState([]);
@@ -145,7 +146,7 @@ export default function CategoryPage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={categories}
@@ -214,6 +215,6 @@ export default function CategoryPage() {
 					{toast.message}
 				</Alert>
 			</Snackbar>
-		</>
+		</PageTransition>
 	);
 }

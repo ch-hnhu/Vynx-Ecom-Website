@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
 	Dialog,
 	DialogTitle,
@@ -14,11 +14,14 @@ import {
 	InputLabel,
 	FormHelperText,
 	Typography,
+	Snackbar,
+	Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
 import api from "../../services/api";
 import { formatSlug } from "../../../../shared/utils/formatHelper";
+import { useToast } from "@shared/hooks/useToast";
 
 export default function EditCategory({
 	open,
@@ -28,6 +31,12 @@ export default function EditCategory({
 	showSuccess,
 	showError,
 }) {
+	const {
+		toast: editToast,
+		showSuccess: showEditSuccess,
+		showError: showEditError,
+		closeToast: closeEditToast,
+	} = useToast();
 	const [formData, setFormData] = useState({
 		name: "",
 		parent_id: "",
@@ -114,7 +123,7 @@ export default function EditCategory({
 		api.put(`/categories/${category.id}`, payload)
 			.then((response) => {
 				const updated = response?.data?.data ?? response?.data;
-				showSuccess?.("Cập nhật thành công!");
+				showEditSuccess("Cập nhật thành công!");
 				onUpdated?.(updated);
 				setTimeout(() => {
 					handleClose();
@@ -133,11 +142,11 @@ export default function EditCategory({
 					setErrors((prev) => ({ ...prev, ...nextErrors }));
 					const firstError = Object.values(nextErrors)[0];
 					if (firstError) {
-						showError?.(firstError);
+						showEditError(firstError);
 					}
 				} else {
 					console.error("Error updating category:", error);
-					showError?.("Cập nhật thất bại!");
+					showEditError("Cập nhật thất bại!");
 				}
 			})
 			.finally(() => {
@@ -151,10 +160,11 @@ export default function EditCategory({
 			parent_id: "",
 			description: "",
 		});
-		setErrors({});
-		setSubmitting(false);
-		onClose();
-	};
+	setErrors({});
+	setSubmitting(false);
+	closeEditToast();
+	onClose();
+};
 
 	const parentOptions = categories?.filter((item) => item.id !== category?.id) || [];
 
@@ -235,7 +245,7 @@ export default function EditCategory({
 								fullWidth
 								multiline
 								rows={4}
-								label="Description"
+								label="Mô tả"
 								name="description"
 								value={formData.description}
 								onChange={handleChange}
@@ -261,7 +271,7 @@ export default function EditCategory({
 						},
 					}}
 				>
-					Cancel
+					Hủy
 				</Button>
 				<Button
 					onClick={handleSubmit}
@@ -275,6 +285,19 @@ export default function EditCategory({
 					{submitting ? "Đang lưu..." : "Lưu danh mục"}
 				</Button>
 			</DialogActions>
-		</Dialog>
+			<Snackbar
+				open={editToast.open}
+				autoHideDuration={3000}
+				onClose={closeEditToast}
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+				<Alert onClose={closeEditToast} severity={editToast.severity} sx={{ width: "100%" }}>
+					{editToast.message}
+				</Alert>
+			</Snackbar>
+</Dialog>
 	);
 }
+
+
+
+

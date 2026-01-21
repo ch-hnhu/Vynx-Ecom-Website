@@ -154,7 +154,7 @@ export default function AddBrand({ open, onClose, onCreated, showSuccess, showEr
 			<DialogTitle>
 				<Box display="flex" alignItems="center" justifyContent="space-between">
 					<Typography variant="h6" component="div">
-						TH?M TH??NG HI?U M?I
+						THÊM THƯƠNG HIỆU MỚI
 					</Typography>
 					<IconButton edge="end" color="inherit" onClick={handleClose} aria-label="close">
 						<CloseIcon />

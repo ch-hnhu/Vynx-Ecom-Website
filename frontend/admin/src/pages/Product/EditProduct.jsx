@@ -160,29 +160,29 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		const nextErrors = {};
 
 		if (!formData.name.trim()) {
-			nextErrors.name = "Vui long nhap ten san pham";
+			nextErrors.name = "Vui lòng nhập tên sản phẩm";
 		} else if (formData.name.length > 255) {
-			nextErrors.name = "Ten san pham khong vuot qua 255 ky tu";
+			nextErrors.name = "Tên sản phẩm không vượt quá 255 ký tự";
 		}
 
 		if (!formData.price) {
-			nextErrors.price = "Vui long nhap gia san pham";
+			nextErrors.price = "Vui lòng nhập giá sản phẩm";
 		} else if (parseFloat(formData.price) <= 0) {
-			nextErrors.price = "Gia phai lon hon 0";
+			nextErrors.price = "Giá phải lớn hơn 0";
 		}
 
 		if (!formData.stock_quantity) {
-			nextErrors.stock_quantity = "Vui long nhap so luong ton kho";
+			nextErrors.stock_quantity = "Vui lòng nhập số lượng tồn kho";
 		} else if (parseInt(formData.stock_quantity) < 0) {
-			nextErrors.stock_quantity = "So luong ton kho khong duoc am";
+			nextErrors.stock_quantity = "Số lượng tồn kho không được âm";
 		}
 
 		if (!formData.category_id) {
-			nextErrors.category_id = "Vui long chon danh muc";
+			nextErrors.category_id = "Vui lòng chọn danh mục";
 		}
 
 		if (!formData.brand_id) {
-			nextErrors.brand_id = "Vui long chon thuong hieu";
+			nextErrors.brand_id = "Vui lòng chọn thương hiệu";
 		}
 
 		setErrors(nextErrors);
@@ -236,7 +236,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 				},
 			})
 				.then(() => {
-					showSuccess("Chinh sua san pham thanh cong!");
+					showSuccess("Chỉnh sửa sản phẩm thành công!");
 					onSuccess?.();
 					setTimeout(() => {
 						handleClose();
@@ -244,14 +244,14 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 				})
 				.catch((error) => {
 					console.error("Error updating product:", error);
-					showError("Chinh sua san pham that bai!");
+					showError("Chỉnh sửa sản phẩm thất bại!");
 					setSubmitting(false);
 				})
 				.finally(() => {
 					setSubmitting(false);
 				});
 		} catch (error) {
-			showError("Loi khi gui bieu mau!");
+			showError("Lỗi khi gửi biểu mẫu!");
 			setSubmitting(false);
 		}
 	};
@@ -281,7 +281,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 			<DialogTitle>
 				<Box display='flex' alignItems='center' justifyContent='space-between'>
 					<Typography variant='h6' component='div'>
-						CHINH SUA SAN PHAM
+						CHỈNH SỬA SẢN PHẨM
 					</Typography>
 					<IconButton edge='end' color='inherit' onClick={handleClose} aria-label='close'>
 						<CloseIcon />
@@ -323,14 +323,14 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 								fontWeight='bold'
 								align='center'
 								sx={{ color: "white", letterSpacing: 1 }}>
-								HINH ANH SAN PHAM
+								HÌNH ẢNH SẢN PHẨM
 							</Typography>
 						</Box>
 
 						<Grid container spacing={2}>
 							<Grid size={5}>
 								<Typography variant='body2' color='text.secondary' gutterBottom>
-									Hinh anh chinh (Hero Image) *
+									Hình ảnh chính (Hero Image) *
 								</Typography>
 								<Box
 									sx={{
@@ -396,7 +396,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 													"&:hover": { backgroundColor: "#1B3C53" },
 												}}
 												startIcon={<CloudUploadIcon />}>
-												Tai anh len
+												Tải ảnh lên
 											</Button>
 											<Typography
 												variant='caption'
@@ -412,7 +412,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 
 							<Grid size={7}>
 								<Typography variant='body2' color='text.secondary' gutterBottom>
-									Hinh anh phu (Gallery Images)
+									Hình ảnh phụ (Gallery Images)
 								</Typography>
 								<Box
 									sx={{
@@ -478,7 +478,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 										width: "100%",
 									}}
 									startIcon={<CloudUploadIcon />}>
-									Tai anh len
+									Tải ảnh lên
 								</Button>
 							</Grid>
 						</Grid>
@@ -498,7 +498,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							fontWeight='bold'
 							align='center'
 							sx={{ color: "white", letterSpacing: 1 }}>
-							THONG TIN SAN PHAM
+							THÔNG TIN SẢN PHẨM
 						</Typography>
 					</Box>
 
@@ -507,12 +507,12 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							<TextField
 								fullWidth
 								required
-								label='Ten san pham'
+								label='Tên sản phẩm'
 								name='name'
 								value={formData.name}
 								onChange={handleChange}
 								error={!!errors.name}
-								helperText={errors.name || `${formData.name.length}/255 ky tu`}
+								helperText={errors.name || `${formData.name.length}/255 ký tự`}
 								inputProps={{ maxLength: 255 }}
 							/>
 						</Grid>
@@ -521,7 +521,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							<TextField
 								fullWidth
 								required
-								label='Gia san pham'
+								label='Giá sản phẩm'
 								name='price'
 								type='number'
 								value={formData.price}
@@ -541,7 +541,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							<TextField
 								fullWidth
 								required
-								label='So luong ton kho'
+								label='Số lượng tồn kho'
 								name='stock_quantity'
 								type='number'
 								value={formData.stock_quantity}
@@ -554,12 +554,12 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 
 						<Grid size={4}>
 							<FormControl fullWidth required error={!!errors.category_id}>
-								<InputLabel>Danh muc</InputLabel>
+								<InputLabel>Danh mục</InputLabel>
 								<Select
 									name='category_id'
 									value={formData.category_id}
 									onChange={handleChange}
-									label='Danh muc'>
+									label='Danh mục'>
 									{categories?.map((category) => (
 										<MenuItem key={category.id} value={category.id}>
 											{category.name}
@@ -574,12 +574,12 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 
 						<Grid size={4}>
 							<FormControl fullWidth required error={!!errors.brand_id}>
-								<InputLabel>Thuong hieu</InputLabel>
+								<InputLabel>Thương hiệu</InputLabel>
 								<Select
 									name='brand_id'
 									value={formData.brand_id}
 									onChange={handleChange}
-									label='Thuong hieu'>
+									label='Thương hiệu'>
 									{brands?.map((brand) => (
 										<MenuItem key={brand.id} value={brand.id}>
 											{brand.name}
@@ -594,14 +594,14 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 
 						<Grid size={4}>
 							<FormControl fullWidth>
-								<InputLabel>Khuyen mai</InputLabel>
+								<InputLabel>Khuyến mãi</InputLabel>
 								<Select
 									name='promotion_id'
 									value={formData.promotion_id}
 									onChange={handleChange}
-									label='Khuyen mai'>
+									label='Khuyến mãi'>
 									<MenuItem value=''>
-										<em>Khong co khuyen mai</em>
+										<em>Không có khuyến mãi</em>
 									</MenuItem>
 									{promotions?.map((promotion) => (
 										<MenuItem key={promotion.id} value={promotion.id}>
@@ -614,7 +614,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 
 						<Grid size={12}>
 							<Typography variant='body2' gutterBottom>
-								Mo ta san pham
+								Mô tả sản phẩm
 							</Typography>
 							<textarea
 								name='description'
@@ -639,7 +639,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							color: "#ffffff",
 						},
 					}}>
-					Huy
+					Hủy
 				</Button>
 				<Button
 					onClick={handleSubmit}

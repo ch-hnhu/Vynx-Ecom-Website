@@ -30,6 +30,11 @@ Route::get('/test', function () {
 });
 Route::post('/support-requests', [SupportRequestController::class, 'store']);
 Route::apiResource('support-requests', SupportRequestController::class)->only(['index', 'update', 'destroy']);
+Route::prefix('support-requests')->group(function () {
+	Route::get('/trashed', [SupportRequestController::class, 'trashed']);
+	Route::post('/{id}/restore', [SupportRequestController::class, 'restore']);
+	Route::delete('/{id}/force', [SupportRequestController::class, 'forceDelete']);
+});
 
 // Authentication routes
 Route::post('/dang-ky', [AuthController::class, 'register']);
@@ -88,12 +93,22 @@ Route::prefix('configuration')->group(function () {
 
 // Resource routes
 Route::apiResource('contacts', SupportRequestController::class)->only(['index', 'destroy']);
-Route::apiResource('users', UserController::class)->only(['index', 'destroy']);
+Route::prefix('users')->group(function () {
+	Route::get('/trashed', [UserController::class, 'trashed']);
+	Route::post('/{id}/restore', [UserController::class, 'restore']);
+	Route::delete('/{id}/force', [UserController::class, 'forceDelete']);
+});
+Route::apiResource('users', UserController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 Route::apiResource('brands', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('attributes', AttributeController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('promotions', PromotionController::class)->only(['index', 'destroy']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
+Route::prefix('reviews')->group(function () {
+	Route::get('/trashed', [ReviewController::class, 'trashed']);
+	Route::post('/{id}/restore', [ReviewController::class, 'restore']);
+	Route::delete('/{id}/force', [ReviewController::class, 'forceDelete']);
+});
 Route::apiResource('slideshows', SlideshowController::class)->only(['index']);
 
 // Protected routes - Require authentication

@@ -14,6 +14,7 @@ import { useToast } from "@shared/hooks/useToast";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import PageTransition from "../../components/PageTransition";
 
 const renderFilterChip = (isFilterable) => {
 	if (isFilterable) {
@@ -139,7 +140,7 @@ export default function AttributePage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={attributes}
@@ -205,6 +206,6 @@ export default function AttributePage() {
 					{toast.message}
 				</Alert>
 			</Snackbar>
-		</>
+		</PageTransition>
 	);
 }
