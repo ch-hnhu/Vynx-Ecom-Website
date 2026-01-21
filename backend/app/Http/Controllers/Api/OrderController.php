@@ -225,4 +225,28 @@ class OrderController extends Controller
 			]);
 		}
 	}
+	public function confirmPayment(string $id)
+	{
+		try {
+			$order = Order::findOrFail($id);
+			$order->update(['payment_status' => 'paid']);
+
+			return response()->json([
+				'success' => true,
+				'message' => 'Cap nhat trang thai thanh toan thanh cong',
+				'data' => $order,
+				'error' => null,
+				'timestamp' => now(),
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Loi khi cap nhat trang thai thanh toan',
+				'data' => null,
+				'error' => $e->getMessage(),
+				'timestamp' => now(),
+			]);
+		}
+	}
+
 }
