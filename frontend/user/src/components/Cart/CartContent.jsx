@@ -250,9 +250,6 @@ export default function CartContent() {
 								Mua hàng
 							</a>
 						</div>
-						<Link to='/thanh-toan' className='btn btn-primary cart-v2-checkout'>
-							Mua hàng
-						</Link>
 					</div>
 				</div>
 			</div>
