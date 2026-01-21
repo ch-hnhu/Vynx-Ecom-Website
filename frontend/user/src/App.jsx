@@ -23,6 +23,7 @@ import { CartProvider } from "./components/Cart/CartContext.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import { HelmetProvider } from "react-helmet-async";
 import { WishlistProvider } from "./components/Wishlist/WishlistContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
 	return (

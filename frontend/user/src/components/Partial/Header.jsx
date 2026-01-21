@@ -4,7 +4,6 @@ import { logout, getUser, isAuthenticated } from "../../services/authService";
 import api from "../../services/api";
 import { useCart } from "../Cart/CartContext.jsx";
 import { formatCurrency } from "@shared/utils/formatHelper.jsx";
-import { useWishlist } from "../Wishlist/WishlistContext.jsx";
 
 export default function Header() {
 	const navigate = useNavigate();
@@ -206,13 +205,8 @@ export default function Header() {
 								<a
 									href='/wishlist'
 									className='text-muted d-flex align-items-center justify-content-center me-3'>
-									<span className='rounded-circle btn-md-square border position-relative'>
+									<span className='rounded-circle btn-md-square border'>
 										<i className='fas fa-heart'></i>
-										{wishlistCount > 0 && (
-											<span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
-												{wishlistCount}
-											</span>
-										)}
 									</span>
 									<span className='text-dark ms-2'>Wishlist</span>
 								</a>
