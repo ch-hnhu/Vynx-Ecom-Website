@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -82,6 +84,8 @@ class OrderController extends Controller
 	public function store(Request $request)
 	{
 		try {
+			DB::beginTransaction();
+
 			$validated = $request->validate([
 				'user_id' => 'nullable|exists:users,id',
 				'address_id' => 'nullable|exists:user_addresses,id',
@@ -95,18 +99,35 @@ class OrderController extends Controller
 				'discount_amount' => 'required|numeric',
 				'shipping_fee' => 'required|numeric',
 				'total_amount' => 'required|numeric',
+				'order_items' => 'required|array|min:1',
+				'order_items.*.product_id' => 'required|exists:products,id',
+				'order_items.*.quantity' => 'required|integer|min:1',
+				'order_items.*.price' => 'required|numeric',
 			]);
 
-			$order = Order::create($validated);
+			$orderData = collect($validated)->except(['order_items'])->toArray();
+			$order = Order::create($orderData);
+
+			foreach ($request->order_items as $item) {
+				OrderItem::create([
+					'order_id' => $order->id,
+					'product_id' => $item['product_id'],
+					'quantity' => $item['quantity'],
+					'price' => $item['price']
+				]);
+			}
+
+			DB::commit();
 
 			return response()->json([
 				'success' => true,
 				'message' => 'Tao don hang thanh cong',
-				'data' => $order,
+				'data' => $order->load('order_items'),
 				'error' => null,
 				'timestamp' => now(),
 			]);
 		} catch (\Exception $e) {
+			DB::rollBack();
 			return response()->json([
 				'success' => false,
 				'message' => 'Loi khi tao don hang',
