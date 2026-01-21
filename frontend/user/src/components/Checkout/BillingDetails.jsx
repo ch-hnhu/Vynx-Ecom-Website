@@ -6,7 +6,7 @@ import { getFinalPrice } from "@shared/utils/productHelper.jsx";
 import { useToast } from "@shared/hooks/useToast.js";
 import api from "../../services/api";
 import { getUser } from "../../services/authService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const DEFAULT_FORM = {
 	shipping_name: "",
@@ -17,9 +17,10 @@ const DEFAULT_FORM = {
 };
 
 export default function BillingDetails() {
-	const { items, subtotal, clearCart } = useCart();
+	const { items, subtotal: cartSubtotal, clearCart, removeFromCart } = useCart();
 	const { toast, showSuccess, showError, closeToast } = useToast();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [formData, setFormData] = useState(DEFAULT_FORM);
 	const [shippingOption, setShippingOption] = useState("standard");
 	const [paymentMethod, setPaymentMethod] = useState("cod");
@@ -28,6 +29,22 @@ export default function BillingDetails() {
 	const [discountCode, setDiscountCode] = useState("");
 	const [discountValue, setDiscountValue] = useState(0);
 	const [promotionId, setPromotionId] = useState(null);
+
+	const selectedIds = location.state?.selectedIds || [];
+
+	const checkoutItems = useMemo(() => {
+		if (selectedIds.length > 0) {
+			return items.filter((item) => selectedIds.includes(item.product.id));
+		}
+		return items;
+	}, [items, selectedIds]);
+
+	const orderSubtotal = useMemo(() => {
+		return checkoutItems.reduce(
+			(sum, item) => sum + getFinalPrice(item.product) * item.quantity,
+			0,
+		);
+	}, [checkoutItems]);
 
 	useEffect(() => {
 		const user = getUser();
@@ -50,9 +67,9 @@ export default function BillingDetails() {
 	}, [shippingOption]);
 
 	const totalAmount = useMemo(() => {
-		const total = subtotal + shippingFee - discountValue;
+		const total = orderSubtotal + shippingFee - discountValue;
 		return total > 0 ? total : 0;
-	}, [subtotal, shippingFee, discountValue]);
+	}, [orderSubtotal, shippingFee, discountValue]);
 
 	const handleApplyCoupon = async () => {
 		if (!discountCode.trim()) {
@@ -66,16 +83,18 @@ export default function BillingDetails() {
 				const promo = res.data.data;
 				let discount = 0;
 				if (promo.discount_type === "percent") {
-					discount = (subtotal * promo.discount_value) / 100;
+					discount = (orderSubtotal * promo.discount_value) / 100;
 				} else {
 					discount = promo.discount_value;
 				}
 
-				if (discount > subtotal) discount = subtotal;
+				if (discount > orderSubtotal) discount = orderSubtotal;
 
 				setDiscountValue(discount);
 				setPromotionId(promo.id);
-				showSuccess(`Áp dụng mã thành công! Giảm ${formatCurrency(discount)}`);
+				showSuccess(
+					`Áp dụng mã thành công! Giảm ${promo.discount_type === "percent" ? promo.discount_value + "%" : formatCurrency(promo.discount_value)} `,
+				);
 			} else {
 				setDiscountValue(0);
 				setPromotionId(null);
@@ -112,8 +131,8 @@ export default function BillingDetails() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (!items.length) {
-			showError("Giỏ hàng đang trống");
+		if (!checkoutItems.length) {
+			showError("Giỏ hàng đang trống hoặc chưa chọn sản phẩm");
 			return;
 		}
 
@@ -121,7 +140,7 @@ export default function BillingDetails() {
 
 		setSubmitting(true);
 
-		const orderItems = items.map((item) => ({
+		const orderItems = checkoutItems.map((item) => ({
 			product_id: item.product.id,
 			quantity: item.quantity,
 			price: getFinalPrice(item.product),
@@ -131,7 +150,7 @@ export default function BillingDetails() {
 		const payload = {
 			...formData,
 			user_id: getUser()?.id || null,
-			subtotal_amount: subtotal,
+			subtotal_amount: orderSubtotal,
 			discount_amount: discountValue,
 			promotion_id: promotionId,
 			shipping_fee: shippingFee,
@@ -152,7 +171,7 @@ export default function BillingDetails() {
 						total_vnpay: totalAmount,
 					});
 					if (vnpayRes.data.code === "00") {
-						clearCart();
+						checkoutItems.forEach((item) => removeFromCart(item.product.id));
 						window.location.href = vnpayRes.data.data;
 					} else {
 						showError("Lỗi tạo link thanh toán VNPAY");
@@ -160,18 +179,20 @@ export default function BillingDetails() {
 					}
 				} else {
 					showSuccess("Đặt hàng thành công!");
-					clearCart();
-					setTimeout(() => {
-						navigate("/thanh-toan-thanh-cong");
-					}, 1000);
+					checkoutItems.forEach((item) => removeFromCart(item.product.id));
+					navigate("/thanh-toan-thanh-cong");
 				}
 			} else {
 				showError(res.data.message || "Đặt hàng thất bại");
 				setSubmitting(false);
 			}
 		} catch (error) {
-			console.error(error);
-			showError("Có lỗi xảy ra khi đặt hàng");
+			console.error("Order submit error:", error);
+			if (error.response && error.response.status === 404) {
+				showError("Lỗi kết nối (404): Không tìm thấy API đặt hàng");
+			} else {
+				showError(error.response?.data?.message || "Có lỗi xảy ra khi đặt hàng");
+			}
 			setSubmitting(false);
 		}
 	};
@@ -267,14 +288,14 @@ export default function BillingDetails() {
 											</tr>
 										</thead>
 										<tbody>
-											{items.length === 0 ? (
+											{checkoutItems.length === 0 ? (
 												<tr className='text-center'>
 													<td colSpan='4' className='py-4 text-muted'>
-														Giỏ hàng đang trống
+														Không có sản phẩm nào được chọn
 													</td>
 												</tr>
 											) : (
-												items.map((item) => {
+												checkoutItems.map((item) => {
 													const price = getFinalPrice(item.product);
 													return (
 														<tr
@@ -309,7 +330,7 @@ export default function BillingDetails() {
 												<td className='py-4'>
 													<div className='py-2 text-center border-bottom border-top'>
 														<p className='mb-0 text-dark'>
-															{formatCurrency(subtotal)}
+															{formatCurrency(orderSubtotal)}
 														</p>
 													</div>
 												</td>

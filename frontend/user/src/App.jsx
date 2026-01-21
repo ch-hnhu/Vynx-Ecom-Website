@@ -33,7 +33,7 @@ export default function App() {
 					<Routes>
 						<Route path='dang-nhap' element={<Login />} />
 						<Route path='dang-ky' element={<Signup />} />
-						<Route path='thanh-toan-thanh-cong' element={<Success />} />
+						<Route path='/thanh-toan-thanh-cong' element={<Success />} />
 						<Route path='/' element={<MainLayout />}>
 							<Route index element={<Home />} />
 
