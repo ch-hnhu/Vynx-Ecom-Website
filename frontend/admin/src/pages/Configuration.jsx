@@ -63,7 +63,7 @@ export default function ConfigurationPage() {
 				setConfigurations(response.data.data || []);
 			})
 			.catch((error) => {
-				console.error("Error fetching configurations: ", error);
+				console.error("Error fetching cau-hinh: ", error);
 				showError("Tải cấu hình thất bại!");
 			})
 			.finally(() => {

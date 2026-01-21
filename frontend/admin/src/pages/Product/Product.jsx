@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import PageTransition from "../../components/PageTransition";
 
 export default function ProductPage() {
-	const title = "VYNX ADMIN | QUẢN LÝ SẢN PHẨM";
+	const title = "VYNX ADMIN | QUAN LY SAN PHAM";
 	useDocumentTitle(title);
 	const navigate = useNavigate();
 	const [products, setProducts] = useState([]);
@@ -31,7 +31,6 @@ export default function ProductPage() {
 	const [rowCount, setRowCount] = useState(0);
 	const { toast, showSuccess, showError, closeToast } = useToast();
 
-	// Fetch products function
 	const fetchProducts = (model = paginationModel) => {
 		setLoading(true);
 		Promise.all([
@@ -81,33 +80,33 @@ export default function ProductPage() {
 		if (!product) {
 			return;
 		}
-		if (window.confirm(`Bạn có chắc chắn muốn xoá sản phẩm: "${product.name}"?`)) {
+		if (window.confirm(`Ban co chac chan muon xoa san pham: "${product.name}"?`)) {
 			api.delete(`/products/${product.id}`)
 				.then((res) => {
 					if (res.data.success) {
-						showSuccess("Xoá sản phẩm thành công!");
+						showSuccess("Xoa san pham thanh cong!");
 						fetchProducts(paginationModel);
 					} else {
-						showError("Xoá sản phẩm thất bại!");
+						showError("Xoa san pham that bai!");
 					}
 				})
 				.catch((error) => {
 					console.error("Error deleting product:", error);
-					showError("Xoá sản phẩm thất bại!");
+					showError("Xoa san pham that bai!");
 				});
 		}
 	};
 
 	const handleGoToTrash = () => {
-		navigate("/products/trash");
+		navigate("/san-pham/thung-rac");
 	};
 
 	const columns = [
 		{ field: "id", headerName: "ID", width: 90 },
-		{ field: "name", headerName: "Tên sản phẩm", width: 300 },
+		{ field: "name", headerName: "Ten san pham", width: 300 },
 		{
 			field: "image_url",
-			headerName: "Hình ảnh",
+			headerName: "Hinh anh",
 			width: 150,
 			renderCell: (params) => {
 				const imageUrl = getProductImage(params.value);
@@ -131,27 +130,27 @@ export default function ProductPage() {
 		{ field: "slug", headerName: "Slug", width: 300 },
 		{
 			field: "price",
-			headerName: "Giá",
+			headerName: "Gia",
 			width: 150,
 			type: "number",
 			valueFormatter: (params) => formatCurrency(params),
 		},
-		{ field: "stock_quantity", headerName: "Tồn kho", width: 120, type: "number" },
+		{ field: "stock_quantity", headerName: "Ton kho", width: 120, type: "number" },
 		{
 			field: "category",
-			headerName: "Danh mục",
+			headerName: "Danh muc",
 			width: 180,
 			valueGetter: (params, row) => row.category?.name || "N/A",
 		},
 		{
 			field: "brand",
-			headerName: "Thương hiệu",
+			headerName: "Thuong hieu",
 			width: 180,
 			valueGetter: (params, row) => row.brand?.name || "N/A",
 		},
 		{
 			field: "created_at",
-			headerName: "Ngày tạo",
+			headerName: "Ngay tao",
 			width: 180,
 			valueFormatter: (params) => {
 				return params ? formatDate(params) : "";
@@ -159,7 +158,7 @@ export default function ProductPage() {
 		},
 		{
 			field: "actions",
-			headerName: "Thao tác",
+			headerName: "Thao tac",
 			width: 220,
 			sortable: false,
 			filterable: false,
@@ -172,7 +171,7 @@ export default function ProductPage() {
 							size='small'
 							startIcon={<EditIcon />}
 							onClick={() => handleEdit(params.row)}>
-							Sửa
+							Sua
 						</Button>
 						<Button
 							variant='outlined'
@@ -180,7 +179,7 @@ export default function ProductPage() {
 							size='small'
 							startIcon={<DeleteIcon />}
 							onClick={() => handleDelete(params.row)}>
-							Xóa
+							Xoa
 						</Button>
 					</Box>
 				);
@@ -189,8 +188,8 @@ export default function ProductPage() {
 	];
 
 	const breadcrumbs = [
-		{ label: "Trang chủ", href: "/" },
-		{ label: "Sản phẩm", active: true },
+		{ label: "Trang chu", href: "/" },
+		{ label: "San pham", active: true },
 	];
 
 	return (
@@ -199,7 +198,7 @@ export default function ProductPage() {
 				columns={columns}
 				rows={products}
 				loading={loading}
-				title='Quản lý sản phẩm'
+				title='Quan ly san pham'
 				breadcrumbs={breadcrumbs}
 				pageSize={25}
 				paginationMode='server'
@@ -217,7 +216,7 @@ export default function ProductPage() {
 								backgroundColor: "#234C6A",
 								"&:hover": { backgroundColor: "#1B3C53" },
 							}}>
-							Thêm sản phẩm
+							Them san pham
 						</Button>
 						<Button
 							variant='outlined'
@@ -231,7 +230,7 @@ export default function ProductPage() {
 									color: "#ffffff",
 								},
 							}}>
-							Thùng rác
+							Thung rac
 						</Button>
 					</Box>
 				}
@@ -251,7 +250,6 @@ export default function ProductPage() {
 				brands={brands}
 				promotions={promotions}
 			/>
-			{/* Toast Notification */}
 			<Snackbar
 				open={toast.open}
 				autoHideDuration={3000}

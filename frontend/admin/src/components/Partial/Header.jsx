@@ -73,12 +73,12 @@ export default function Header() {
           </li>
           <li className="nav-item d-none d-md-block">
             <Link to="/" className="nav-link" style={{ color: "#f5f5f5" }}>
-              Home
+              Trang chủ
             </Link>
           </li>
           <li className="nav-item d-none d-md-block">
             <a href="#" className="nav-link" style={{ color: "#f5f5f5" }}>
-              Contact
+              Liên hệ
             </a>
           </li>
         </ul>
@@ -273,25 +273,25 @@ export default function Header() {
                   <li className="user-body">
                     <div className="row">
                       <div className="col-4 text-center">
-                        <a href="#">Profile</a>
+                        <a href="#">Tài khoản</a>
                       </div>
                       <div className="col-4 text-center">
-                        <a href="#">Settings</a>
+                        <a href="#">Cài đặt</a>
                       </div>
                       <div className="col-4 text-center">
-                        <a href="#">Activity</a>
+                        <a href="#">Hoạt động</a>
                       </div>
                     </div>
                   </li>
                   <li className="user-footer">
                     <a href="#" className="btn btn-outline-secondary">
-                      Profile
+                      Tài khoản
                     </a>
                     <button
                       onClick={handleLogout}
                       className="btn btn-outline-danger float-end"
                     >
-                      Sign out
+                      Đăng xuất
                     </button>
                   </li>
                 </ul>

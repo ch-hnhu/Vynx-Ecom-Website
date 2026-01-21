@@ -47,12 +47,33 @@ Route::prefix('products')->group(function () {
 	Route::delete('/{id}', [ProductController::class, 'destroy']);
 });
 
+// Brand routes
+Route::prefix('brands')->group(function () {
+	Route::get('/trashed', [BrandController::class, 'trashed']);
+	Route::post('/{id}/restore', [BrandController::class, 'restore']);
+	Route::delete('/{id}/force', [BrandController::class, 'forceDelete']);
+});
+
+// Category routes
+Route::prefix('categories')->group(function () {
+	Route::get('/trashed', [CategoryController::class, 'trashed']);
+	Route::post('/{id}/restore', [CategoryController::class, 'restore']);
+	Route::delete('/{id}/force', [CategoryController::class, 'forceDelete']);
+});
+
 // Public order routes (for admin)
 Route::prefix('orders')->group(function () {
 	Route::get('/', [OrderController::class, 'index']);
 	Route::get('/{id}', [OrderController::class, 'show']);
 	Route::put('/{id}', [OrderController::class, 'update']);
 	Route::delete('/{id}', [OrderController::class, 'destroy']);
+});
+
+// Attribute routes
+Route::prefix('attributes')->group(function () {
+	Route::get('/trashed', [AttributeController::class, 'trashed']);
+	Route::post('/{id}/restore', [AttributeController::class, 'restore']);
+	Route::delete('/{id}/force', [AttributeController::class, 'forceDelete']);
 });
 
 Route::prefix('configuration')->group(function () {
@@ -68,9 +89,9 @@ Route::prefix('configuration')->group(function () {
 // Resource routes
 Route::apiResource('contacts', SupportRequestController::class)->only(['index', 'destroy']);
 Route::apiResource('users', UserController::class)->only(['index', 'destroy']);
-Route::apiResource('brands', BrandController::class)->only(['index', 'destroy']);
+Route::apiResource('brands', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
-Route::apiResource('attributes', AttributeController::class)->only(['index', 'destroy']);
+Route::apiResource('attributes', AttributeController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('promotions', PromotionController::class)->only(['index', 'destroy']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
 Route::apiResource('slideshows', SlideshowController::class)->only(['index']);

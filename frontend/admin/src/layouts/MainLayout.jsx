@@ -198,9 +198,9 @@ export default function MainLayout() {
 						e.preventDefault();
 						const card = btn.closest(".card");
 						if (card) {
-							const contacts = card.querySelector(".direct-chat-contacts");
+							const contacts = card.querySelector(".direct-chat-lien-he");
 							if (contacts) {
-								card.classList.toggle("direct-chat-contacts-open");
+								card.classList.toggle("direct-chat-lien-he-open");
 							}
 						}
 					});

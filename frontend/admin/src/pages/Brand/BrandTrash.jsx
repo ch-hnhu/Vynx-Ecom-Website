@@ -5,26 +5,26 @@ import { Button, Box } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { formatDate, formatCurrency } from "@shared/utils/formatHelper.jsx";
-import { getProductImage } from "../../../../shared/utils/productHelper";
+import { formatDate } from "@shared/utils/formatHelper.jsx";
+import { getProductImage } from "@shared/utils/productHelper.jsx";
 import { useToast } from "@shared/hooks/useToast";
 import { Snackbar, Alert } from "@mui/material";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
 import PageTransition from "../../components/PageTransition";
 
-export default function ProductTrashPage() {
-	useDocumentTitle("VYNX ADMIN | THUNG RAC SAN PHAM");
+export default function BrandTrashPage() {
+	useDocumentTitle("VYNX ADMIN | THÙNG RÁC THƯƠNG HIỆU");
 	const navigate = useNavigate();
-	const [products, setProducts] = useState([]);
+	const [brands, setBrands] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
 	const [rowCount, setRowCount] = useState(0);
 	const { toast, showSuccess, showError, closeToast } = useToast();
 
-	const fetchTrashedProducts = (model = paginationModel) => {
+	const fetchTrashedBrands = (model = paginationModel) => {
 		setLoading(true);
-		api.get("/products/trashed", {
+		api.get("/brands/trashed", {
 			params: {
 				page: model.page + 1,
 				per_page: model.pageSize,
@@ -32,15 +32,15 @@ export default function ProductTrashPage() {
 		})
 			.then((res) => {
 				if (res.data.success) {
-					setProducts(res.data.data || []);
+					setBrands(res.data.data || []);
 					setRowCount(res.data.pagination?.total ?? 0);
 				} else {
-					showError("Khong the tai danh sach san pham da xoa");
+					showError("Không thể tải danh sách thương hiệu đã xóa");
 				}
 			})
 			.catch((error) => {
-				console.error("Error fetching trashed san-pham: ", error);
-				showError("Loi khi tai danh sach san pham da xoa");
+				console.error("Error fetching trashed thuong-hieu: ", error);
+				showError("Lỗi khi tải danh sách thương hiệu đã xóa");
 			})
 			.finally(() => {
 				setLoading(false);
@@ -48,106 +48,89 @@ export default function ProductTrashPage() {
 	};
 
 	useEffect(() => {
-		fetchTrashedProducts(paginationModel);
+		fetchTrashedBrands(paginationModel);
 	}, [paginationModel.page, paginationModel.pageSize]);
 
-	const handleRestore = (product) => {
-		if (!product) return;
+	const handleRestore = (brand) => {
+		if (!brand) return;
 
-		if (window.confirm(`Ban co chac chan muon khoi phuc san pham: "${product.name}"?`)) {
-			api.post(`/products/${product.id}/restore`)
+		if (window.confirm(`Bạn có chắc chắn muốn khôi phục thương hiệu: "${brand.name}"?`)) {
+			api.post(`/brands/${brand.id}/restore`)
 				.then((res) => {
 					if (res.data.success) {
-						showSuccess("Khoi phuc san pham thanh cong!");
-						fetchTrashedProducts(paginationModel);
+						showSuccess("Khôi phục thương hiệu thành công!");
+						fetchTrashedBrands(paginationModel);
 					} else {
-						showError("Khoi phuc san pham that bai!");
+						showError("Khôi phục thương hiệu thất bại!");
 					}
 				})
 				.catch((error) => {
-					console.error("Error restoring product:", error);
-					showError("Khoi phuc san pham that bai!");
+					console.error("Error restoring brand:", error);
+					showError("Khôi phục thương hiệu thất bại!");
 				});
 		}
 	};
 
-	const handleForceDelete = (product) => {
-		if (!product) return;
+	const handleForceDelete = (brand) => {
+		if (!brand) return;
 
 		if (
 			window.confirm(
-				`Ban co chac chan muon xoa vinh vien san pham: "${product.name}"?\n\nHanh dong nay KHONG THE HOAN TAC!`,
+				`Bạn có chắc chắn muốn xóa vĩnh viễn thương hiệu: "${brand.name}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`,
 			)
 		) {
-			api.delete(`/products/${product.id}/force`)
+			api.delete(`/brands/${brand.id}/force`)
 				.then((res) => {
 					if (res.data.success) {
-						showSuccess("Xoa vinh vien san pham thanh cong!");
-						fetchTrashedProducts(paginationModel);
+						showSuccess("Xóa vĩnh viễn thương hiệu thành công!");
+						fetchTrashedBrands(paginationModel);
 					} else {
-						showError("Xoa vinh vien san pham that bai!");
+						showError("Xóa vĩnh viễn thương hiệu thất bại!");
 					}
 				})
 				.catch((error) => {
-					console.error("Error force deleting product:", error);
-					showError("Xoa vinh vien san pham that bai!");
+					console.error("Error force deleting brand:", error);
+					showError("Xóa vĩnh viễn thương hiệu thất bại!");
 				});
 		}
 	};
 
-	const handleBackToProducts = () => {
-		navigate("/san-pham");
+	const handleBackToBrands = () => {
+		navigate("/thuong-hieu");
 	};
 
 	const columns = [
 		{ field: "id", headerName: "ID", width: 90 },
-		{ field: "name", headerName: "Ten san pham", width: 300 },
 		{
-			field: "image_url",
-			headerName: "Hinh anh",
-			width: 150,
+			field: "logo_url",
+			headerName: "Logo",
+			width: 110,
+			sortable: false,
 			renderCell: (params) => {
-				const imageUrl = getProductImage(params.value);
+				const src = getProductImage(params.row.logo_url);
 				return (
 					<img
-						src={imageUrl}
-						alt={params.row.name}
+						src={src}
+						alt={params.row.name || "brand-logo"}
 						style={{
-							width: "50px",
-							height: "50px",
-							objectFit: "cover",
-							borderRadius: "4px",
+							width: 48,
+							height: 48,
+							objectFit: "contain",
+							borderRadius: 6,
 						}}
 						onError={(e) => {
-							e.target.src = "https://placehold.co/600x400";
+							e.currentTarget.onerror = null;
+							e.currentTarget.src = "/img/product-default.png";
 						}}
 					/>
 				);
 			},
 		},
-		{
-			field: "price",
-			headerName: "Gia",
-			width: 150,
-			type: "number",
-			valueFormatter: (params) => formatCurrency(params),
-		},
-		{ field: "stock_quantity", headerName: "Ton kho", width: 120, type: "number" },
-		{
-			field: "category",
-			headerName: "Danh muc",
-			width: 180,
-			valueGetter: (params, row) => row.category?.name || "N/A",
-		},
-		{
-			field: "brand",
-			headerName: "Thuong hieu",
-			width: 180,
-			valueGetter: (params, row) => row.brand?.name || "N/A",
-		},
+		{ field: "name", headerName: "Tên thương hiệu", width: 240 },
+		{ field: "description", headerName: "Mô tả", width: 400 },
 		{
 			field: "deleted_at",
-			headerName: "Ngay xoa",
+			headerName: "Ngày xóa",
 			width: 180,
 			valueFormatter: (params) => {
 				return params ? formatDate(params) : "";
@@ -155,8 +138,8 @@ export default function ProductTrashPage() {
 		},
 		{
 			field: "actions",
-			headerName: "Thao tac",
-			width: 300,
+			headerName: "Thao tác",
+			width: 320,
 			sortable: false,
 			filterable: false,
 			renderCell: (params) => {
@@ -168,7 +151,7 @@ export default function ProductTrashPage() {
 							size='small'
 							startIcon={<RestoreIcon />}
 							onClick={() => handleRestore(params.row)}>
-							Khoi phuc
+							Khôi phục
 						</Button>
 						<Button
 							variant='contained'
@@ -176,7 +159,7 @@ export default function ProductTrashPage() {
 							size='small'
 							startIcon={<DeleteForeverIcon />}
 							onClick={() => handleForceDelete(params.row)}>
-							Xoa vinh vien
+							Xóa vĩnh viễn
 						</Button>
 					</Box>
 				);
@@ -185,18 +168,18 @@ export default function ProductTrashPage() {
 	];
 
 	const breadcrumbs = [
-		{ label: "Trang chu", href: "/" },
-		{ label: "San pham", href: "/san-pham" },
-		{ label: "Thung rac", active: true },
+		{ label: "Trang chủ", href: "/" },
+		{ label: "Thương hiệu", href: "/thuong-hieu" },
+		{ label: "Thùng rác", active: true },
 	];
 
 	return (
 		<PageTransition>
 			<DataTable
 				columns={columns}
-				rows={products}
+				rows={brands}
 				loading={loading}
-				title='Thung rac san pham'
+				title='Thùng rác thương hiệu'
 				breadcrumbs={breadcrumbs}
 				pageSize={25}
 				paginationMode='server'
@@ -208,12 +191,12 @@ export default function ProductTrashPage() {
 					<Button
 						variant='contained'
 						startIcon={<ArrowBackIcon />}
-						onClick={handleBackToProducts}
+						onClick={handleBackToBrands}
 						sx={{
 							backgroundColor: "#234C6A",
 							"&:hover": { backgroundColor: "#1B3C53" },
 						}}>
-						Quay lai danh sach
+						Quay lại danh sách
 					</Button>
 				}
 			/>

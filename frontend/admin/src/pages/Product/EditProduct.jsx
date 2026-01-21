@@ -53,7 +53,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		if (res.data.success) {
 			setCategories(res.data.data || []);
 		} else {
-			console.log("Error fetching categories: ", res.data.error);
+			console.log("Error fetching danh-muc: ", res.data.error);
 		}
 	};
 
@@ -65,7 +65,6 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		if (open) {
 			const timer = setTimeout(() => {
 				if (window.CKEDITOR) {
-					// Check and destroy existing instance
 					if (window.CKEDITOR.instances["edit-description"]) {
 						window.CKEDITOR.instances["edit-description"].destroy(true);
 					}
@@ -77,10 +76,6 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 						setFormData((prev) => ({ ...prev, description: data }));
 					});
 
-					// Set initial data
-					// We use product.description here because formData might not be updated yet in this render cycle
-					// if they run interleaved, but usually product is stable when opening.
-					// Or wait, EditProduct receives `product` prop.
 					if (product) {
 						editor.setData(product.description || "");
 					}
@@ -90,7 +85,6 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		}
 	}, [open, product]);
 
-	// Update form khi product thay đổi
 	useEffect(() => {
 		if (product) {
 			setFormData({
@@ -103,7 +97,6 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 				description: product.description || "",
 			});
 
-			// Load existing images
 			if (product.image_url && Array.isArray(product.image_url)) {
 				const [firstImage, ...restImages] = product.image_url;
 				setHeroImage(firstImage || null);
@@ -114,20 +107,17 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		}
 	}, [product]);
 
-	// Handle text field changes
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({
 			...prev,
 			[name]: value,
 		}));
-		// Clear error for this field
 		if (errors[name]) {
 			setErrors((prev) => ({ ...prev, [name]: "" }));
 		}
 	};
 
-	// Handle hero image selection
 	const handleHeroImageChange = (e) => {
 		const file = e.target.files[0];
 		if (file && file.type.startsWith("image/")) {
@@ -138,18 +128,15 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 			};
 			reader.readAsDataURL(file);
 		}
-		// Reset input value to allow selecting the same file again
 		e.target.value = "";
 	};
 
-	// Handle gallery images selection
 	const handleGalleryImagesChange = (e) => {
 		const files = Array.from(e.target.files);
 		const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
 		setGalleryImages((prev) => [...prev, ...imageFiles]);
 
-		// Generate previews
 		imageFiles.forEach((file) => {
 			const reader = new FileReader();
 			reader.onloadend = () => {
@@ -159,53 +146,49 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		});
 	};
 
-	// Remove gallery image
 	const handleRemoveGalleryImage = (index) => {
 		setGalleryImages((prev) => prev.filter((_, i) => i !== index));
 		setGalleryPreviews((prev) => prev.filter((_, i) => i !== index));
 	};
 
-	// Remove hero image
 	const handleRemoveHeroImage = () => {
 		setHeroImage(null);
 		setHeroImagePreview(null);
 	};
 
-	// Validate form
 	const validate = () => {
-		const errors = {};
+		const nextErrors = {};
 
 		if (!formData.name.trim()) {
-			errors.name = "Vui lòng nhập tên sản phẩm";
+			nextErrors.name = "Vui long nhap ten san pham";
 		} else if (formData.name.length > 255) {
-			errors.name = "Tên sản phẩm không được vượt quá 255 ký tự";
+			nextErrors.name = "Ten san pham khong vuot qua 255 ky tu";
 		}
 
 		if (!formData.price) {
-			errors.price = "Vui lòng nhập giá sản phẩm";
+			nextErrors.price = "Vui long nhap gia san pham";
 		} else if (parseFloat(formData.price) <= 0) {
-			errors.price = "Giá phải lớn hơn 0";
+			nextErrors.price = "Gia phai lon hon 0";
 		}
 
 		if (!formData.stock_quantity) {
-			errors.stock_quantity = "Vui lòng nhập số lượng tồn kho";
+			nextErrors.stock_quantity = "Vui long nhap so luong ton kho";
 		} else if (parseInt(formData.stock_quantity) < 0) {
-			errors.stock_quantity = "Số lượng tồn kho không được âm";
+			nextErrors.stock_quantity = "So luong ton kho khong duoc am";
 		}
 
 		if (!formData.category_id) {
-			errors.category_id = "Vui lòng chọn danh mục";
+			nextErrors.category_id = "Vui long chon danh muc";
 		}
 
 		if (!formData.brand_id) {
-			errors.brand_id = "Vui lòng chọn thương hiệu";
+			nextErrors.brand_id = "Vui long chon thuong hieu";
 		}
 
-		setErrors(errors);
-		return Object.keys(errors).length === 0;
+		setErrors(nextErrors);
+		return Object.keys(nextErrors).length === 0;
 	};
 
-	// Handle form submit
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -216,10 +199,8 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		setSubmitting(true);
 
 		try {
-			// Tạo FormData để gửi dữ liệu
 			const formDataToSend = new FormData();
 
-			// Thêm các trường text
 			Object.keys(formData).forEach((key) => {
 				if (formData[key] !== "") {
 					formDataToSend.append(key, formData[key]);
@@ -229,27 +210,21 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 			const slug = formatSlug(formData.name);
 			formDataToSend.append("slug", slug);
 
-			// Gửi danh sách ảnh cũ muốn giữ lại
 			const existingImages = [];
 
-			// Nếu hero image là URL (ảnh cũ), thêm vào existing
 			if (heroImage && typeof heroImage === "string") {
 				existingImages.push(heroImage);
 			}
 
-			// Thêm gallery images cũ (URLs) vào existing
 			const existingGalleryImages = galleryImages.filter((img) => typeof img === "string");
 			existingImages.push(...existingGalleryImages);
 
-			// LUÔN gửi existing_images, kể cả khi rỗng (để backend biết user đã xóa ảnh)
 			formDataToSend.append("existing_images", JSON.stringify(existingImages));
 
-			// Thêm hero image mới nếu là file
 			if (heroImage && typeof heroImage !== "string") {
 				formDataToSend.append("hero_image", heroImage);
 			}
 
-			// Chỉ thêm gallery images mới (File objects, không phải URLs)
 			const newGalleryImages = galleryImages.filter((img) => img instanceof File);
 			newGalleryImages.forEach((image) => {
 				formDataToSend.append("gallery_images[]", image);
@@ -261,29 +236,27 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 				},
 			})
 				.then(() => {
-					showSuccess("Chỉnh sửa sản phẩm thành công!");
+					showSuccess("Chinh sua san pham thanh cong!");
 					onSuccess?.();
-					// Delay close để toast kịp hiển thị
 					setTimeout(() => {
 						handleClose();
 					}, 1500);
 				})
 				.catch((error) => {
-					showError("Chỉnh sửa sản phẩm thất bại!");
+					console.error("Error updating product:", error);
+					showError("Chinh sua san pham that bai!");
 					setSubmitting(false);
 				})
 				.finally(() => {
 					setSubmitting(false);
 				});
 		} catch (error) {
-			showError("Lỗi khi gửi biểu mẫu!");
+			showError("Loi khi gui bieu mau!");
 			setSubmitting(false);
 		}
 	};
 
-	// Handle dialog close
 	const handleClose = () => {
-		// Reset form
 		setFormData({
 			name: "",
 			price: "",
@@ -299,7 +272,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 		setGalleryPreviews([]);
 		setErrors({});
 		setSubmitting(false);
-		closeToast(); // Reset toast state
+		closeToast();
 		onClose();
 	};
 
@@ -308,7 +281,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 			<DialogTitle>
 				<Box display='flex' alignItems='center' justifyContent='space-between'>
 					<Typography variant='h6' component='div'>
-						CHỈNH SỬA SẢN PHẨM
+						CHINH SUA SAN PHAM
 					</Typography>
 					<IconButton edge='end' color='inherit' onClick={handleClose} aria-label='close'>
 						<CloseIcon />
@@ -335,7 +308,6 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 					onChange={handleGalleryImagesChange}
 				/>
 				<Box component='form' onSubmit={handleSubmit} noValidate>
-					{/* Image Upload Section */}
 					<Box mb={3}>
 						<Box
 							sx={{
@@ -351,20 +323,19 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 								fontWeight='bold'
 								align='center'
 								sx={{ color: "white", letterSpacing: 1 }}>
-								HÌNH ẢNH SẢN PHẨM
+								HINH ANH SAN PHAM
 							</Typography>
 						</Box>
 
 						<Grid container spacing={2}>
 							<Grid size={5}>
-								{/* Hero Image */}
 								<Typography variant='body2' color='text.secondary' gutterBottom>
-									Hình ảnh chính (Hero Image) *
+									Hinh anh chinh (Hero Image) *
 								</Typography>
 								<Box
 									sx={{
 										width: "100%",
-										paddingTop: "100%", // 1:1 aspect ratio
+										paddingTop: "100%",
 										position: "relative",
 										border: "3px dashed",
 										borderColor: "divider",
@@ -425,7 +396,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 													"&:hover": { backgroundColor: "#1B3C53" },
 												}}
 												startIcon={<CloudUploadIcon />}>
-												TẢI ẢNH LÊN
+												Tai anh len
 											</Button>
 											<Typography
 												variant='caption'
@@ -440,15 +411,13 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							</Grid>
 
 							<Grid size={7}>
-								{/* Gallery Images */}
 								<Typography variant='body2' color='text.secondary' gutterBottom>
-									Hình ảnh phụ (Gallery Images)
+									Hinh anh phu (Gallery Images)
 								</Typography>
 								<Box
 									sx={{
 										display: "grid",
-										gridTemplateColumns:
-											"repeat(auto-fill, minmax(120px, 1fr))",
+										gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
 										gap: 2,
 										mb: 2,
 									}}>
@@ -509,13 +478,12 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 										width: "100%",
 									}}
 									startIcon={<CloudUploadIcon />}>
-									TẢI ẢNH LÊN
+									Tai anh len
 								</Button>
 							</Grid>
 						</Grid>
 					</Box>
 
-					{/* Product Information */}
 					<Box
 						sx={{
 							background: "linear-gradient(360deg, #234C6A 0%, #456882 100%)",
@@ -530,32 +498,30 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							fontWeight='bold'
 							align='center'
 							sx={{ color: "white", letterSpacing: 1 }}>
-							THÔNG TIN SẢN PHẨM
+							THONG TIN SAN PHAM
 						</Typography>
 					</Box>
 
 					<Grid container spacing={2}>
-						{/* Product Name */}
 						<Grid size={12}>
 							<TextField
 								fullWidth
 								required
-								label='Tên sản phẩm'
+								label='Ten san pham'
 								name='name'
 								value={formData.name}
 								onChange={handleChange}
 								error={!!errors.name}
-								helperText={errors.name || `${formData.name.length}/255 ký tự`}
+								helperText={errors.name || `${formData.name.length}/255 ky tu`}
 								inputProps={{ maxLength: 255 }}
 							/>
 						</Grid>
 
-						{/* Price */}
 						<Grid size={6}>
 							<TextField
 								fullWidth
 								required
-								label='Giá sản phẩm'
+								label='Gia san pham'
 								name='price'
 								type='number'
 								value={formData.price}
@@ -571,12 +537,11 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							/>
 						</Grid>
 
-						{/* Stock Quantity */}
 						<Grid size={6}>
 							<TextField
 								fullWidth
 								required
-								label='Số lượng tồn kho'
+								label='So luong ton kho'
 								name='stock_quantity'
 								type='number'
 								value={formData.stock_quantity}
@@ -587,15 +552,14 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							/>
 						</Grid>
 
-						{/* Category */}
 						<Grid size={4}>
 							<FormControl fullWidth required error={!!errors.category_id}>
-								<InputLabel>Danh mục</InputLabel>
+								<InputLabel>Danh muc</InputLabel>
 								<Select
 									name='category_id'
 									value={formData.category_id}
 									onChange={handleChange}
-									label='Danh mục'>
+									label='Danh muc'>
 									{categories?.map((category) => (
 										<MenuItem key={category.id} value={category.id}>
 											{category.name}
@@ -608,15 +572,14 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							</FormControl>
 						</Grid>
 
-						{/* Brand */}
 						<Grid size={4}>
 							<FormControl fullWidth required error={!!errors.brand_id}>
-								<InputLabel>Thương hiệu</InputLabel>
+								<InputLabel>Thuong hieu</InputLabel>
 								<Select
 									name='brand_id'
 									value={formData.brand_id}
 									onChange={handleChange}
-									label='Thương hiệu'>
+									label='Thuong hieu'>
 									{brands?.map((brand) => (
 										<MenuItem key={brand.id} value={brand.id}>
 											{brand.name}
@@ -629,17 +592,16 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							</FormControl>
 						</Grid>
 
-						{/* Promotion */}
 						<Grid size={4}>
 							<FormControl fullWidth>
-								<InputLabel>Khuyến mãi</InputLabel>
+								<InputLabel>Khuyen mai</InputLabel>
 								<Select
 									name='promotion_id'
 									value={formData.promotion_id}
 									onChange={handleChange}
-									label='Khuyến mãi'>
+									label='Khuyen mai'>
 									<MenuItem value=''>
-										<em>No promotion</em>
+										<em>Khong co khuyen mai</em>
 									</MenuItem>
 									{promotions?.map((promotion) => (
 										<MenuItem key={promotion.id} value={promotion.id}>
@@ -650,10 +612,9 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							</FormControl>
 						</Grid>
 
-						{/* Description */}
 						<Grid size={12}>
 							<Typography variant='body2' gutterBottom>
-								Mô tả sản phẩm
+								Mo ta san pham
 							</Typography>
 							<textarea
 								name='description'
@@ -678,7 +639,7 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 							color: "#ffffff",
 						},
 					}}>
-					Cancel
+					Huy
 				</Button>
 				<Button
 					onClick={handleSubmit}
@@ -688,11 +649,10 @@ export default function EditProduct({ open, onClose, onSuccess, product, brands,
 						backgroundColor: "#234C6A",
 						"&:hover": { backgroundColor: "#1B3C53" },
 					}}>
-					{submitting ? "Saving..." : "Save Product"}
+					{submitting ? "Dang luu..." : "Luu san pham"}
 				</Button>
 			</DialogActions>
 
-			{/* Toast Notification */}
 			<Snackbar
 				open={toast.open}
 				autoHideDuration={3000}

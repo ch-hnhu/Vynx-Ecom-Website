@@ -27,7 +27,7 @@ export default function PromotionPage() {
 				setPromotions(response.data.data || []);
 			})
 			.catch((error) => {
-				console.error("Error fetching promotions: ", error);
+				console.error("Error fetching khuyen-mai: ", error);
 			})
 			.finally(() => {
 				setLoading(false);

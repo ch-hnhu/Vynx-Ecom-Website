@@ -42,7 +42,7 @@ export default function OrderPage() {
 				setRowCount(res.data.pagination?.total ?? 0);
 			})
 			.catch((error) => {
-				console.error("Error fetching orders: ", error);
+				console.error("Error fetching don-hang: ", error);
 			})
 			.finally(() => {
 				setLoading(false);

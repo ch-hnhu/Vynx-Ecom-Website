@@ -27,7 +27,7 @@ export default function UserPage() {
 				setUsers(response.data.data || []);
 			})
 			.catch((error) => {
-				console.error("Error fetching users: ", error);
+				console.error("Error fetching nguoi-dung: ", error);
 			})
 			.finally(() => {
 				setLoading(false);
