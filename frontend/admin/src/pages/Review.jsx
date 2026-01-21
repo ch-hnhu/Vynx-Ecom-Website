@@ -56,7 +56,7 @@ export default function ReviewPage() {
 	const [submitting, setSubmitting] = useState(false);
 	const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
 	const [rowCount, setRowCount] = useState(0);
-	const { toast, showSuccess, showError, showInfo, closeToast } = useToast();
+	const { toast, showSuccess, showError, closeToast } = useToast();
 
 	const fetchReviews = (model = paginationModel) => {
 		setLoading(true);
@@ -111,7 +111,7 @@ export default function ReviewPage() {
 				);
 				setTimeout(() => {
 					handleCloseReply();
-				}, 800);
+				}, 1500);
 			})
 			.catch((error) => {
 				console.error("Error updating review reply:", error);
@@ -260,17 +260,17 @@ export default function ReviewPage() {
 						{submitting ? "Đang lưu..." : "Phản hồi"}
 					</Button>
 				</DialogActions>
-			</Dialog>
 
-			<Snackbar
-				open={toast.open}
-				autoHideDuration={toast.duration}
-				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
-					{toast.message}
-				</Alert>
-			</Snackbar>
+				<Snackbar
+					open={toast.open}
+					autoHideDuration={3000}
+					onClose={closeToast}
+					anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+					<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+						{toast.message}
+					</Alert>
+				</Snackbar>
+			</Dialog>
 		</>
 	);
 }

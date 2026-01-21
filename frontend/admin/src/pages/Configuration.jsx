@@ -583,17 +583,18 @@ export default function ConfigurationPage() {
 						{submitting ? "Đang lưu..." : isCreateMode ? "Tạo mới" : "Cập nhật"}
 					</Button>
 				</DialogActions>
+				<Snackbar
+					open={toast.open}
+					autoHideDuration={toast.duration}
+					onClose={closeToast}
+					anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+					<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+						{toast.message}
+					</Alert>
+				</Snackbar>
 			</Dialog>
 
-			<Snackbar
-				open={toast.open}
-				autoHideDuration={toast.duration}
-				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
-					{toast.message}
-				</Alert>
-			</Snackbar>
+			
 		</>
 	);
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../services/api";
 
 export default function Navbar() {
@@ -112,25 +113,25 @@ export default function Navbar() {
 
 									<div className='collapse navbar-collapse' id='navbarCollapse'>
 										<div className='navbar-nav ms-auto py-0'>
-											<a href='/' className='nav-item nav-link'>
+											<Link to='/' className='nav-item nav-link'>
 												Trang chủ
-											</a>
-											<a href='/san-pham' className='nav-item nav-link'>
+											</Link>
+											<Link to='/san-pham' className='nav-item nav-link'>
 												Sản phẩm
-											</a>
-											<a href='/laptop' className='nav-item nav-link'>
+											</Link>
+											<Link to='/laptop' className='nav-item nav-link'>
 												Laptop
-											</a>
+											</Link>
 
 											<div className='nav-item dropdown'>
-												<a
-													href='/phu-kien'
+												<Link
+													to='/phu-kien'
 													className='nav-link'
 													data-bs-toggle='dropdown'>
 													<span className='dropdown-toggle'>
 														Phụ kiện
 													</span>
-												</a>
+												</Link>
 												<div className='dropdown-menu m-0'>
 													<a
 														href='bestseller.html'
