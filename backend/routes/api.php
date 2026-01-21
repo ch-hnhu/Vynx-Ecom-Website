@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\AttributeController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\PromotionController;
 use App\Http\Controllers\Api\ConfigurationController;
 use App\Http\Controllers\Api\ReviewController;
@@ -74,6 +75,7 @@ Route::apiResource('attributes', AttributeController::class)->only(['index', 'de
 Route::apiResource('promotions', PromotionController::class)->only(['index', 'destroy']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
 Route::apiResource('slideshows', SlideshowController::class)->only(['index']);
+Route::apiResource('blogs', BlogController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 
 // Protected routes - Require authentication
 Route::middleware('auth:sanctum')->group(function () {

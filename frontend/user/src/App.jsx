@@ -17,6 +17,8 @@ import Faq from "./pages/Faq.jsx";
 import Warranty from "./pages/Warranty.jsx";
 import Terms from "./pages/Terms.jsx";
 import Account from "./pages/Account.jsx";
+import Blog from "./pages/Blog.jsx";
+import BlogDetail from "./pages/BlogDetail.jsx";
 import { CartProvider } from "./components/Cart/CartContext.jsx";
 import { HelmetProvider } from "react-helmet-async";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -74,6 +76,8 @@ export default function App() {
 						<Route path='cau-hoi-thuong-gap' element={<Faq />} />
 						<Route path='chinh-sach-bao-hanh' element={<Warranty />} />
 						<Route path='dieu-khoan' element={<Terms />} />
+						<Route path='tin-tuc' element={<Blog />} />
+						<Route path='tin-tuc/:id' element={<BlogDetail />} />
 						<Route path='404' element={<NotFound />} />
 
 						<Route path=':slug' element={<ProductDetails />} />

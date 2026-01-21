@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
             OrderItemSeeder::class,
             ProductReviewSeeder::class,
+            BlogSeeder::class,
         ]);
 
         // 5. (Optional) Generate thêm dữ liệu sử dụng factories

@@ -151,9 +151,9 @@ export default function Navbar() {
 										type='button'
 										data-bs-toggle='collapse'
 										data-bs-target='#allCat'>
-										<h4 className='m-0'>
+										{/* <h4 className='m-0'>
 											<i className='fa fa-bars me-2'></i>Danh mục
-										</h4>
+										</h4> */}
 									</button>
 
 									<div
