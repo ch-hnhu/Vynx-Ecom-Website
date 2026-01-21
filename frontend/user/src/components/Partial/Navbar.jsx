@@ -1,8 +1,109 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../services/api";
 
 export default function Navbar() {
 	const [configuration, setConfiguration] = useState({});
+	const [categories, setCategories] = useState([]);
+	const [phuKienCategories, setPhuKienCategories] = useState([]);
+	const [linhKienCategories, setLinhKienCategories] = useState([]);
+
+	useEffect(() => {
+		api.get("/categories", {
+			params: {
+				parent_slug: "phu-kien",
+			},
+		}).then((res) => {
+			if (res.data.success) {
+				setPhuKienCategories(res.data.data);
+			} else {
+				console.error("Error fetching phu kien categories:", res.data.error);
+			}
+		}).catch((err) => {
+			console.error("Error fetching phu kien categories:", err);
+		});
+	}, []);
+
+	useEffect(() => {
+		api.get("/categories", {
+			params: {
+				parent_slug: "linh-kien-may-tinh",
+			},
+		}).then((res) => {
+			if (res.data.success) {
+				setLinhKienCategories(res.data.data);
+			} else {
+				console.error("Error fetching linh kien categories:", res.data.error);
+			}
+		}).catch((err) => {
+			console.error("Error fetching linh kien categories:", err);
+		});
+	}, []);
+
+	const getChildren = (cat) => {
+		return cat?.children_recursive || [];
+	};
+
+	const renderCategoryTree = (nodes, level = 0) => {
+		if (!nodes || nodes.length === 0) return null;
+
+		return (
+			<ul
+				className={[
+					"vynx-catmenu",
+					`level-${level}`,
+					level === 0 ? "vynx-catmenu-root" : "",
+				]
+					.filter(Boolean)
+					.join(" ")}>
+				{nodes.map((cat) => {
+					const children = getChildren(cat);
+					// Tu cap 2 tro di (level >= 1): an va chi hien khi hover (desktop)
+					const hasChildren = children.length > 0;
+					return (
+						<li
+							key={cat.id}
+							className={[
+								"vynx-catmenu-item",
+								`level-${level}`,
+								hasChildren ? "has-children" : "",
+							]
+								.filter(Boolean)
+								.join(" ")}>
+							<Link className='vynx-catmenu-link' to={`/${cat.slug}`}>
+								<span className='vynx-catmenu-text'>{cat.name}</span>
+								{hasChildren ? (
+									<i
+										className='fa fa-angle-right vynx-catmenu-caret'
+										aria-hidden='true'
+									/>
+								) : null}
+							</Link>
+
+							{hasChildren ? (
+								<div className='vynx-catmenu-submenu'>
+									{renderCategoryTree(children, level + 1)}
+								</div>
+							) : null}
+						</li>
+					);
+				})}
+			</ul>
+		);
+	};
+
+	useEffect(() => {
+		api.get("/categories")
+			.then((res) => {
+				if (res.data && res.data.data) {
+					console.log(res.data.data);
+					setCategories(res.data.data);
+				}
+			})
+			.catch((err) => {
+				console.error("Error fetching categories:", err);
+			});
+	}, []);
 
 	useEffect(() => {
 		api.get("/configuration").then((res) => {
@@ -112,31 +213,52 @@ export default function Navbar() {
 
 									<div className='collapse navbar-collapse' id='navbarCollapse'>
 										<div className='navbar-nav ms-auto py-0'>
-											<a href='/' className='nav-item nav-link'>
+											<Link to='/' className='nav-item nav-link'>
 												Trang chủ
-											</a>
-											<a href='/san-pham' className='nav-item nav-link'>
+											</Link>
+											<Link to='/san-pham' className='nav-item nav-link'>
 												Sản phẩm
-											</a>
-											<a href='/laptop' className='nav-item nav-link'>
+											</Link>
+											<Link to='/laptop' className='nav-item nav-link'>
 												Laptop
-											</a>
+											</Link>
 
 											<div className='nav-item dropdown'>
-												<a
-													href='/phu-kien'
+												<Link
+													to='/phu-kien'
 													className='nav-link'
 													data-bs-toggle='dropdown'>
 													<span className='dropdown-toggle'>
 														Phụ kiện
 													</span>
-												</a>
+												</Link>
 												<div className='dropdown-menu m-0'>
-													<a
-														href='bestseller.html'
-														className='dropdown-item'>
-														Tai nghe
-													</a>
+													{phuKienCategories && phuKienCategories.length > 0 ? (
+														renderCategoryTree(phuKienCategories)
+													) : (
+														<ul className='list-unstyled categories-bars'>
+															<li>Không có danh mục</li>
+														</ul>
+													)}
+												</div>
+											</div>
+											<div className='nav-item dropdown'>
+												<Link
+													to='/linh-kien-may-tinh'
+													className='nav-link'
+													data-bs-toggle='dropdown'>
+													<span className='dropdown-toggle'>
+														Linh kiện máy tính
+													</span>
+												</Link>
+												<div className='dropdown-menu m-0'>
+													{linhKienCategories && linhKienCategories.length > 0 ? (
+														renderCategoryTree(linhKienCategories)
+													) : (
+														<ul className='list-unstyled categories-bars'>
+															<li>Không có danh mục</li>
+														</ul>
+													)}
 												</div>
 											</div>
 

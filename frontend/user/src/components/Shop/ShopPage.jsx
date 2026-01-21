@@ -15,7 +15,7 @@ export default function ShopPage() {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const { addToCart } = useCart();
-	const { toast, showSuccess, closeToast } = useToast();
+	const { toast, showSuccess, showError, closeToast } = useToast();
 	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [pagination, setPagination] = useState({
@@ -199,7 +199,12 @@ export default function ShopPage() {
 	};
 
 	const handleAddToCart = (product) => {
-		addToCart(product, 1);
+		const added = addToCart(product, 1);
+		if (!added) {
+			showError("Vui lòng đăng nhập để thêm vào giỏ hàng");
+			navigate("/dang-nhap");
+			return;
+		}
 		showSuccess("Đã thêm vào giỏ hàng");
 	};
 
