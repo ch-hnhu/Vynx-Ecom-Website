@@ -154,7 +154,8 @@ export default function OrderPage() {
 			headerName: "Số lượng SP",
 			width: 110,
 			type: "number",
-			valueGetter: (params, row) => row.order_items?.length || 0,
+			valueGetter: (params, row) =>
+				row.order_items?.reduce((total, item) => total + (item.quantity || 0), 0) || 0,
 		},
 		{
 			field: "total_amount",

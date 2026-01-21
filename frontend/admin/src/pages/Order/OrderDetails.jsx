@@ -281,6 +281,19 @@ export default function OrderDetails({ open, onClose, order }) {
 										</TableCell>
 									</TableRow>
 								)}
+								{/* Phí vận chuyển */}
+								<TableRow key='shipping-fee'>
+									<TableCell colSpan={5} align='right'>
+										<Typography variant='body2' color='text.secondary'>
+											Phí vận chuyển:
+										</Typography>
+									</TableCell>
+									<TableCell align='right'>
+										<Typography variant='body2' color='text.secondary'>
+											{formatCurrency(order.shipping_fee || 0)}
+										</Typography>
+									</TableCell>
+								</TableRow>
 								<TableRow key='total'>
 									<TableCell colSpan={5} align='right'>
 										<Typography variant='h6' fontWeight='bold'>
