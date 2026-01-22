@@ -46,7 +46,6 @@ export default function About() {
 		: [];
 
 	const title = "VỀ CHÚNG TÔI";
-
 	const breadcrumbs = [
 		{ label: "Trang chủ", href: "/" },
 		{ label: "Về chúng tôi", active: true },
