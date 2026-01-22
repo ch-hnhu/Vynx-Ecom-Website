@@ -101,9 +101,14 @@ export default function SingleProduct({ product }) {
 			checkInWishlist();
 		}
 
-		if (window.initCarousels?.single) {
-			window.initCarousels.single();
-		}
+		// Delay carousel init to ensure DOM is ready
+		const timer = setTimeout(() => {
+			if (window.initCarousels?.single) {
+				window.initCarousels.single();
+			}
+		}, 100);
+
+		return () => clearTimeout(timer);
 	}, [images.length, product.id]);
 
 	const handleToggleWishlist = () => {

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
+
 class PromotionController extends Controller
 {
     /**
