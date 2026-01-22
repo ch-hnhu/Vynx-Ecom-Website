@@ -82,7 +82,14 @@ export default function BlogDetail() {
 							style={{ aspectRatio: "16 / 9", objectFit: "cover" }}
 							onError={handleBlogImageError}
 						/>
-						<p style={{ whiteSpace: "pre-line",  color: "black"}}>{blog.content}</p>
+						{blog.content ? (
+							<div
+								className='blog-content'
+								dangerouslySetInnerHTML={{ __html: blog.content }}
+							/>
+						) : (
+							<p className='text-muted'>Chưa có nội dung bài viết.</p>
+						)}
 					</div>
 				) : (
 					<p className='text-muted'>Không tìm thấy bài viết.</p>

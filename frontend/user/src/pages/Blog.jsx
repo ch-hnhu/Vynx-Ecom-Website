@@ -101,7 +101,10 @@ export default function Blog() {
 
 	const getBlogExcerpt = (content) => {
 		if (!content) return "";
-		const plain = String(content).replace(/\s+/g, " ").trim();
+		const plain = String(content)
+			.replace(/<[^>]*>/g, " ")
+			.replace(/\s+/g, " ")
+			.trim();
 		return plain.length > 120 ? `${plain.slice(0, 120)}...` : plain;
 	};
 

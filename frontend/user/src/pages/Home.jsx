@@ -101,9 +101,18 @@ export default function Home() {
 	const handleBlogImageError = (event) => {
 		event.currentTarget.src = "https://placehold.co/400x250";
 	};
+	const decodeHtml = (value) => {
+		if (!value) return "";
+		const textarea = document.createElement("textarea");
+		textarea.innerHTML = value;
+		return textarea.value;
+	};
+
 	const getBlogExcerpt = (content) => {
 		if (!content) return "";
-		const plain = String(content).replace(/\s+/g, " ").trim();
+		const stripped = String(content).replace(/<[^>]*>/g, " ");
+		const decoded = decodeHtml(stripped);
+		const plain = decoded.replace(/\s+/g, " ").trim();
 		return plain.length > 80 ? `${plain.slice(0, 80)}...` : plain;
 	};
 

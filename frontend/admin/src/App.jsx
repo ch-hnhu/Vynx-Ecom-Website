@@ -19,7 +19,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AuthRedirect from "./pages/AuthRedirect";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import Blog from "./pages/Blog";
 export default function App() {
   return (
     <Routes>
@@ -51,6 +51,8 @@ export default function App() {
         <Route path="configurations" element={<Configuration />} />
         <Route path="reviews" element={<Review />} />
         <Route path="contacts" element={<SupportRequest />} />
+        <Route path="blogs" element={<Blog />} />
+        <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
     </Routes>
   );
