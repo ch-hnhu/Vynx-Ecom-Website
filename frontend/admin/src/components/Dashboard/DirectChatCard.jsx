@@ -126,25 +126,25 @@ export default function DirectChatCard() {
 					))}
 				</div>
 
-				<div className='direct-chat-lien-he'>
-					<ul className='lien-he-list'>
+				<div className='direct-chat-contacts'>
+					<ul className='contacts-list'>
 						{contacts.map((contact, index) => (
 							<li key={index}>
 								<a href='#'>
 									<img
-										className='lien-he-list-img'
+										className='contacts-list-img'
 										src={contact.avatar}
 										alt='User Avatar'
 									/>
-									<div className='lien-he-list-info'>
-										<span className='lien-he-list-name'>
+									<div className='contacts-list-info'>
+										<span className='contacts-list-name'>
 											{contact.name}
-											<small className='lien-he-list-date float-end'>
+											<small className='contacts-list-date float-end'>
 												{" "}
 												{contact.date}{" "}
 											</small>
 										</span>
-										<span className='lien-he-list-msg'>
+										<span className='contacts-list-msg'>
 											{" "}
 											{contact.message}{" "}
 										</span>
