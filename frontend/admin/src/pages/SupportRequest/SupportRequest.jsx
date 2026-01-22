@@ -30,6 +30,7 @@ import {
 import { useToast } from "@shared/hooks/useToast";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
+import PageTransition from "../../components/PageTransition";
 
 export default function SupportRequestPage() {
 	const navigate = useNavigate();
@@ -205,7 +206,7 @@ export default function SupportRequestPage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={supportRequests}
@@ -274,7 +275,7 @@ export default function SupportRequestPage() {
 					{toast.message}
 				</Alert>
 			</Snackbar>
-		</>
+		</PageTransition>
 	);
 }
 

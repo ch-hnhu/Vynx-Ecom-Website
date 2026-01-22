@@ -25,6 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { useToast } from "@shared/hooks/useToast";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
+import PageTransition from "../components/PageTransition";
 
 export default function ConfigurationPage() {
 	useDocumentTitle("VYNX ADMIN | CẤU HÌNH HỆ THỐNG");
@@ -399,7 +400,7 @@ export default function ConfigurationPage() {
 	const activeCount = configurations.filter((item) => item.is_active).length;
 
 	return (
-		<>
+		<PageTransition>
 			{activeCount > 1 && (
 				<Alert severity='warning' sx={{ mb: 2 }}>
 					Có {activeCount} cấu hình đang được kích hoạt. Vui lòng tắt bớt để chỉ còn 1
@@ -594,6 +595,6 @@ export default function ConfigurationPage() {
 					{toast.message}
 				</Alert>
 			</Snackbar>
-		</>
+		</PageTransition>
 	);
 }

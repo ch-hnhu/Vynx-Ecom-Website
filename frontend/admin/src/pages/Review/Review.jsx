@@ -25,6 +25,7 @@ import { formatDate } from "@shared/utils/formatHelper.jsx";
 import { useToast } from "@shared/hooks/useToast";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
+import PageTransition from "../../components/PageTransition";
 
 const renderStars = (rating) => {
 	const stars = [];
@@ -215,7 +216,7 @@ export default function ReviewPage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={reviews}
@@ -294,7 +295,7 @@ export default function ReviewPage() {
 					{toast.message}
 				</Alert>
 			</Snackbar>
-		</>
+		</PageTransition>
 	);
 }
 

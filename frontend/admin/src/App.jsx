@@ -62,6 +62,7 @@ export default function App() {
         <Route path="danh-gia/thung-rac" element={<ReviewTrash />} />
         <Route path="lien-he" element={<SupportRequest />} />
         <Route path="lien-he/thung-rac" element={<SupportRequestTrash />} />
+        <Route path="thong-tin-ca-nhan" element={<AdminProfile />} />
       </Route>
     </Routes>
   );
