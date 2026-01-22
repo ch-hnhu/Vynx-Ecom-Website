@@ -101,7 +101,13 @@ export default function Blog() {
 
 	const getBlogExcerpt = (content) => {
 		if (!content) return "";
-		const plain = String(content)
+		const decodeHtml = (value) => {
+			if (!value) return "";
+			const textarea = document.createElement("textarea");
+			textarea.innerHTML = value;
+			return textarea.value;
+		};
+		const plain = decodeHtml(String(content))
 			.replace(/<[^>]*>/g, " ")
 			.replace(/\s+/g, " ")
 			.trim();
