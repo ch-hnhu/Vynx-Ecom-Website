@@ -1,5 +1,33 @@
 import React from "react";
 import { formatCurrency } from "@shared/utils/formatHelper";
+import {
+    getDeliveryStatusName,
+    deliveryStatusColors,
+} from "@shared/utils/orderHelper";
+
+const BACKEND_URL = "http://localhost:8000";
+const DEFAULT_PRODUCT_IMAGE = "https://placehold.co/80?text=No+Image";
+
+const getProductImage = (product) => {
+    if (!product || !product.image_url) return DEFAULT_PRODUCT_IMAGE;
+
+    let images = product.image_url;
+
+    if (typeof images === "string") {
+        try {
+            images = JSON.parse(images);
+        } catch {
+            return DEFAULT_PRODUCT_IMAGE;
+        }
+    }
+
+    if (Array.isArray(images) && images.length > 0) {
+        const first = images[0];
+        return first.startsWith("http") ? first : `${BACKEND_URL}${first}`;
+    }
+
+    return DEFAULT_PRODUCT_IMAGE;
+};
 
 export default function OrderDetailModal({ order, open, onClose, onCancel }) {
     if (!open || !order) return null;
@@ -16,25 +44,7 @@ export default function OrderDetailModal({ order, open, onClose, onCancel }) {
         });
     };
 
-    const statusLabels = {
-        pending: "Đang chờ xử lý",
-        confirmed: "Đã xác nhận",
-        shipping: "Đang giao hàng",
-        delivered: "Đã giao hàng",
-        failed: "Giao hàng thất bại",
-        returned: "Đã hoàn trả",
-        cancelled: "Đã hủy",
-    };
 
-    const statusColors = {
-        pending: "warning",
-        confirmed: "info",
-        shipping: "primary",
-        delivered: "success",
-        failed: "danger",
-        returned: "secondary",
-        cancelled: "dark",
-    };
 
     return (
         <>
@@ -47,9 +57,9 @@ export default function OrderDetailModal({ order, open, onClose, onCancel }) {
                             <h5 className="modal-title">
                                 Chi tiết đơn hàng #{order.id}
                                 <span
-                                    className={`badge bg-${statusColors[order.delivery_status] || "secondary"} ms-2 fs-6`}
+                                    className={`badge bg-${deliveryStatusColors[getDeliveryStatusName(order.delivery_status)] || "secondary"} ms-2 fs-6`}
                                 >
-                                    {statusLabels[order.delivery_status] || order.delivery_status}
+                                    {getDeliveryStatusName(order.delivery_status)}
                                 </span>
                             </h5>
                             <button
@@ -106,19 +116,26 @@ export default function OrderDetailModal({ order, open, onClose, onCancel }) {
                                                 <td>
                                                     <div className="d-flex align-items-center">
                                                         <img
-                                                            src={item.product?.image || "https://placehold.co/80x80?text=No+Image"}
+                                                            src={getProductImage(item.product)}
                                                             alt={item.product?.name}
                                                             className="rounded border"
                                                             style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                                                            onError={(e) =>
+                                                                (e.target.src = DEFAULT_PRODUCT_IMAGE)
+                                                            }
                                                         />
                                                         <div className="ms-3">
-                                                            <h6 className="mb-0 text-truncate" style={{ maxWidth: "250px" }}>{item.product_name || item.product?.name}</h6>
+                                                            <h6 className="mb-0 text-truncate" style={{ maxWidth: "250px" }}>
+                                                                {item.product?.name || "Không rõ sản phẩm"}
+                                                            </h6>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="text-center">{formatCurrency(item.price)}</td>
                                                 <td className="text-center">x{item.quantity}</td>
-                                                <td className="text-end fw-bold">{formatCurrency(item.total_price)}</td>
+                                                <td className="text-end fw-bold">
+                                                    {formatCurrency(item.price * item.quantity)}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
