@@ -107,7 +107,7 @@ export default function ReviewPage() {
 		api.put(`/reviews/${selectedReview.id}`, payload)
 			.then((response) => {
 				const updated = response?.data?.data ?? payload;
-				showSuccess("Pháº£n há»“i Ä‘Ã¡nh giÃ¡ thÃ nh cÃ´ng!");
+				showSuccess("Phản hồi đánh giá thành công!");
 				setReviews((prev) =>
 					prev.map((item) =>
 						item.id === selectedReview.id ? { ...item, ...updated } : item
@@ -262,7 +262,7 @@ export default function ReviewPage() {
 					<Box component='form' onSubmit={handleSubmitReply} noValidate>
 						<TextField
 							fullWidth
-							label='Pháº£n há»“i'
+							label='Phản hồi'
 							name='review_reply'
 							value={replyText}
 							onChange={(e) => setReplyText(e.target.value)}
