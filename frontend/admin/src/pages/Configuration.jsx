@@ -21,14 +21,19 @@ import DataTable from "../components/Partial/DataTable";
 import api from "../services/api";
 import { formatDate } from "@shared/utils/formatHelper.jsx";
 import { renderChip } from "@shared/utils/renderHelper.jsx";
+import {
+	configurationStatusColors,
+	getConfigurationStatusName,
+} from "@shared/utils/configurationHelper.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { useToast } from "@shared/hooks/useToast";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
+import PageTransition from "../components/PageTransition";
 
 export default function ConfigurationPage() {
 	useDocumentTitle("VYNX ADMIN | CẤU HÌNH HỆ THỐNG");
-	
+
 	const [configurations, setConfigurations] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -50,10 +55,6 @@ export default function ConfigurationPage() {
 	const [showAllConfigurations, setShowAllConfigurations] = useState(false);
 	const { toast, showSuccess, showError, closeToast } = useToast();
 	const logoInputRef = useRef(null);
-	const statusColor = {
-		Active: "success",
-		Inactive: "default",
-	};
 
 	const fetchConfigurations = () => {
 		setLoading(true);
@@ -63,7 +64,7 @@ export default function ConfigurationPage() {
 				setConfigurations(response.data.data || []);
 			})
 			.catch((error) => {
-				console.error("Error fetching configurations: ", error);
+				console.error("Error fetching cau-hinh: ", error);
 				showError("Tải cấu hình thất bại!");
 			})
 			.finally(() => {
@@ -199,17 +200,13 @@ export default function ConfigurationPage() {
 			formDataToSend.append("logo", formData.logo.trim());
 		}
 
-		if (!isCreateMode) {
-			formDataToSend.append("_method", "PUT");
-		}
-
 		const request = isCreateMode
 			? api.post("/configuration", formDataToSend, {
-					headers: { "Content-Type": "multipart/form-data" },
-			  })
-			: api.post(`/configuration/${selectedConfig?.id}`, formDataToSend, {
-					headers: { "Content-Type": "multipart/form-data" },
-			  });
+				headers: { "Content-Type": "multipart/form-data" },
+			})
+			: api.put(`/configuration/${selectedConfig?.id}`, formDataToSend, {
+				headers: { "Content-Type": "multipart/form-data" },
+			});
 
 		request
 			.then((response) => {
@@ -337,9 +334,8 @@ export default function ConfigurationPage() {
 			headerName: "Trạng thái",
 			width: 130,
 			renderCell: (params) => {
-				return params.value
-					? renderChip("Active", statusColor)
-					: renderChip("Inactive", statusColor);
+				const label = getConfigurationStatusName(params.value);
+				return renderChip(label, configurationStatusColors);
 			},
 		},
 		{
@@ -399,11 +395,11 @@ export default function ConfigurationPage() {
 	const activeCount = configurations.filter((item) => item.is_active).length;
 
 	return (
-		<>
+		<PageTransition>
 			{activeCount > 1 && (
 				<Alert severity='warning' sx={{ mb: 2 }}>
 					Có {activeCount} cấu hình đang được kích hoạt. Vui lòng tắt bớt để chỉ còn 1
-					 cấu hình active.
+					cấu hình active.
 				</Alert>
 			)}
 			<DataTable
@@ -583,6 +579,7 @@ export default function ConfigurationPage() {
 						{submitting ? "Đang lưu..." : isCreateMode ? "Tạo mới" : "Cập nhật"}
 					</Button>
 				</DialogActions>
+
 				<Snackbar
 					open={toast.open}
 					autoHideDuration={toast.duration}
@@ -593,8 +590,6 @@ export default function ConfigurationPage() {
 					</Alert>
 				</Snackbar>
 			</Dialog>
-
-			
-		</>
+		</PageTransition>
 	);
 }

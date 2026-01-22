@@ -31,10 +31,23 @@ export default function SingleProduct({ product }) {
 	const [categorySlug, setCategorySlug] = useState(null);
 	const images = useMemo(() => getAllProductImages(product?.image_url), [product?.image_url]);
 	const DEFAULT_AVATAR = "https://placehold.co/400?text=Chưa+có+ảnh";
-	const getAvatarSrc = () => {
-		const raw = reviews.user?.image;
-		const src = typeof raw === "string" ? raw.trim() : raw;
-		return src ? src : DEFAULT_AVATAR;
+	const BACKEND_URL = "http://localhost:8000";
+	const getAvatarSrc = (imagePath) => {
+		if (!imagePath || imagePath === "null" || imagePath === "undefined") {
+			return DEFAULT_AVATAR;
+		}
+		const src = typeof imagePath === "string" ? imagePath.trim() : imagePath;
+		if (!src || src === "null" || src === "undefined") {
+			return DEFAULT_AVATAR;
+		}
+		if (src.startsWith("http://") || src.startsWith("https://")) {
+			return src;
+		}
+		return `${BACKEND_URL}${src}`;
+	};
+	const handleAvatarError = (e) => {
+		e.currentTarget.onerror = null;
+		e.currentTarget.src = DEFAULT_AVATAR;
 	};
 
 	// Pagination logic for reviews
@@ -586,13 +599,14 @@ export default function SingleProduct({ product }) {
 																className='review-item border rounded p-3 mb-3'>
 																<div className='d-flex'>
 																	<img
-																		src={getAvatarSrc()}
+																		src={getAvatarSrc(review.user?.image)}
 																		className='rounded-circle me-3'
 																		style={{
 																			width: "60px",
 																			height: "60px",
 																			objectFit: "cover",
 																		}}
+																		onError={handleAvatarError}
 																		alt='Avatar'
 																	/>
 																	<div className='flex-grow-1'>

@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SlideshowController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,11 @@ Route::get('/test', function () {
 Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 Route::post('/support-requests', [SupportRequestController::class, 'store']);
 Route::apiResource('support-requests', SupportRequestController::class)->only(['index', 'update', 'destroy']);
+Route::prefix('support-requests')->group(function () {
+	Route::get('/trashed', [SupportRequestController::class, 'trashed']);
+	Route::post('/{id}/restore', [SupportRequestController::class, 'restore']);
+	Route::delete('/{id}/force', [SupportRequestController::class, 'forceDelete']);
+});
 
 // Authentication routes
 Route::post('/dang-ky', [AuthController::class, 'register']);
@@ -50,6 +56,20 @@ Route::prefix('products')->group(function () {
 	Route::delete('/{id}', [ProductController::class, 'destroy']);
 });
 
+// Brand routes
+Route::prefix('brands')->group(function () {
+	Route::get('/trashed', [BrandController::class, 'trashed']);
+	Route::post('/{id}/restore', [BrandController::class, 'restore']);
+	Route::delete('/{id}/force', [BrandController::class, 'forceDelete']);
+});
+
+// Category routes
+Route::prefix('categories')->group(function () {
+	Route::get('/trashed', [CategoryController::class, 'trashed']);
+	Route::post('/{id}/restore', [CategoryController::class, 'restore']);
+	Route::delete('/{id}/force', [CategoryController::class, 'forceDelete']);
+});
+
 // Public order routes (for admin)
 Route::prefix('orders')->group(function () {
 	Route::get('/', [OrderController::class, 'index']);
@@ -58,6 +78,13 @@ Route::prefix('orders')->group(function () {
 	Route::put('/{id}/pay-confirm', [OrderController::class, 'confirmPayment']);
 	Route::post('/', [OrderController::class, 'store']);
 	Route::delete('/{id}', [OrderController::class, 'destroy']);
+});
+
+// Attribute routes
+Route::prefix('attributes')->group(function () {
+	Route::get('/trashed', [AttributeController::class, 'trashed']);
+	Route::post('/{id}/restore', [AttributeController::class, 'restore']);
+	Route::delete('/{id}/force', [AttributeController::class, 'forceDelete']);
 });
 
 Route::prefix('configuration')->group(function () {
@@ -70,14 +97,37 @@ Route::prefix('configuration')->group(function () {
 	Route::delete('/{id}', [ConfigurationController::class, 'destroy']);
 });
 
+// Dashboard routes (for admin)
+Route::prefix('dashboard')->group(function () {
+	Route::get('/statistics', [DashboardController::class, 'statistics']);
+	Route::get('/recent-orders', [DashboardController::class, 'recentOrders']);
+	Route::get('/chart-data', [DashboardController::class, 'chartData']);
+});
+
 // Resource routes
 Route::apiResource('contacts', SupportRequestController::class)->only(['index', 'destroy']);
-Route::apiResource('users', UserController::class)->only(['index', 'destroy']);
-Route::apiResource('brands', BrandController::class)->only(['index', 'destroy']);
+Route::prefix('users')->group(function () {
+	Route::get('/trashed', [UserController::class, 'trashed']);
+	Route::post('/{id}/restore', [UserController::class, 'restore']);
+	Route::delete('/{id}/force', [UserController::class, 'forceDelete']);
+});
+Route::apiResource('users', UserController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+Route::apiResource('brands', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
-Route::apiResource('attributes', AttributeController::class)->only(['index', 'destroy']);
-Route::apiResource('promotions', PromotionController::class)->only(['index', 'store', 'update', 'destroy']);
+Route::apiResource('attributes', AttributeController::class)->only([
+	'index',
+	'store',
+	'update',
+	'destroy',
+]);
+Route::post('/promotions/check', [PromotionController::class, 'check']);
+Route::apiResource('promotions', PromotionController::class)->only(['index', 'destroy']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
+Route::prefix('reviews')->group(function () {
+	Route::get('/trashed', [ReviewController::class, 'trashed']);
+	Route::post('/{id}/restore', [ReviewController::class, 'restore']);
+	Route::delete('/{id}/force', [ReviewController::class, 'forceDelete']);
+});
 Route::apiResource('slideshows', SlideshowController::class)->only(['index']);
 Route::apiResource('blogs', BlogController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 
