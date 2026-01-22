@@ -9,13 +9,17 @@ import {
 	Box,
 	IconButton,
 	Typography,
+	Snackbar,
+	Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
 import api from "../../services/api";
 import { getProductImage } from "@shared/utils/productHelper.jsx";
+import { useToast } from "@shared/hooks/useToast";
 
-export default function EditBrand({ open, onClose, brand, onUpdated, showSuccess, showError }) {
+export default function EditBrand({ open, onClose, brand, onUpdated }) {
+	const { toast, showSuccess, showError, closeToast } = useToast();
 	const [formData, setFormData] = useState({
 		name: "",
 		logo_url: "",
@@ -95,7 +99,7 @@ export default function EditBrand({ open, onClose, brand, onUpdated, showSuccess
 		})
 			.then((response) => {
 				const updated = response?.data?.data ?? response?.data;
-				showSuccess?.("Cập nhật thương hiệu thành công!");
+				showSuccess("Cập nhật thương hiệu thành công!");
 				onUpdated?.(updated);
 				setTimeout(() => {
 					handleClose();
@@ -114,11 +118,11 @@ export default function EditBrand({ open, onClose, brand, onUpdated, showSuccess
 					setErrors((prev) => ({ ...prev, ...nextErrors }));
 					const firstError = Object.values(nextErrors)[0];
 					if (firstError) {
-						showError?.(firstError);
+						showError(firstError);
 					}
 				} else {
 					console.error("Error updating brand:", error);
-					showError?.("Cập nhật thương hiệu thất bại!");
+					showError("Cập nhật thương hiệu thất bại!");
 				}
 			})
 			.finally(() => {
@@ -136,6 +140,7 @@ export default function EditBrand({ open, onClose, brand, onUpdated, showSuccess
 		setLogoPreview("");
 		setErrors({});
 		setSubmitting(false);
+		closeToast();
 		onClose();
 	};
 
@@ -324,6 +329,16 @@ export default function EditBrand({ open, onClose, brand, onUpdated, showSuccess
 					{submitting ? "Đang lưu..." : "Lưu thay đổi"}
 				</Button>
 			</DialogActions>
+
+			<Snackbar
+				open={toast.open}
+				autoHideDuration={3000}
+				onClose={closeToast}
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+					{toast.message}
+				</Alert>
+			</Snackbar>
 		</Dialog>
 	);
 }

@@ -193,8 +193,6 @@ export default function AttributePage() {
 				}}
 				attribute={selectedAttribute}
 				onUpdated={handleCreated}
-				showSuccess={showSuccess}
-				showError={showError}
 			/>
 			<Snackbar
 				open={toast.open}

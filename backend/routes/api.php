@@ -105,7 +105,12 @@ Route::prefix('users')->group(function () {
 Route::apiResource('users', UserController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 Route::apiResource('brands', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
-Route::apiResource('attributes', AttributeController::class)->only(['index', 'destroy']);
+Route::apiResource('attributes', AttributeController::class)->only([
+	'index',
+	'store',
+	'update',
+	'destroy',
+]);
 Route::post('/promotions/check', [PromotionController::class, 'check']);
 Route::apiResource('promotions', PromotionController::class)->only(['index', 'destroy']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);

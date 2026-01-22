@@ -210,7 +210,8 @@ export default function CategoryPage() {
 				open={toast.open}
 				autoHideDuration={3000}
 				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}
+				style={{ zIndex: 999999 }}>
 				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 					{toast.message}
 				</Alert>

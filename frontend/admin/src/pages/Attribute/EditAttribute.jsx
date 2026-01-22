@@ -38,15 +38,8 @@ const DATA_TYPES = [
 	{ value: "date", label: "Ngày" },
 ];
 
-export default function EditAttribute({
-	open,
-	onClose,
-	attribute,
-	onUpdated,
-	showSuccess,
-	showError,
-}) {
-	const { toast, showSuccess: showLocalSuccess, showError: showLocalError, closeToast } = useToast();
+export default function EditAttribute({ open, onClose, attribute, onUpdated }) {
+	const { toast, showSuccess, showError, closeToast } = useToast();
 	const [formData, setFormData] = useState({
 		name: "",
 		attribute_type: "specification",
@@ -126,7 +119,7 @@ export default function EditAttribute({
 		api.put(`/attributes/${attribute.id}`, payload)
 			.then((response) => {
 				const updated = response?.data?.data ?? response?.data;
-				showLocalSuccess("Cập nhật thuộc tính thành công!");
+				showSuccess("Cập nhật thuộc tính thành công!");
 				onUpdated?.(updated);
 				setTimeout(() => {
 					handleClose();
@@ -145,11 +138,11 @@ export default function EditAttribute({
 					setErrors((prev) => ({ ...prev, ...nextErrors }));
 					const firstError = Object.values(nextErrors)[0];
 					if (firstError) {
-						showLocalError(firstError);
+						showError(firstError);
 					}
 				} else {
 					console.error("Error updating attribute:", error);
-					showLocalError("Cập nhật thuộc tính thất bại!");
+					showError("Cập nhật thuộc tính thất bại!");
 				}
 			})
 			.finally(() => {

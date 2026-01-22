@@ -203,15 +203,12 @@ export default function BrandPage() {
 				}}
 				brand={selectedBrand}
 				onUpdated={handleCreated}
-				showSuccess={showSuccess}
-				showError={showError}
 			/>
 			<Snackbar
 				open={toast.open}
 				autoHideDuration={3000}
 				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}
-			>
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
 				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 					{toast.message}
 				</Alert>

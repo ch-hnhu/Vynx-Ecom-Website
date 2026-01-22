@@ -26,6 +26,7 @@ import { useToast } from "@shared/hooks/useToast";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
 import PageTransition from "../../components/PageTransition";
+import { createPortal } from "react-dom";
 
 const renderStars = (rating) => {
 	const stars = [];
@@ -286,15 +287,24 @@ export default function ReviewPage() {
 				</DialogActions>
 			</Dialog>
 
-			<Snackbar
-				open={toast.open}
-				autoHideDuration={toast.duration}
-				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-				<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
-					{toast.message}
-				</Alert>
-			</Snackbar>
+			{typeof document !== "undefined"
+				? createPortal(
+						<Snackbar
+							open={toast.open}
+							autoHideDuration={toast.duration}
+							onClose={closeToast}
+							anchorOrigin={{ vertical: "top", horizontal: "right" }}
+							style={{ zIndex: 999999 }}>
+							<Alert
+								onClose={closeToast}
+								severity={toast.severity}
+								sx={{ width: "100%" }}>
+								{toast.message}
+							</Alert>
+						</Snackbar>,
+						document.body
+				  )
+				: null}
 		</PageTransition>
 	);
 }
