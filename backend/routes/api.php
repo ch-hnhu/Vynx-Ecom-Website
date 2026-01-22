@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SupportRequestController;
 use App\Http\Controllers\Api\SlideshowController;
 use App\Http\Controllers\Api\WishlistController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,7 @@ Route::get('/test', function () {
 		'message' => 'hehe tako nek!'
 	]);
 });
+Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 Route::post('/support-requests', [SupportRequestController::class, 'store']);
 Route::apiResource('support-requests', SupportRequestController::class)->only(['index', 'update', 'destroy']);
 
@@ -53,6 +55,8 @@ Route::prefix('orders')->group(function () {
 	Route::get('/', [OrderController::class, 'index']);
 	Route::get('/{id}', [OrderController::class, 'show']);
 	Route::put('/{id}', [OrderController::class, 'update']);
+	Route::put('/{id}/pay-confirm', [OrderController::class, 'confirmPayment']);
+	Route::post('/', [OrderController::class, 'store']);
 	Route::delete('/{id}', [OrderController::class, 'destroy']);
 });
 
