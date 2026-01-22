@@ -24,11 +24,11 @@ export default function ProductTrashPage() {
 
 	const fetchTrashedProducts = (model = paginationModel) => {
 		setLoading(true);
-		api.get("/products/trashed", { 
-			params: { 
-				page: model.page + 1, 
-				per_page: model.pageSize 
-			} 
+		api.get("/products/trashed", {
+			params: {
+				page: model.page + 1,
+				per_page: model.pageSize,
+			},
 		})
 			.then((res) => {
 				if (res.data.success) {
@@ -53,7 +53,7 @@ export default function ProductTrashPage() {
 
 	const handleRestore = (product) => {
 		if (!product) return;
-		
+
 		if (window.confirm(`Bạn có chắc chắn muốn khôi phục sản phẩm: "${product.name}"?`)) {
 			api.post(`/products/${product.id}/restore`)
 				.then((res) => {
@@ -73,8 +73,12 @@ export default function ProductTrashPage() {
 
 	const handleForceDelete = (product) => {
 		if (!product) return;
-		
-		if (window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm: "${product.name}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`)) {
+
+		if (
+			window.confirm(
+				`Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm: "${product.name}"?\n\nành động này KHÔNG THỂ HOÀN TÁC!`,
+			)
+		) {
 			api.delete(`/products/${product.id}/force`)
 				.then((res) => {
 					if (res.data.success) {
@@ -92,7 +96,7 @@ export default function ProductTrashPage() {
 	};
 
 	const handleBackToProducts = () => {
-		navigate("/products");
+		navigate("/san-pham");
 	};
 
 	const columns = [
@@ -181,9 +185,9 @@ export default function ProductTrashPage() {
 	];
 
 	const breadcrumbs = [
-		{ label: "Trang chủ", href: "/" },
-		{ label: "Sản phẩm", href: "/admin/products" },
-		{ label: "Thùng rác", active: true },
+		{ label: "Trang chu", href: "/" },
+		{ label: "San pham", href: "/san-pham" },
+		{ label: "Thung rac", active: true },
 	];
 
 	return (
@@ -192,7 +196,7 @@ export default function ProductTrashPage() {
 				columns={columns}
 				rows={products}
 				loading={loading}
-				title='Thùng rác sản phẩm'
+				title='Thung rac san pham'
 				breadcrumbs={breadcrumbs}
 				pageSize={25}
 				paginationMode='server'
@@ -213,7 +217,6 @@ export default function ProductTrashPage() {
 					</Button>
 				}
 			/>
-			{/* Toast Notification */}
 			<Snackbar
 				open={toast.open}
 				autoHideDuration={3000}

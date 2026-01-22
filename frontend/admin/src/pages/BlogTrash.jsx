@@ -103,7 +103,7 @@ export default function BlogTrashPage() {
 	};
 
 	const handleBackToBlogs = () => {
-		navigate("/blogs");
+		navigate("/bai-viet");
 	};
 
 	const columns = [

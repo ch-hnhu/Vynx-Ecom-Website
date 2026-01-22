@@ -31,9 +31,10 @@ import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
 import CloseIcon from "@mui/icons-material/Close";
 import { useToast } from "@shared/hooks/useToast";
 import { useNavigate } from "react-router-dom";
+import PageTransition from "../components/PageTransition";
 
 export default function PromotionPage() {
-	useDocumentTitle("VYNX ADMIN | QUẢN LÝ KHUYẾN MÃI");
+	useDocumentTitle("Quản lý khuyến mãi");
 	const navigate = useNavigate();
 	
 	const [promotions, setPromotions] = useState([]);
@@ -138,7 +139,7 @@ export default function PromotionPage() {
 	};
 
 	const handleGoToTrash = () => {
-		navigate("/promotions/trash");
+		navigate("/khuyen-mai/thung-rac");
 	};
 
 	const handleChange = (event) => {
@@ -303,7 +304,7 @@ export default function PromotionPage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={promotions}
@@ -343,38 +344,38 @@ export default function PromotionPage() {
 			/>
 
 			<Dialog open={openDialog} onClose={handleCloseDialog} maxWidth='md' fullWidth>
-				
+
 				<DialogTitle>
-				<Box display="flex" alignItems="center" justifyContent="space-between">
-					<Typography variant="h6" component="div">
-						{isEditMode ? "CẬP NHẬT MÃ KHUYẾN MÃI" : "THÊM MÃ KHUYẾN MÃI"}
-					</Typography>
-					<IconButton edge="end" color="inherit" onClick={handleCloseDialog} aria-label="close">
-						<CloseIcon />
-					</IconButton>
-				</Box>
-			</DialogTitle>
+					<Box display="flex" alignItems="center" justifyContent="space-between">
+						<Typography variant="h6" component="div">
+							{isEditMode ? "CẬP NHẬT MÃ KHUYẾN MÃI" : "THÊM MÃ KHUYẾN MÃI"}
+						</Typography>
+						<IconButton edge="end" color="inherit" onClick={handleCloseDialog} aria-label="close">
+							<CloseIcon />
+						</IconButton>
+					</Box>
+				</DialogTitle>
 				<DialogContent dividers>
 					<Box component='form' id='promotion-form' onSubmit={handleSubmit} noValidate>
 						<Box
-						sx={{
-							background: "linear-gradient(360deg, #234C6A 0%, #456882 100%)",
-							borderRadius: 2,
-							py: 1.5,
-							px: 2,
-							mb: 3,
-							boxShadow: "0 4px 6px rgba(35, 76, 106, 0.3)",
-						}}
-					>
-						<Typography
-							variant="h5"
-							fontWeight="bold"
-							align="center"
-							sx={{ color: "white", letterSpacing: 1 }}
+							sx={{
+								background: "linear-gradient(360deg, #234C6A 0%, #456882 100%)",
+								borderRadius: 2,
+								py: 1.5,
+								px: 2,
+								mb: 3,
+								boxShadow: "0 4px 6px rgba(35, 76, 106, 0.3)",
+							}}
 						>
-							{isEditMode ? "CẬP NHẬT THÔNG TIN MÃ KHUYẾN MÃI" : "THÔNG TIN MÃ KHUYẾN MÃI"}
-						</Typography>
-					</Box>
+							<Typography
+								variant="h5"
+								fontWeight="bold"
+								align="center"
+								sx={{ color: "white", letterSpacing: 1 }}
+							>
+								{isEditMode ? "CẬP NHẬT THÔNG TIN MÃ KHUYẾN MÃI" : "THÔNG TIN MÃ KHUYẾN MÃI"}
+							</Typography>
+						</Box>
 						<Grid container spacing={2}>
 							<Grid item xs={12} md={6}>
 								<TextField
@@ -480,18 +481,17 @@ export default function PromotionPage() {
 						{submitting ? "Đang lưu..." : isEditMode ? "Cập nhật" : "Tạo mới"}
 					</Button>
 				</DialogActions>
-				
+
 				<Snackbar
-				open={toast.open}
-				autoHideDuration={toast.duration}
-				onClose={closeToast}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+					open={toast.open}
+					autoHideDuration={toast.duration}
+					onClose={closeToast}
+					anchorOrigin={{ vertical: "top", horizontal: "right" }}>
 					<Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
 						{toast.message}
 					</Alert>
 				</Snackbar>
 			</Dialog>
-			
-		</>
+		</PageTransition>
 	);
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
 	Button,
 	Box,
@@ -15,14 +15,18 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CloseIcon from "@mui/icons-material/Close";
-import DataTable from "../components/Partial/DataTable";
-import api from "../services/api";
+import DataTable from "../../components/Partial/DataTable";
+import api from "../../services/api";
 import { formatDate } from "@shared/utils/formatHelper.jsx";
 import { useToast } from "@shared/hooks/useToast";
 import { useDocumentTitle } from "@shared/hooks/useDocumentTitle";
+import { useNavigate } from "react-router-dom";
+import PageTransition from "../../components/PageTransition";
+import { createPortal } from "react-dom";
 
 const renderStars = (rating) => {
 	const stars = [];
@@ -46,6 +50,7 @@ const renderStars = (rating) => {
 };
 
 export default function ReviewPage() {
+	const navigate = useNavigate();
 	useDocumentTitle("VYNX ADMIN | QUẢN LÝ ĐÁNH GIÁ");
 
 	const [reviews, setReviews] = useState([]);
@@ -126,7 +131,7 @@ export default function ReviewPage() {
 			api.delete(`/reviews/${id}`)
 				.then(() => {
 					showSuccess("Xóa thành công!");
-					//Lọc lại đánh giá vừa xoá
+					//Lọc lại đánh giá vừa xóa
 					setReviews(reviews.filter((review) => review.id !== id));
 				})
 				.catch((error) => {
@@ -134,6 +139,10 @@ export default function ReviewPage() {
 					showError("Xóa thất bại!");
 				});
 		}
+	};
+
+	const handleGoToTrash = () => {
+		navigate("/danh-gia/thung-rac");
 	};
 
 	const columns = [
@@ -166,7 +175,7 @@ export default function ReviewPage() {
 		{ field: "review_reply", headerName: "Phản hồi", width: 220 },
 		{
 			field: "created_at",
-			headerName: "Ngay tạo",
+			headerName: "Ngày tạo",
 			width: 150,
 			valueFormatter: (params) => {
 				return params ? formatDate(params) : "";
@@ -208,7 +217,7 @@ export default function ReviewPage() {
 	];
 
 	return (
-		<>
+		<PageTransition>
 			<DataTable
 				columns={columns}
 				rows={reviews}
@@ -220,6 +229,22 @@ export default function ReviewPage() {
 				rowCount={rowCount}
 				paginationModel={paginationModel}
 				onPaginationModelChange={setPaginationModel}
+				actions={
+					<Button
+						variant='outlined'
+						startIcon={<DeleteSweepIcon />}
+						onClick={handleGoToTrash}
+						sx={{
+							color: "#234C6A",
+							borderColor: "#234C6A",
+							"&:hover": {
+								backgroundColor: "#1B3C53",
+								color: "#ffffff",
+							},
+						}}>
+						Thùng rác
+					</Button>
+				}
 				checkboxSelection={true}
 			/>
 
@@ -271,6 +296,8 @@ export default function ReviewPage() {
 					</Alert>
 				</Snackbar>
 			</Dialog>
-		</>
+		</PageTransition>
 	);
 }
+
+

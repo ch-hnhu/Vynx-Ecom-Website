@@ -13,7 +13,7 @@ import { renderChip } from "@shared/utils/renderHelper.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function PromotionTrashPage() {
-	useDocumentTitle("VYNX ADMIN | THÙNG RÁC KHUYẾN MÃI");
+	useDocumentTitle("Thùng rác mã khuyến mãi");
 	const navigate = useNavigate();
 	const [promotions, setPromotions] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -100,7 +100,7 @@ export default function PromotionTrashPage() {
 	};
 
 	const handleBackToPromotions = () => {
-		navigate("/promotions");
+		navigate("/khuyen-mai");
 	};
 
 	const columns = [

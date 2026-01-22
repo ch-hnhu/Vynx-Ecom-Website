@@ -70,13 +70,13 @@ export default function AddCategory({
 		const nextErrors = {};
 
 		if (!formData.name.trim()) {
-			nextErrors.name = "Please enter a category name.";
+			nextErrors.name = "Vui lòng nhập tên danh mục.";
 		} else if (formData.name.length > 255) {
-			nextErrors.name = "Name must be 255 characters or less.";
+			nextErrors.name = "Tên danh mục không vượt quá 255 ký tự.";
 		}
 
 		if (formData.description.length > 1000) {
-			nextErrors.description = "Description must be 1000 characters or less.";
+			nextErrors.description = "Mô tả không vượt quá 1000 ký tự.";
 		}
 
 		setErrors(nextErrors);
@@ -183,7 +183,7 @@ export default function AddCategory({
 							<TextField
 								fullWidth
 								required
-								label="Category Name"
+								label="Tên danh mục"
 								name="name"
 								value={formData.name}
 								onChange={handleChange}
@@ -195,7 +195,7 @@ export default function AddCategory({
 
 						<Grid size={12}>
 							<FormControl fullWidth>
-								<InputLabel>Parent Category</InputLabel>
+								<InputLabel>Danh mục cha</InputLabel>
 								<Select
 									name="parent_id"
 									value={formData.parent_id}
@@ -203,7 +203,7 @@ export default function AddCategory({
 									label="Parent Category"
 								>
 									<MenuItem value="">
-										<em>None</em>
+										<em>Không có</em>
 									</MenuItem>
 									{categories?.map((category) => (
 										<MenuItem key={category.id} value={category.id}>
@@ -220,7 +220,7 @@ export default function AddCategory({
 								fullWidth
 								multiline
 								rows={4}
-								label="Description"
+								label="Mô tả"
 								name="description"
 								value={formData.description}
 								onChange={handleChange}
@@ -246,7 +246,7 @@ export default function AddCategory({
 						},
 					}}
 				>
-					Cancel
+					Hủy
 				</Button>
 				<Button
 					onClick={handleSubmit}
@@ -257,7 +257,7 @@ export default function AddCategory({
 						"&:hover": { backgroundColor: "#1B3C53" },
 					}}
 				>
-					{submitting ? "Saving..." : "Save Category"}
+					{submitting ? "Đang lưu..." : "Lưu danh mục"}
 				</Button>
 			</DialogActions>
 

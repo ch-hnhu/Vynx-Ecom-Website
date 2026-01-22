@@ -622,7 +622,7 @@ export default function BlogPage() {
 	};
 
 	const handleGoToTrash = () => {
-		navigate("/blogs/trash");
+		navigate("/bai-viet/thung-rac");
 	};
 
 	const columns = [

@@ -73,12 +73,12 @@ export default function Header() {
           </li>
           <li className="nav-item d-none d-md-block">
             <Link to="/" className="nav-link" style={{ color: "#f5f5f5" }}>
-              Home
+              Trang chủ
             </Link>
           </li>
           <li className="nav-item d-none d-md-block">
             <a href="#" className="nav-link" style={{ color: "#f5f5f5" }}>
-              Contact
+              Liên hệ
             </a>
           </li>
         </ul>
@@ -267,7 +267,7 @@ export default function Header() {
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <Link to="/profile" className="dropdown-item">
+                    <Link to="/tai-khoan" className="dropdown-item">
                       <i className="bi bi-person me-2"></i>
                       Tài khoản
                     </Link>
