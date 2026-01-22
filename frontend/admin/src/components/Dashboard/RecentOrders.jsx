@@ -121,7 +121,7 @@ export default function RecentOrders({ orders, formatCurrency }) {
 											fontSize: "14px",
 											color: "#4b5563",
 										}}>
-										{order.user?.name || order.shipping_name || "N/A"}
+										{order.user?.full_name || order.shipping_name || "N/A"}
 									</td>
 									<td
 										style={{
