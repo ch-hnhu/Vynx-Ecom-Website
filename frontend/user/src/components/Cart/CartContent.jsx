@@ -9,7 +9,7 @@ import api from "../../services/api";
 import { useToast } from "@shared/hooks/useToast";
 
 export default function CartContent() {
-	const { items, updateQuantity, removeFromCart, clearCart, subtotal } = useCart();
+	const { items, updateQuantity, removeFromCart, subtotal } = useCart();
 	const navigate = useNavigate();
 	const { toast, showError, closeToast } = useToast();
 
@@ -41,6 +41,16 @@ export default function CartContent() {
 			return;
 		}
 		navigate("/thanh-toan", { state: { selectedIds: Array.from(selectedIds) } });
+	};
+
+	const handleRemoveSelected = () => {
+		if (selectedIds.size === 0) {
+			showError("Vui lòng chọn ít nhất 1 sản phẩm để xóa");
+			return;
+		}
+
+		Array.from(selectedIds).forEach((productId) => removeFromCart(productId));
+		setSelectedIds(new Set());
 	};
 
 	const resolveImage = (rawImage) => {
@@ -279,7 +289,7 @@ export default function CartContent() {
 							<button
 								className='cart-v2-footer-action'
 								type='button'
-								onClick={clearCart}>
+								onClick={handleRemoveSelected}>
 								{"X\u00F3a"}
 							</button>
 							<button className='cart-v2-footer-link' type='button'>
