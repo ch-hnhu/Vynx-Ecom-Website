@@ -48,11 +48,29 @@ export const getProducts = async (options = {}) => {
 
 		// Áp dụng các bộ lọc
 		if (category_slug) {
-			query = query.eq("categories.slug", category_slug);
+			// First get category ID from slug
+			const { data: category } = await supabase
+				.from("categories")
+				.select("id")
+				.eq("slug", category_slug)
+				.single();
+
+			if (category) {
+				query = query.eq("category_id", category.id);
+			}
 		}
 
 		if (brand_slug) {
-			query = query.eq("brands.slug", brand_slug);
+			// First get brand ID from slug
+			const { data: brand } = await supabase
+				.from("brands")
+				.select("id")
+				.eq("slug", brand_slug)
+				.single();
+
+			if (brand) {
+				query = query.eq("brand_id", brand.id);
+			}
 		}
 
 		if (has_promotion === 1 || has_promotion === "1") {

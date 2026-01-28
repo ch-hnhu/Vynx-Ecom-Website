@@ -4,6 +4,8 @@
  */
 
 export * from "./productService.js";
+export * from "./categoryService.js";
+export * from "./brandService.js";
 export * from "./blogService.js";
 export * from "./wishlistService.js";
 export * from "./orderService.js";
@@ -11,3 +13,4 @@ export * from "./reviewService.js";
 export * from "./configService.js";
 export * from "./userService.js";
 export * from "./supportService.js";
+export * from "./slideshowService.js";
