@@ -1,4 +1,4 @@
-import { supabase } from "@shared/lib/supabase.js";
+import { supabase } from "../../lib/supabase.js";
 
 /**
  * Service để xử lý các API liên quan đến configuration/cấu hình trang web
